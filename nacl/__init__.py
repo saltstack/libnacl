@@ -343,7 +343,7 @@ def randombytes(size):
     size = int(size)
     buf = ctypes.create_string_buffer(size)
     libnacl.randombytes(buf, size)
-    return  buf
+    return  buf.ruw
 
 
 def randombytes_buf(size):
@@ -353,7 +353,7 @@ def randombytes_buf(size):
     size = int(size)
     buf = ctypes.create_string_buffer(size)
     libnacl.randombytes_buf(buf, size)
-    return  buf
+    return  buf.raw
 
 
 def randombytes_close():
@@ -368,7 +368,7 @@ def randombytes_random():
     '''
     Return a random 32-bit unsigned value
     '''
-    return libnacl.randombytes_random()
+    return libnacl.randombytes_random().raw
 
 
 def randombytes_stir():
@@ -385,7 +385,7 @@ def randombytes_uniform(upper_bound):
     '''
     Return a value between 0 and upper_bound using a uniform distribution
     '''
-    return libnacl.randombytes_uniform(upper_bound)
+    return libnacl.randombytes_uniform(upper_bound).raw
 
 # Utility functions
 
