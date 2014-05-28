@@ -343,7 +343,7 @@ def randombytes(size):
     size = int(size)
     buf = ctypes.create_string_buffer(size)
     libnacl.randombytes(buf, size)
-    return  buf.ruw
+    return  buf.raw
 
 
 def randombytes_buf(size):
