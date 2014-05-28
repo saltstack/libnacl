@@ -143,7 +143,7 @@ def crypto_sign_keypair():
     ret = libnacl.crypto_sign_keypair(vk, sk)
     if ret:
         raise ValueError('Failed to generate keypair')
-    return vk, sk
+    return vk.raw, sk.raw
 
 
 def crypto_sign(msg, sk):
