@@ -152,7 +152,12 @@ def crypto_sign(msg, sk):
     '''
     sig = ctypes.create_string_buffer(len(msg) + crypto_sign_BYTES)
     slen = ctypes.pointer(ctypes.c_ulonglong())
-    ret = libnacl.crypto_sign(sig, slen, msg, sk)
+    ret = libnacl.crypto_sign(
+            sig,
+            slen,
+            msg,
+            ctypes.c_ulonglong(len(msg)),
+            sk)
     if ret:
         raise ValueError('Failed to sign message')
     return sig.raw
