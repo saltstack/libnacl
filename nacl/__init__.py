@@ -201,7 +201,7 @@ def crypto_secretbox_open(ctxt, nonce, key):
     Decrypts a ciphertext ctxt given the receivers private key, and senders
     public key
     '''
-    pad = b'\x00' * crypto_secretbox_ZEROBYTES + ctxt
+    pad = b'\x00' * crypto_secretbox_BOXZEROBYTES + ctxt
     msg = ctypes.create_string_buffer(len(pad))
     ret = libnacl.crypto_secretbox_open(
             msg,
