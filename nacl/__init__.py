@@ -120,7 +120,7 @@ def crypto_box_beforenm(pk, sk):
     ret = libnacl.crypto_box_beforenm(k, pk, sk)
     if ret:
         raise CryptError('Unable to compute shared key')
-    return k.raw[crypto_box_BEFORENMBYTES:]
+    return k.raw
 
 
 def crypto_box_afternm(msg, nonce, k):
