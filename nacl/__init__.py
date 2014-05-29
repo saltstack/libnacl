@@ -14,22 +14,23 @@ else:
 
 # Define constants
 
-crypto_box_PUBLICKEYBYTES = 32
-crypto_box_SECRETKEYBYTES = 32
-crypto_box_BEFORENMBYTES = 32
-crypto_box_NONCEBYTES = 24
-crypto_box_ZEROBYTES = 32
-crypto_box_BOXZEROBYTES = 16
-crypto_sign_BYTES = 64
-crypto_sign_PUBLICKEYBYTES = 32
-crypto_sign_SECRETKEYBYTES = 64
-crypto_sign_SEEDBYTES = 32
+crypto_box_SECRETKEYBYTES = libnacl.crypto_box_secretkeybytes()
+crypto_box_PUBLICKEYBYTES = libnacl.crypto_box_publickeybytes()
+crypto_box_NONCEBYTES = libnacl.crypto_box_noncebytes()
+crypto_box_ZEROBYTES = libnacl.crypto_box_zerobytes()
+crypto_box_BOXZEROBYTES = libnacl.crypto_box_boxzerobytes()
+crypto_box_BEFORENMBYTES = libnacl.crypto_box_beforenmbytes()
+crypto_scalarmult_BYTES = libnacl.crypto_scalarmult_bytes()
+crypto_scalarmult_SCALARBYTES = libnacl.crypto_scalarmult_scalarbytes()
+crypto_sign_BYTES = libnacl.crypto_sign_bytes()
+crypto_sign_SEEDBYTES = libnacl.crypto_sign_secretkeybytes() // 2
+crypto_sign_PUBLICKEYBYTES = libnacl.crypto_sign_publickeybytes()
+crypto_sign_SECRETKEYBYTES = libnacl.crypto_sign_secretkeybytes()
 crypto_box_MACBYTES = crypto_box_ZEROBYTES - crypto_box_BOXZEROBYTES
-crypto_secretbox_KEYBYTES = 32
-crypto_secretbox_NONCEBYTES = 24
-crypto_secretbox_KEYBYTES = 32
-crypto_secretbox_ZEROBYTES = 32
-crypto_secretbox_BOXZEROBYTES = 16
+crypto_secretbox_KEYBYTES = libnacl.crypto_secretbox_keybytes()
+crypto_secretbox_NONCEBYTES = libnacl.crypto_secretbox_noncebytes()
+crypto_secretbox_ZEROBYTES = libnacl.crypto_secretbox_zerobytes()
+crypto_secretbox_BOXZEROBYTES = libnacl.crypto_secretbox_boxzerobytes()
 crypto_secretbox_MACBYTES = crypto_secretbox_ZEROBYTES - crypto_secretbox_BOXZEROBYTES
 crypto_stream_KEYBYTES = 32
 crypto_stream_NONCEBYTES = 24
@@ -40,7 +41,9 @@ crypto_onetimeauth_KEYBYTES = 32
 crypto_generichash_BYTES = 32
 crypto_scalarmult_curve25519_BYTES = 32
 crypto_scalarmult_BYTES = 32
-crypto_hash_BYTES = 64
+crypto_hash_BYTES = libnacl.crypto_hash_sha512_bytes()
+crypto_hash_sha256_BYTES = libnacl.crypto_hash_sha256_bytes()
+crypto_hash_sha512_BYTES = libnacl.crypto_hash_sha512_bytes()
 
 # Define exceptions
 class CryptError(Exception):
@@ -337,6 +340,35 @@ def crypto_hash(msg):
     hbuf = ctypes.create_string_buffer(crypto_hash_BYTES)
     libnacl.crypto_hash(hbuf, msg, len(msg))
     return hbuf.raw
+
+def crypto_hash_sha256(msg):
+    '''
+    Compute the sha256 hash of the given message
+    '''
+    hbuf = ctypes.create_string_buffer(crypto_hash_sha256_BYTES)
+    libnacl.crypto_hash_sha256(hbuf, msg, len(msg))
+    return hbuf.raw
+
+def crypto_hash_sha512(msg):
+    '''
+    Compute the sha512 hash of the given message
+    '''
+    hbuf = ctypes.create_string_buffer(crypto_hash_sha512_BYTES)
+    libnacl.crypto_hash_sha512(hbuf, msg, len(msg))
+    return hbuf.raw
+
+# scalarmult
+
+def crypto_scalarmult_base(n):
+    '''
+    Computes and returns the scalar product of a standard group element and an
+    integer "n".
+    '''
+    buf = ctypes.create_string_buffer(crypto_scalarmult_BYTES)
+    ret = libnacl.crypto_scalarmult_base(buf, n)
+    if ret:
+        raise CryptError('Failed to compute scalar product')
+    return buf.raw
 
 # String cmp
 
