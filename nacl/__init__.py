@@ -12,6 +12,8 @@ if sys.platform.startswith('win'):
 else:
     libnacl = ctypes.cdll.LoadLibrary('libsodium.so')
 
+# Define constants
+
 crypto_box_PUBLICKEYBYTES = 32
 crypto_box_SECRETKEYBYTES = 32
 crypto_box_BEFORENMBYTES = 32
@@ -40,6 +42,12 @@ crypto_scalarmult_curve25519_BYTES = 32
 crypto_scalarmult_BYTES = 32
 crypto_hash_BYTES = 64
 
+# Define exceptions
+class CryptError(Exception):
+    '''
+    Base Exception for cryptographic errors
+    '''
+
 # Pubkey defs
 
 
@@ -62,13 +70,17 @@ def crypto_box(msg, nonce, pk, sk):
 
     enc_msg = nacl.crypto_box('secret message', <unique nonce>, <public key string>, <secret key string>)
     '''
-    if None in (msg, nonce, pk, sk):
-        raise ValueError('Invalid input')
+    if len(pk) != crypto_box_PUBLICKEYBYTES:
+        raise ValueError('Invalid public key')
+    if len(sk) != crypto_box_SECRETKEYBYTES:
+        raise ValueError('Invalid secret key')
+    if len(nonce) != crypto_box_NONCEBYTES:
+        raise ValueError('Invalid nonce')
     pad = b'\x00' * crypto_box_ZEROBYTES + msg
     c = ctypes.create_string_buffer(len(pad))
     ret = libnacl.crypto_box(c, pad, ctypes.c_ulonglong(len(pad)), nonce, pk, sk)
     if ret:
-        raise ValueError('Unable to encrypt message')
+        raise CryptError('Unable to encrypt message')
     return c.raw[crypto_box_BOXZEROBYTES:]
 
 
@@ -76,8 +88,12 @@ def crypto_box_open(ctxt, nonce, pk, sk):
     '''
     Decrypts a message given the receivers private key, and senders public key
     '''
-    if None in (ctxt, nonce, pk, sk):
-        raise ValueError('Invalid input')
+    if len(pk) != crypto_box_PUBLICKEYBYTES:
+        raise ValueError('Invalid public key')
+    if len(sk) != crypto_box_SECRETKEYBYTES:
+        raise ValueError('Invalid secret key')
+    if len(nonce) != crypto_box_NONCEBYTES:
+        raise ValueError('Invalid nonce')
     pad = b'\x00' * crypto_box_BOXZEROBYTES + ctxt
     msg = ctypes.create_string_buffer(len(pad))
     ret = libnacl.crypto_box_open(
@@ -88,7 +104,7 @@ def crypto_box_open(ctxt, nonce, pk, sk):
             pk,
             sk)
     if ret:
-        raise ValueError('Unable to decrypt ciphertext')
+        raise CryptError('Unable to decrypt ciphertext')
     return msg.raw[crypto_box_ZEROBYTES:]
 
 
@@ -96,34 +112,46 @@ def crypto_box_beforenm(pk, sk):
     '''
     Partially performs the computation required for both encryption and decryption of data
     '''
-    if None in (pk, sk):
-        raise ValueError('Invalid input')
+    if len(pk) != crypto_box_PUBLICKEYBYTES:
+        raise ValueError('Invalid public key')
+    if len(sk) != crypto_box_SECRETKEYBYTES:
+        raise ValueError('Invalid secret key')
     k = ctypes.create_string_buffer(crypto_box_BEFORENMBYTES)
-    libnacl.crypto_box_beforenm(k, pk, sk)
-    return k.raw
+    ret = libnacl.crypto_box_beforenm(k, pk, sk)
+    if ret:
+        raise CryptError('Unable to compute shared key')
+    return k.raw[crypto_box_BEFORENMBYTES:]
 
 
 def crypto_box_afternm(msg, nonce, k):
     '''
     Encrypts a given a message, using partial computed data
     '''
+    if len(k) != crypto_box_BEFORENMBYTES:
+        raise ValueError('Invalid shared key')
+    if len(nonce) != crypto_box_NONCEBYTES:
+        raise ValueError('Invalid nonce')
     pad = b'\x00' * crypto_box_ZEROBYTES + msg
-    c = ctypes.create_string_buffer(len(pad))
-    ret = libnacl.crypto_box_afternm(c, msg, ctypes.c_ulonglong(len(pad)), nonce, k)
+    ctxt = ctypes.create_string_buffer(len(pad))
+    ret = libnacl.crypto_box_afternm(ctxt, msg, ctypes.c_ulonglong(len(pad)), nonce, k)
     if ret:
         raise ValueError('Unable to encrypt messsage')
-    return c.raw[crypto_box_BOXZEROBYTES:]
+    return ctxt.raw[crypto_box_BOXZEROBYTES:]
 
 
 def crypto_box_open_afternm(ctxt, nonce, k):
     '''
     Decrypts a ciphertext ctxt given k
     '''
-    pad = b'\x00' * crypto_box_ZEROBYTES + ctxt
+    if len(k) != crypto_box_BEFORENMBYTES:
+        raise ValueError('Invalid shared key')
+    if len(nonce) != crypto_box_NONCEBYTES:
+        raise ValueError('Invalid nonce')
+    pad = b'\x00' * crypto_box_BOXZEROBYTES + ctxt
     msg = ctypes.create_string_buffer(len(pad))
     ret = libnacl.crypto_box_open_afternm(
             msg,
-            ctxt,
+            pad,
             ctypes.c_ulonglong(len(pad)),
             nonce,
             k)

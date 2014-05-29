@@ -2,7 +2,7 @@
 import nacl
 
 # Import python libs
-import time
+import datetime
 import binascii
 
 
@@ -20,7 +20,7 @@ def time_nonce():
     The nonce generated here is done by grabbing the 20 digit microsecond
     timestamp and appending 4 random chars
     '''
-    nonce = '{0}{1}'.format(
-            time.time(),
-            binascii.hexlify(nacl.randombytes(4)))
+    nonce = '{0:%Y%m%d%H%M%S%f}{1}'.format(
+            datetime.datetime.now(),
+            binascii.hexlify(nacl.randombytes(2)).decode(encoding='UTF-8'))
     return nonce
