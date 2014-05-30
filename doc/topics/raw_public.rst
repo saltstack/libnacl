@@ -1,6 +1,6 @@
-======================================
-Raw Public Key Encryption With libnacl
-======================================
+=========================
+Raw Public Key Encryption
+=========================
 
 .. note
 
@@ -52,7 +52,24 @@ Now with a box in hand it can be decrypted by Bob:
 
 .. code-block:: python
 
-    msg = libnacl.crypto_box_open(box, nonce, alice_pk, bob_sk)
+    clear_msg = libnacl.crypto_box_open(box, nonce, alice_pk, bob_sk)
 
 The trick here is that the box AND the nonce need to be sent to Bob, so he can
 decrypt the message. The nonce can be safely sent to Bob in the clear.
+
+To bring it all together:
+
+.. code-block:: python
+
+    import libnacl
+    import libnacl.utils
+
+    alice_pk, alice_sk = libnacl.crypto_keypair()
+    bob_pk, bob_sk = libnacl.crypto_keypair()
+
+    nonce = libnacl.utils.time_nonce()
+
+    msg = 'Quiet, quiet.  Quiet!  There are ways of telling whether she is a witch.'
+    box = libnacl.crypto_box(msg, nonce, bob_pk, alice_sk)
+
+    clear_msg = libnacl.crypto_box_open(box, nonce, alice_pk, bob_sk)

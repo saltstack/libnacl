@@ -1,16 +1,15 @@
-.. Python-NaCl documentation master file, created by
-   sphinx-quickstart on Thu May 29 10:29:25 2014.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to Python-NaCl's documentation!
-=======================================
+libnacl: Python bindings to NaCl
+================================
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
+   topics/raw_public
+   topics/raw_secret
+   topics/raw_sign
+   topics/raw_hash
 
 
 Indices and tables
