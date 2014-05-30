@@ -1,5 +1,5 @@
 # Import nacl libs
-import nacl
+import libnacl
 
 # Import python libs
 import datetime
@@ -10,7 +10,7 @@ def salsa_key():
     '''
     Generates a salsa2020 key
     '''
-    return nacl.randombytes(nacl.crypto_secretbox_KEYBYTES)
+    return libnacl.randombytes(libnacl.crypto_secretbox_KEYBYTES)
 
 
 def time_nonce():
@@ -22,5 +22,5 @@ def time_nonce():
     '''
     nonce = '{0:%Y%m%d%H%M%S%f}{1}'.format(
             datetime.datetime.now(),
-            binascii.hexlify(nacl.randombytes(2)).decode(encoding='UTF-8'))
+            binascii.hexlify(libnacl.randombytes(2)).decode(encoding='UTF-8'))
     return nonce
