@@ -1,8 +1,8 @@
 from distutils.core import setup
 
-NAME = 'nacl'
-DESC = ('A ctypes based libsodium wrapper')
-VERSION = '0.1.0'
+NAME = 'libnacl'
+DESC = ('Python bindings for libsodium/tweetnacl based on ctypes')
+VERSION = '0.9.0'
 
 setup(name=NAME,
       version=VERSION,
@@ -10,4 +10,4 @@ setup(name=NAME,
       author='Thomas S Hatch',
       author_email='thatch45@gmail.com',
       url='https://github.com/thatch45/nacl',
-      packages=['nacl'])
+      packages=['libnacl'])
