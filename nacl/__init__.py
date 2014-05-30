@@ -194,6 +194,21 @@ def crypto_sign(msg, sk):
     return sig.raw
 
 
+def crypto_sign_seed_keypair(seed):
+    '''
+    Computes and returns the secret adn verify keys from the given seed
+    '''
+    if len(seed) != crypto_sign_SEEDBYTES:
+        raise ValueError('Invalid Seed')
+    sk = ctypes.create_string_buffer(crypto_sign_SECRETKEYBYTES)
+    vk = ctypes.create_string_buffer(crypto_sign_PUBLICKEYBYTES)
+
+    ret = libnacl.crypto_sign_seed_keypair(sk, vk, seed)
+    if ret:
+        raise CryptError('Failed to generate keypair from seed')
+    return vk.raw, sk.raw
+
+
 def crypto_sign_open(sig, vk):
     '''
     Verifies the signed message sig using the signer's verification key
@@ -210,7 +225,6 @@ def crypto_sign_open(sig, vk):
     if ret:
         raise ValueError('Failed to validate message')
     return msg.raw[:msglen.value]
-
 
 # Authenticated Symmetric Encryption
 
