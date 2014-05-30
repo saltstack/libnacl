@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Python-NaCl documentation build configuration file, created by
+# libnacl documentation build configuration file, created by
 # sphinx-quickstart on Thu May 29 10:29:25 2014.
 #
 # This file is execfile()d with the current directory set to its
@@ -45,7 +45,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Python-NaCl'
+project = u'libnacl'
 copyright = u'2014, Thomas S Hatch'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -178,7 +178,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Python-NaCldoc'
+htmlhelp_basename = 'libnacldoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -198,7 +198,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'Python-NaCl.tex', u'Python-NaCl Documentation',
+  ('index', 'libnacl.tex', u'libnacl Documentation',
    u'Thomas S Hatch', 'manual'),
 ]
 
@@ -228,7 +228,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'python-nacl', u'Python-NaCl Documentation',
+    ('index', 'libnacl', u'libnacl Documentation',
      [u'Thomas S Hatch'], 1)
 ]
 
@@ -242,8 +242,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'Python-NaCl', u'Python-NaCl Documentation',
-   u'Thomas S Hatch', 'Python-NaCl', 'One line description of project.',
+  ('index', 'libnacl', u'libnacl Documentation',
+   u'Thomas S Hatch', 'libnacl', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -263,13 +263,13 @@ texinfo_documents = [
 # -- Options for Epub output ----------------------------------------------
 
 # Bibliographic Dublin Core info.
-epub_title = u'Python-NaCl'
+epub_title = u'libnacl'
 epub_author = u'Thomas S Hatch'
 epub_publisher = u'Thomas S Hatch'
 epub_copyright = u'2014, Thomas S Hatch'
 
 # The basename for the epub file. It defaults to the project name.
-#epub_basename = u'Python-NaCl'
+#epub_basename = u'libnacl'
 
 # The HTML theme for the epub output. Since the default themes are not optimized
 # for small screen space, using the same theme for HTML and epub output is
