@@ -9,6 +9,8 @@ import sys
 # Import libsodium
 if sys.platform.startswith('win'):
     nacl = ctypes.cdll.LoadLibrary('libsodium')
+elif sys.platform.startswith('darwin'):
+    nacl = ctypes.cdll.LoadLibrary('libsodium.dylib')
 else:
     nacl = ctypes.cdll.LoadLibrary('libsodium.so')
 
