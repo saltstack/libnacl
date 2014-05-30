@@ -10,4 +10,13 @@ setup(name=NAME,
       author='Thomas S Hatch',
       author_email='thatch45@gmail.com',
       url='https://github.com/thatch45/nacl',
+      classifiers=[
+          'Programming Language :: Python',
+          'Programming Language :: Python :: 2.6',
+          'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3.4',
+          'Development Status :: 4 - Beta',
+          'Intended Audience :: Developers',
+          'Topic :: Security :: Cryptography',
+          ],
       packages=['libnacl'])
