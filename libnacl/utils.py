@@ -1,5 +1,6 @@
 # Import nacl libs
 import libnacl
+import libnacl.encode
 
 # Import python libs
 import datetime
