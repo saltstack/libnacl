@@ -63,7 +63,7 @@ def crypto_box_keypair():
     pk, sk = nacl.crypto_box_keypair()
     '''
     pk = ctypes.create_string_buffer(crypto_box_PUBLICKEYBYTES)
-    sk = ctypes.create_string_buffer(crypto_box_PUBLICKEYBYTES)
+    sk = ctypes.create_string_buffer(crypto_box_SECRETKEYBYTES)
     nacl.crypto_box_keypair(pk, sk)
     return pk.raw, sk.raw
 
