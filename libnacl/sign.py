@@ -28,6 +28,12 @@ class Signer(libnacl.utils.BaseKey):
         '''
         return libnacl.crypto_sign(msg, self.sk)
 
+    def signature(self, msg):
+        '''
+        Return just the signature for the message
+        '''
+        return libnacl.crypto_sign(msg, self.sk)[libnacl.crypto_sign_BYTES:]
+
 
 class Verifier(libnacl.utils.BaseKey):
     '''
