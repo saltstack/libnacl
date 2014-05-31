@@ -3,6 +3,7 @@ High level classes and routines around public key encryption and decryption
 '''
 # import libnacl libs
 import libnacl
+import libnacl.utils
 import libnacl.encode
 
 
@@ -70,7 +71,7 @@ class Box(object):
             nonce = libnacl.utils.time_nonce()
         elif len(nonce) != libnacl.crypto_box_NONCEBYTES:
             raise ValueError('Invalid nonce size')
-        ctxt = libnacl.crypto_box_afternm(self._k, msg, nonce)
+        ctxt = libnacl.crypto_box_afternm(msg, nonce, self._k)
         return nonce + ctxt
 
     def decrypt(self, ctxt, nonce=None):
@@ -84,5 +85,5 @@ class Box(object):
             ctxt = ctxt[libnacl.crypto_box_NONCEBYTES:]
         elif len(nonce) != libnacl.crypto_box_NONCEBYTES:
             raise ValueError('Invalid nonce')
-        msg = libnacl.crypto_box_open_afternm(self._k, ctxt, nonce)
+        msg = libnacl.crypto_box_open_afternm(ctxt, nonce, self._k)
         return msg
