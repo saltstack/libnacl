@@ -7,21 +7,7 @@ import libnacl.utils
 import libnacl.encode
 
 
-class BaseKey(object):
-    '''
-    Include methods for key management convenience
-    '''
-    def hex_sk(self):
-        if hasattr(self, 'sk'):
-            return libnacl.encode.hex_encode(self.sk)
-        else:
-            return ''
-
-    def hex_pk(self):
-        return libnacl.encode.hex_encode(self.pk)
-
-
-class PublicKey(BaseKey):
+class PublicKey(libnacl.utils.BaseKey):
     '''
     This class is used to manage public keys
     '''
@@ -29,7 +15,7 @@ class PublicKey(BaseKey):
         self.pk = pk
 
 
-class SecretKey(BaseKey):
+class SecretKey(libnacl.utils.BaseKey):
     '''
     This class is used to manage keypairs
     '''

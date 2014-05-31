@@ -6,6 +6,25 @@ import datetime
 import binascii
 
 
+class BaseKey(object):
+    '''
+    Include methods for key management convenience
+    '''
+    def hex_sk(self):
+        if hasattr(self, 'sk'):
+            return libnacl.encode.hex_encode(self.sk)
+        else:
+            return ''
+
+    def hex_pk(self):
+        if hasattr(self, 'pk'):
+            return libnacl.encode.hex_encode(self.pk)
+
+    def hex_vk(self):
+        if hasattr(self, 'pk'):
+            return libnacl.encode.hex_encode(self.pk)
+
+
 def salsa_key():
     '''
     Generates a salsa2020 key
