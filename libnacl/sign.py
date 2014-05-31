@@ -1,0 +1,46 @@
+'''
+High level routines to maintain signing keys and to sign and verify messages
+'''
+# Import libancl libs
+import libnacl
+import libnacl.utils
+import libnacl.encode
+
+
+class Signer(libnacl.utils.BaseKey):
+    '''
+    The tools needed to sign messages
+    '''
+    def __init__(self, seed=None):
+        '''
+        Create a signing key, if not seed it supplied a keypair is generated
+        '''
+        if seed:
+            if len(seed) != libnacl.crypto_sign_SEEDBYTES:
+                raise ValueError('Invalid seed bytes')
+            self.sk, self.vk = libnacl.crypto_sign_seed_keypair(seed)
+        else:
+            self.sk, self.vk = libnacl.crypto_sign_keypair()
+
+    def sign(self, msg):
+        '''
+        Sign the given message with this key
+        '''
+        return libnacl.crypto_sign(msg, self.sk)
+
+
+class Verifier(libnacl.utils.BaseKey):
+    '''
+    Verify signed messages
+    '''
+    def __init__(self, vk_hex):
+        '''
+        Create a verification key from a hex encoded vkey
+        '''
+        self.vk = libnacl.encode.hex_decode(vk_hex)
+
+    def verify(self, msg):
+        '''
+        Verify the message with tis key
+        '''
+        return libnacl.crypto_sign_open(msg, self.vk)
