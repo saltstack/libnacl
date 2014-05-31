@@ -18,9 +18,9 @@ class Signer(libnacl.utils.BaseKey):
         if seed:
             if len(seed) != libnacl.crypto_sign_SEEDBYTES:
                 raise ValueError('Invalid seed bytes')
-            self.sk, self.vk = libnacl.crypto_sign_seed_keypair(seed)
+            self.vk, self.sk = libnacl.crypto_sign_seed_keypair(seed)
         else:
-            self.sk, self.vk = libnacl.crypto_sign_keypair()
+            self.vk, self.sk = libnacl.crypto_sign_keypair()
 
     def sign(self, msg):
         '''
