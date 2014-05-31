@@ -50,8 +50,7 @@ class TestPublic(unittest.TestCase):
         self.assertNotEqual(nonce1, nonce2)
         self.assertNotEqual(enc_msg, enc_msg2)
 
-    # Needs more work on the nm routines
-    def not_test_boxnm(self):
+    def test_boxnm(self):
         msg = b'Are you suggesting coconuts migrate?'
         # run 1
         nonce1 = libnacl.utils.time_nonce()
