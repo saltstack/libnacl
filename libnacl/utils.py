@@ -22,8 +22,8 @@ class BaseKey(object):
             return libnacl.encode.hex_encode(self.pk)
 
     def hex_vk(self):
-        if hasattr(self, 'pk'):
-            return libnacl.encode.hex_encode(self.pk)
+        if hasattr(self, 'vk'):
+            return libnacl.encode.hex_encode(self.vk)
 
 
 def salsa_key():
