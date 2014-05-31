@@ -15,7 +15,7 @@ class SecretBox(object):
             key = libnacl.utils.salsa_key()
         if len(key) != libnacl.crypto_secretbox_KEYBYTES:
             raise ValueError('Invalid key')
-        self._k = key
+        self.key = key
 
     def encrypt(self, msg, nonce=None):
         '''
@@ -26,7 +26,7 @@ class SecretBox(object):
             nonce = libnacl.utils.time_nonce()
         if len(nonce) != libnacl.crypto_secretbox_NONCEBYTES:
             raise ValueError('Invalid Nonce')
-        ctxt = libnacl.crypto_secretbox(self._k, msg, nonce)
+        ctxt = libnacl.crypto_secretbox(msg, nonce, self.key)
         return nonce + ctxt
 
     def decrypt(self, ctxt, nonce=None):
@@ -39,4 +39,4 @@ class SecretBox(object):
             ctxt = ctxt[libnacl.crypto_secretbox_NONCEBYTES:]
         if len(nonce) != libnacl.crypto_secretbox_NONCEBYTES:
             raise ValueError('Invalid nonce')
-        return libnacl.crypto_secretbox_open(self._k, ctxt, nonce)
+        return libnacl.crypto_secretbox_open(ctxt, nonce, self.key)
