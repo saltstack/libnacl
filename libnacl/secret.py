@@ -6,7 +6,7 @@ import libnacl
 import libnacl.utils
 
 
-class SecretBox(object):
+class SecretBox(libnacl.utils.BaseKey):
     '''
     Manage symetric encryption using the salsa20 algorithm
     '''
@@ -15,7 +15,7 @@ class SecretBox(object):
             key = libnacl.utils.salsa_key()
         if len(key) != libnacl.crypto_secretbox_KEYBYTES:
             raise ValueError('Invalid key')
-        self.key = key
+        self.sk = key
 
     def encrypt(self, msg, nonce=None):
         '''
@@ -26,7 +26,7 @@ class SecretBox(object):
             nonce = libnacl.utils.time_nonce()
         if len(nonce) != libnacl.crypto_secretbox_NONCEBYTES:
             raise ValueError('Invalid Nonce')
-        ctxt = libnacl.crypto_secretbox(msg, nonce, self.key)
+        ctxt = libnacl.crypto_secretbox(msg, nonce, self.sk)
         return nonce + ctxt
 
     def decrypt(self, ctxt, nonce=None):
@@ -39,4 +39,4 @@ class SecretBox(object):
             ctxt = ctxt[libnacl.crypto_secretbox_NONCEBYTES:]
         if len(nonce) != libnacl.crypto_secretbox_NONCEBYTES:
             raise ValueError('Invalid nonce')
-        return libnacl.crypto_secretbox_open(ctxt, nonce, self.key)
+        return libnacl.crypto_secretbox_open(ctxt, nonce, self.sk)
