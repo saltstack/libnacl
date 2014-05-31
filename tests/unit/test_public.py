@@ -10,7 +10,7 @@ class TestPublic(unittest.TestCase):
     def test_secretkey(self):
         '''
         '''
-        msg = 'You\'ve got two empty halves of coconut and you\'re bangin\' \'em together.'
+        msg = b'You\'ve got two empty halves of coconut and you\'re bangin\' \'em together.'
         bob = libnacl.public.SecretKey()
         alice = libnacl.public.SecretKey()
         bob_box = libnacl.public.Box(bob.sk, alice.pk)
@@ -28,7 +28,7 @@ class TestPublic(unittest.TestCase):
     def test_publickey(self):
         '''
         '''
-        msg = 'You\'ve got two empty halves of coconut and you\'re bangin\' \'em together.'
+        msg = b'You\'ve got two empty halves of coconut and you\'re bangin\' \'em together.'
         bob = libnacl.public.SecretKey()
         alice = libnacl.public.SecretKey()
         alice_pk = libnacl.public.PublicKey(alice.pk)

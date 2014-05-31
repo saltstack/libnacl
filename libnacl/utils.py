@@ -43,4 +43,4 @@ def time_nonce():
     nonce = '{0:%Y%m%d%H%M%S%f}{1}'.format(
             datetime.datetime.now(),
             binascii.hexlify(libnacl.randombytes(2)).decode(encoding='UTF-8'))
-    return nonce
+    return nonce.encode(encoding='UTF-8')

@@ -7,7 +7,7 @@ class TestSecret(unittest.TestCase):
     '''
     '''
     def test_secret(self):
-        msg = 'But then of course African swallows are not migratory.'
+        msg = b'But then of course African swallows are not migratory.'
         box = libnacl.secret.SecretBox()
         ctxt = box.encrypt(msg)
         self.assertNotEqual(msg, ctxt)
