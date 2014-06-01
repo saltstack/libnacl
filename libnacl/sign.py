@@ -22,6 +22,7 @@ class Signer(libnacl.utils.BaseKey):
         else:
             seed = libnacl.randombytes(libnacl.crypto_sign_SEEDBYTES)
             self.vk, self.sk = libnacl.crypto_sign_seed_keypair(seed)
+        self.seed = seed
 
     def sign(self, msg):
         '''
