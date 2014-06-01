@@ -47,7 +47,7 @@ class Box(object):
         if pk and sk:
             self._k = libnacl.crypto_box_beforenm(sk, pk)
 
-    def encrypt(self, msg, nonce=None):
+    def encrypt(self, msg, nonce=None, pack_nonce=True):
         '''
         Encrypt the given message with the given nonce, if the nonce is not
         provided it will be generated from the libnacl.utils.time_nonce
@@ -58,7 +58,10 @@ class Box(object):
         elif len(nonce) != libnacl.crypto_box_NONCEBYTES:
             raise ValueError('Invalid nonce size')
         ctxt = libnacl.crypto_box_afternm(msg, nonce, self._k)
-        return nonce + ctxt
+        if pack_nonce:
+            return nonce + ctxt
+        else:
+            return nonce, ctxt
 
     def decrypt(self, ctxt, nonce=None):
         '''
