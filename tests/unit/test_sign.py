@@ -28,7 +28,7 @@ class TestSign(unittest.TestCase):
         self.assertNotEqual(sk1, sk2)
         self.assertNotEqual(sk2, sk3)
 
-    def test_box(self):
+    def test_sign(self):
         msg = b'Are you suggesting coconuts migrate?'
         # run 1
         vk1, sk1 = libnacl.crypto_sign_keypair()
@@ -36,3 +36,4 @@ class TestSign(unittest.TestCase):
         self.assertEqual(msg, sig[libnacl.crypto_sign_BYTES:])
         sig_msg = libnacl.crypto_sign_open(sig, vk1)
         self.assertEqual(msg, sig_msg)
+

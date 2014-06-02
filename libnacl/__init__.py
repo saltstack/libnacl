@@ -205,10 +205,10 @@ def crypto_sign_seed_keypair(seed):
     sk = ctypes.create_string_buffer(crypto_sign_SECRETKEYBYTES)
     vk = ctypes.create_string_buffer(crypto_sign_PUBLICKEYBYTES)
 
-    ret = nacl.crypto_sign_seed_keypair(sk, vk, seed)
+    ret = nacl.crypto_sign_seed_keypair(vk, sk, seed)
     if ret:
         raise CryptError('Failed to generate keypair from seed')
-    return vk.raw, sk.raw
+    return (vk.raw, sk.raw)
 
 
 def crypto_sign_open(sig, vk):
