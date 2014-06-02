@@ -1,4 +1,13 @@
-from distutils.core import setup
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import os
+import sys
+
+if 'USE_SETUPTOOLS' in os.environ or 'setuptools' in sys.modules:
+    from setuptools import setup
+else:
+    from distutils.core import setup
 
 NAME = 'libnacl'
 DESC = ('Python bindings for libsodium/tweetnacl based on ctypes')
