@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Wrap libsodium routines
 '''
@@ -14,8 +15,8 @@ elif sys.platform.startswith('darwin'):
 else:
     nacl = ctypes.cdll.LoadLibrary('libsodium.so')
 
+# pylint: disable=C0103
 # Define constants
-
 crypto_box_SECRETKEYBYTES = nacl.crypto_box_secretkeybytes()
 crypto_box_PUBLICKEYBYTES = nacl.crypto_box_publickeybytes()
 crypto_box_NONCEBYTES = nacl.crypto_box_noncebytes()
@@ -46,6 +47,8 @@ crypto_scalarmult_BYTES = nacl.crypto_scalarmult_bytes()
 crypto_hash_BYTES = nacl.crypto_hash_sha512_bytes()
 crypto_hash_sha256_BYTES = nacl.crypto_hash_sha256_bytes()
 crypto_hash_sha512_BYTES = nacl.crypto_hash_sha512_bytes()
+# pylint: enable=C0103
+
 
 # Define exceptions
 class CryptError(Exception):
@@ -63,7 +66,7 @@ def crypto_box_keypair():
     pk, sk = nacl.crypto_box_keypair()
     '''
     pk = ctypes.create_string_buffer(crypto_box_PUBLICKEYBYTES)
-    sk = ctypes.create_string_buffer(crypto_box_PUBLICKEYBYTES)
+    sk = ctypes.create_string_buffer(crypto_box_SECRETKEYBYTES)
     nacl.crypto_box_keypair(pk, sk)
     return pk.raw, sk.raw
 
@@ -357,6 +360,7 @@ def crypto_hash(msg):
     nacl.crypto_hash(hbuf, msg, len(msg))
     return hbuf.raw
 
+
 def crypto_hash_sha256(msg):
     '''
     Compute the sha256 hash of the given message
@@ -365,6 +369,7 @@ def crypto_hash_sha256(msg):
     nacl.crypto_hash_sha256(hbuf, msg, len(msg))
     return hbuf.raw
 
+
 def crypto_hash_sha512(msg):
     '''
     Compute the sha512 hash of the given message
@@ -372,6 +377,7 @@ def crypto_hash_sha512(msg):
     hbuf = ctypes.create_string_buffer(crypto_hash_sha512_BYTES)
     nacl.crypto_hash_sha512(hbuf, msg, len(msg))
     return hbuf.raw
+
 
 # scalarmult
 
@@ -424,7 +430,7 @@ def randombytes(size):
     size = int(size)
     buf = ctypes.create_string_buffer(size)
     nacl.randombytes(buf, size)
-    return  buf.raw
+    return buf.raw
 
 
 def randombytes_buf(size):
@@ -434,7 +440,7 @@ def randombytes_buf(size):
     size = int(size)
     buf = ctypes.create_string_buffer(size)
     nacl.randombytes_buf(buf, size)
-    return  buf.raw
+    return buf.raw
 
 
 def randombytes_close():
@@ -468,8 +474,8 @@ def randombytes_uniform(upper_bound):
     '''
     return nacl.randombytes_uniform(upper_bound).raw
 
-# Utility functions
 
+# Utility functions
 
 def sodium_version_major():
     '''

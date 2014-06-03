@@ -1,39 +1,23 @@
 # Import libnacl libs
-import libnacl
-import libnacl.utils
+import libnacl.sign
 
-# Import python libs
+# Import pythonlibs
 import unittest
 
 
-class TestSign(unittest.TestCase):
+class TestSigning(unittest.TestCase):
     '''
-    Test sign functions
     '''
-    def test_gen(self):
-        vk1, sk1 = libnacl.crypto_sign_keypair()
-        vk2, sk2 = libnacl.crypto_sign_keypair()
-        vk3, sk3 = libnacl.crypto_sign_keypair()
-        self.assertEqual(len(vk1), libnacl.crypto_sign_PUBLICKEYBYTES)
-        self.assertEqual(len(sk1), libnacl.crypto_sign_SECRETKEYBYTES)
-        self.assertEqual(len(vk2), libnacl.crypto_sign_PUBLICKEYBYTES)
-        self.assertEqual(len(sk2), libnacl.crypto_sign_SECRETKEYBYTES)
-        self.assertEqual(len(vk3), libnacl.crypto_sign_PUBLICKEYBYTES)
-        self.assertEqual(len(sk3), libnacl.crypto_sign_SECRETKEYBYTES)
-        self.assertNotEqual(vk1, sk1)
-        self.assertNotEqual(vk2, sk2)
-        self.assertNotEqual(vk3, sk3)
-        self.assertNotEqual(vk1, vk2)
-        self.assertNotEqual(vk1, vk3)
-        self.assertNotEqual(sk1, sk2)
-        self.assertNotEqual(sk2, sk3)
-
     def test_sign(self):
-        msg = b'Are you suggesting coconuts migrate?'
-        # run 1
-        vk1, sk1 = libnacl.crypto_sign_keypair()
-        sig = libnacl.crypto_sign(msg, sk1)
-        self.assertEqual(msg, sig[libnacl.crypto_sign_BYTES:])
-        sig_msg = libnacl.crypto_sign_open(sig, vk1)
-        self.assertEqual(msg, sig_msg)
+        msg = (b'Well, that\'s no ordinary rabbit.  That\'s the most foul, '
+               b'cruel, and bad-tempered rodent you ever set eyes on.')
+        signer = libnacl.sign.Signer()
+        signed = signer.sign(msg)
+        signature = signer.signature(msg)
+        self.assertNotEqual(msg, signed)
+        veri = libnacl.sign.Verifier(signer.hex_vk())
+        verified = veri.verify(signed)
+        verified2 = veri.verify(signature + msg)
+        self.assertEqual(verified, msg)
+        self.assertEqual(verified2, msg)
 
