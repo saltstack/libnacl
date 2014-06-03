@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Utilities to make secret box encryption simple
 '''

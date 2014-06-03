@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Build in routines and classes to simplify encoding routines
 '''
