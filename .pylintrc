@@ -47,22 +47,9 @@ load-plugins=salttesting.pylintplugins.pep8,salttesting.pylintplugins.pep263,sal
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=W0142,
-  C0330
-#  E8121,
-#  E8122,
-#  E8123,
-#  E8124,
-#  E8125,
-#  E8126,
-#  E8127,
-#  E8128
+disable=C0330
 
 # Disabled Checks
-#
-# W0142 (star-args)
-# E812* All PEP8 E12*
-# E8501 PEP8 line too long
 # C0330 (bad-continuation)
 
 
