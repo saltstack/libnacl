@@ -11,7 +11,7 @@ else:
 
 NAME = 'libnacl'
 DESC = ('Python bindings for libsodium/tweetnacl based on ctypes')
-VERSION = '0.9.0'
+VERSION = '0.9.1'
 
 setup(name=NAME,
       version=VERSION,
