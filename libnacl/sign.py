@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 High level routines to maintain signing keys and to sign and verify messages
 '''

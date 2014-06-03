@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 High level classes and routines around public key encryption and decryption
 '''
