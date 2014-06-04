@@ -6,6 +6,9 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   topics/public
+   topics/secret
+   topics/sign
    topics/raw_public
    topics/raw_secret
    topics/raw_sign
