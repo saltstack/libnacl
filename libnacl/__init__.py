@@ -14,9 +14,27 @@ def _get_nacl():
     '''
     # Import libsodium
     if sys.platform.startswith('win'):
-        return ctypes.cdll.LoadLibrary('libsodium')
+        try:
+            return ctypes.cdll.LoadLibrary('libsodium')
+        except OSError:
+            pass
+        try:
+            return ctypes.cdll.LoadLibrary('tweetnacl')
+        except OSError:
+            msg = ('Could not locate nacl lib, searched for libsodium, '
+                   'tweetnacl')
+            raise OSError(msg)
     elif sys.platform.startswith('darwin'):
-        return ctypes.cdll.LoadLibrary('libsodium.dylib')
+        try:
+            return ctypes.cdll.LoadLibrary('libsodium.dylib')
+        except OSError:
+            pass
+        try:
+            return ctypes.cdll.LoadLibrary('tweetnacl.dylib')
+        except OSError:
+            msg = ('Could not locate nacl lib, searched for libsodium, '
+                   'tweetnacl')
+            raise OSError(msg)
     else:
         try:
             return ctypes.cdll.LoadLibrary('libsodium.so')
