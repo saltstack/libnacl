@@ -2,20 +2,61 @@
 '''
 Wrap libsodium routines
 '''
-
+# pylint: disable=C0103
 # Import python libs
 import ctypes
 import sys
 
-# Import libsodium
-if sys.platform.startswith('win'):
-    nacl = ctypes.cdll.LoadLibrary('libsodium')
-elif sys.platform.startswith('darwin'):
-    nacl = ctypes.cdll.LoadLibrary('libsodium.dylib')
-else:
-    nacl = ctypes.cdll.LoadLibrary('libsodium.so')
 
-# pylint: disable=C0103
+def _get_nacl():
+    '''
+    Locate the nacl c libs to use
+    '''
+    # Import libsodium
+    if sys.platform.startswith('win'):
+        try:
+            return ctypes.cdll.LoadLibrary('libsodium')
+        except OSError:
+            pass
+        try:
+            return ctypes.cdll.LoadLibrary('tweetnacl')
+        except OSError:
+            msg = ('Could not locate nacl lib, searched for libsodium, '
+                   'tweetnacl')
+            raise OSError(msg)
+    elif sys.platform.startswith('darwin'):
+        try:
+            return ctypes.cdll.LoadLibrary('libsodium.dylib')
+        except OSError:
+            pass
+        try:
+            return ctypes.cdll.LoadLibrary('tweetnacl.dylib')
+        except OSError:
+            msg = ('Could not locate nacl lib, searched for libsodium, '
+                   'tweetnacl')
+            raise OSError(msg)
+    else:
+        try:
+            return ctypes.cdll.LoadLibrary('libsodium.so')
+        except OSError:
+            pass
+        try:
+            return ctypes.cdll.LoadLibrary('libsodium.so.5')
+        except OSError:
+            pass
+        try:
+            return ctypes.cdll.LoadLibrary('libsodium.so.4')
+        except OSError:
+            pass
+        try:
+            return ctypes.cdll.LoadLibrary('tweetnacl.so')
+        except OSError:
+            msg = ('Could not locate nacl lib, searched for libsodium.so, '
+                   'libsodium.so.5, libsodium.so.4, tweetnacl.so')
+            raise OSError(msg)
+
+nacl = _get_nacl()
+
 # Define constants
 crypto_box_SECRETKEYBYTES = nacl.crypto_box_secretkeybytes()
 crypto_box_PUBLICKEYBYTES = nacl.crypto_box_publickeybytes()
