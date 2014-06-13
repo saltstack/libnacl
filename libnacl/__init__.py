@@ -3,6 +3,8 @@
 Wrap libsodium routines
 '''
 # pylint: disable=C0103
+# Import libnacl libs
+from libnacl.version import __version__
 # Import python libs
 import ctypes
 import sys
