@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+# Import python libs
 import os
 import sys
+# Import libnacl libs
+from libnacl.version import __version__
 
 if 'USE_SETUPTOOLS' in os.environ or 'setuptools' in sys.modules:
     from setuptools import setup
@@ -11,7 +13,7 @@ else:
 
 NAME = 'libnacl'
 DESC = ('Python bindings for libsodium/tweetnacl based on ctypes')
-VERSION = '0.9.3'
+VERSION = __version__
 
 setup(name=NAME,
       version=VERSION,
