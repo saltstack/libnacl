@@ -56,7 +56,7 @@ class BaseKey(object):
             import json
             packaged = json.dumps(pre)
         cumask = os.umask(191)
-        with open(path, 'wb+') as fp_:
+        with open(path, 'w+') as fp_:
             fp_.write(packaged)
         os.umask(cumask)
 
