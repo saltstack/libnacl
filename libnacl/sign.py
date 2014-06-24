@@ -4,11 +4,11 @@ High level routines to maintain signing keys and to sign and verify messages
 '''
 # Import libancl libs
 import libnacl
-import libnacl.utils
+import libnacl.base
 import libnacl.encode
 
 
-class Signer(libnacl.utils.BaseKey):
+class Signer(libnacl.base.BaseKey):
     '''
     The tools needed to sign messages
     '''
@@ -38,7 +38,7 @@ class Signer(libnacl.utils.BaseKey):
         return libnacl.crypto_sign(msg, self.sk)[:libnacl.crypto_sign_BYTES]
 
 
-class Verifier(libnacl.utils.BaseKey):
+class Verifier(libnacl.base.BaseKey):
     '''
     Verify signed messages
     '''
