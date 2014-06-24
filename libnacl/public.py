@@ -6,7 +6,7 @@ High level classes and routines around public key encryption and decryption
 import libnacl
 import libnacl.utils
 import libnacl.encode
-
+import libnacl.dual
 
 class PublicKey(libnacl.utils.BaseKey):
     '''
@@ -39,9 +39,9 @@ class Box(object):
     cryptographic boxes
     '''
     def __init__(self, sk, pk):
-        if isinstance(sk, SecretKey):
+        if isinstance(sk, (SecretKey, libnacl.dual.DualSecret)):
             sk = sk.sk
-        if isinstance(pk, SecretKey):
+        if isinstance(pk, (SecretKey, libnacl.dual.DualSecret)):
             raise ValueError('Passed in secret key as public key')
         if isinstance(pk, PublicKey):
             pk = pk.pk
