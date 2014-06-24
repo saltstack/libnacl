@@ -5,7 +5,7 @@ import libnacl.dual
 # Import python libs
 import unittest
 
-class TestPublic(unittest.TestCase):
+class TestDual(unittest.TestCase):
     '''
     '''
     def test_secretkey(self):
@@ -40,3 +40,15 @@ class TestPublic(unittest.TestCase):
         bclear = alice_box.decrypt(bob_ctxt)
         self.assertEqual(msg, bclear)
 
+    def test_sign(self):
+        msg = (b'Well, that\'s no ordinary rabbit.  That\'s the most foul, '
+               b'cruel, and bad-tempered rodent you ever set eyes on.')
+        signer = libnacl.dual.DualSecret()
+        signed = signer.sign(msg)
+        signature = signer.signature(msg)
+        self.assertNotEqual(msg, signed)
+        veri = libnacl.sign.Verifier(signer.hex_vk())
+        verified = veri.verify(signed)
+        verified2 = veri.verify(signature + msg)
+        self.assertEqual(verified, msg)
+        self.assertEqual(verified2, msg)
