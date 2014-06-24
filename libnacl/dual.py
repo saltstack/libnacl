@@ -4,12 +4,12 @@ cryptographic and signing keys
 '''
 # import libnacl libs
 import libnacl
-import libnacl.utils
+import libnacl.base
 import libnacl.public
 import libnacl.sign
 
 
-class DualSecret(libnacl.utils.BaseKey):
+class DualSecret(libnacl.base.BaseKey):
     '''
     Manage crypt and sign keys in one object
     '''
