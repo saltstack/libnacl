@@ -15,18 +15,18 @@ class DualSecret(libnacl.utils.BaseKey):
     '''
     def __init__(self, crypt=None, sign=None):
         self.crypt = libnacl.public.SecretKey(crypt)
-        self.sign = libnacl.sign.Signer(sign)
+        self.signer = libnacl.sign.Signer(sign)
         self.sk = self.crypt.sk
-        self.seed = self.sign.seed
+        self.seed = self.signer.seed
 
     def sign(self, msg):
         '''
         Sign the given message
         '''
-        return self.sign.sign(msg)
+        return self.signer.sign(msg)
 
     def signature(self, msg):
         '''
         Return just the signature for the message
         '''
-        return self.sign.signature(msg)
+        return self.signer.signature(msg)
