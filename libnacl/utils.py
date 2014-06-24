@@ -8,7 +8,6 @@ import libnacl.sign
 import libnacl.dual
 
 # Import python libs
-import os
 import time
 import binascii
 
@@ -26,7 +25,7 @@ def load_key(path, serial='json'):
     elif serial == 'json':
         import json
         key_data = json.loads(packaged)
-    if 'priv' and 'seed' in key_data:
+    if 'priv' and 'sign' in key_data:
         return libnacl.dual.DualSecret(
                 libnacl.encode.hex_decode(key_data['priv']),
                 libnacl.encode.hex_decode(key_data['seed']))
