@@ -3,6 +3,9 @@
 # Import nacl libs
 import libnacl
 import libnacl.encode
+import libnacl.public
+import libnacl.sign
+import libnacl.dual
 
 # Import python libs
 import os
