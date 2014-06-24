@@ -28,7 +28,7 @@ def load_key(path, serial='json'):
     if 'priv' and 'sign' in key_data:
         return libnacl.dual.DualSecret(
                 libnacl.encode.hex_decode(key_data['priv']),
-                libnacl.encode.hex_decode(key_data['seed']))
+                libnacl.encode.hex_decode(key_data['sign']))
     elif 'priv' in key_data:
         return libnacl.public.SecretKey(
                 libnacl.encode.hex_decode(key_data['priv']))
