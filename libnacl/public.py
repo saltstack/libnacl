@@ -7,8 +7,10 @@ import libnacl
 import libnacl.utils
 import libnacl.encode
 import libnacl.dual
+import libnacl.base
 
-class PublicKey(libnacl.utils.BaseKey):
+
+class PublicKey(libnacl.base.BaseKey):
     '''
     This class is used to manage public keys
     '''
@@ -16,7 +18,7 @@ class PublicKey(libnacl.utils.BaseKey):
         self.pk = pk
 
 
-class SecretKey(libnacl.utils.BaseKey):
+class SecretKey(libnacl.base.BaseKey):
     '''
     This class is used to manage keypairs
     '''
