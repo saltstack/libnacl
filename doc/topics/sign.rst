@@ -10,6 +10,8 @@ To sign and verify messages use the Signer and Verifier classes:
 
 .. code-block:: python
 
+    import libnacl.sign
+
     msg = (b'Well, that\'s no ordinary rabbit.  That\'s the most foul, '
            b'cruel, and bad-tempered rodent you ever set eyes on.')
     # Create a Signer Object, if the key seed value is not passed in the
@@ -25,3 +27,17 @@ To sign and verify messages use the Signer and Verifier classes:
     # Verify the message!
     verified = veri.verify(signed)
     verified2 = veri.verify(signature + msg)
+
+Saving Keys to Disk
+===================
+
+All libnacl key objects can be safely saved to disk via the save method. This
+method changes the umask before saving the key file to ensure that the saved
+file can only be read by the user creating it and cannot be written to.
+
+.. code-block:: python
+
+    import libnacl.sign
+
+    signer = libnacl.sign.Signer()
+    signer.save('/etc/nacl/signer.key')
