@@ -27,7 +27,7 @@ class SecretKey(libnacl.base.BaseKey):
         If a secret key is not passed in then it will be generated
         '''
         if sk is None:
-            self.sk, self.pk = libnacl.crypto_box_keypair()
+            self.pk, self.sk = libnacl.crypto_box_keypair()
         elif len(sk) == libnacl.crypto_box_SECRETKEYBYTES:
             self.sk = sk
             self.pk = libnacl.crypto_scalarmult_base(sk)
@@ -48,7 +48,7 @@ class Box(object):
         if isinstance(pk, PublicKey):
             pk = pk.pk
         if pk and sk:
-            self._k = libnacl.crypto_box_beforenm(sk, pk)
+            self._k = libnacl.crypto_box_beforenm(pk, sk)
 
     def encrypt(self, msg, nonce=None, pack_nonce=True):
         '''
