@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Import libnacl libs
 import libnacl.dual
 import libnacl.utils

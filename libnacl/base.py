@@ -2,10 +2,10 @@
 '''
 Impliment the base key object for other keys to inherit convenience functions
 '''
-# Import libnacl routines
+# Import libnacl libs
 import libnacl.encode
 
-# Import python routines
+# Import python libs
 import os
 
 
@@ -58,5 +58,3 @@ class BaseKey(object):
         with open(path, 'w+') as fp_:
             fp_.write(packaged)
         os.umask(cumask)
-
-
