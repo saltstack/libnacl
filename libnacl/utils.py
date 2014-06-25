@@ -24,7 +24,7 @@ def load_key(path, serial='json'):
         key_data = msgpack.loads(packaged)
     elif serial == 'json':
         import json
-        key_data = json.loads(packaged)
+        key_data = json.loads(packaged.decode(encoding='UTF-8'))
     if 'priv' and 'sign' in key_data:
         return libnacl.dual.DualSecret(
                 libnacl.encode.hex_decode(key_data['priv']),

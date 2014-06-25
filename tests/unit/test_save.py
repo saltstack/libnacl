@@ -5,6 +5,7 @@ import libnacl.utils
 
 # Import pythonlibs
 import os
+import stat
 import unittest
 import tempfile
 
@@ -48,5 +49,5 @@ class TestSave(unittest.TestCase):
         fh_, bob_path = tempfile.mkstemp()
         bob.save(bob_path)
         stats = os.stat(bob_path)
-        print(stats)
+        self.assertEqual(stats[stat.ST_MODE], 33152)
         os.remove(bob_path)
