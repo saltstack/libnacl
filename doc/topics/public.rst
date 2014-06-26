@@ -85,3 +85,17 @@ To manage only the public key end, a public key object exists:
 
     raw_pk = tom.pk
     hex_pk = tom.hex_pk()
+
+Saving Keys to Disk
+===================
+
+All libnacl key objects can be safely saved to disk via the save method. This
+method changes the umask before saving the key file to ensure that the saved
+file can only be read by the user creating it and cannot be written to.
+
+.. code-block:: python
+
+    import libnacl.public
+
+    fred = libnacl.public.SecretKey()
+    fred.save('/etc/nacl/fred.key')

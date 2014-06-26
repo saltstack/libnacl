@@ -5,9 +5,10 @@ Utilities to make secret box encryption simple
 # Import libnacl
 import libnacl
 import libnacl.utils
+import libnacl.base
 
 
-class SecretBox(libnacl.utils.BaseKey):
+class SecretBox(libnacl.base.BaseKey):
     '''
     Manage symetric encryption using the salsa20 algorithm
     '''

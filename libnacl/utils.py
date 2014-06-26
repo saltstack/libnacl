@@ -3,33 +3,44 @@
 # Import nacl libs
 import libnacl
 import libnacl.encode
+import libnacl.public
+import libnacl.sign
+import libnacl.dual
 
 # Import python libs
 import time
 import binascii
 
 
-class BaseKey(object):
+def load_key(path, serial='json'):
     '''
-    Include methods for key management convenience
+    Read in a key from a file and return the applicable key object based on
+    the contents of the file
     '''
-    def hex_sk(self):
-        if hasattr(self, 'sk'):
-            return libnacl.encode.hex_encode(self.sk)
-        else:
-            return ''
-
-    def hex_pk(self):
-        if hasattr(self, 'pk'):
-            return libnacl.encode.hex_encode(self.pk)
-
-    def hex_vk(self):
-        if hasattr(self, 'vk'):
-            return libnacl.encode.hex_encode(self.vk)
-
-    def hex_seed(self):
-        if hasattr(self, 'seed'):
-            return libnacl.encode.hex_encode(self.seed)
+    with open(path, 'rb') as fp_:
+        packaged = fp_.read()
+    if serial == 'msgpack':
+        import msgpack
+        key_data = msgpack.loads(packaged)
+    elif serial == 'json':
+        import json
+        key_data = json.loads(packaged.decode(encoding='UTF-8'))
+    if 'priv' and 'sign' in key_data:
+        return libnacl.dual.DualSecret(
+                libnacl.encode.hex_decode(key_data['priv']),
+                libnacl.encode.hex_decode(key_data['sign']))
+    elif 'priv' in key_data:
+        return libnacl.public.SecretKey(
+                libnacl.encode.hex_decode(key_data['priv']))
+    elif 'sign' in key_data:
+        return libnacl.sign.Signer(
+                libnacl.encode.hex_decode(key_data['sign']))
+    elif 'pub' in key_data:
+        return libnacl.public.PublicKey(
+                libnacl.encode.hex_decode(key_data['pub']))
+    elif 'verify' in key_data:
+        return libnacl.sign.Verifier(key_data['verify'])
+    raise ValueError('Found no key data')
 
 
 def salsa_key():

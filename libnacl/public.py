@@ -6,9 +6,11 @@ High level classes and routines around public key encryption and decryption
 import libnacl
 import libnacl.utils
 import libnacl.encode
+import libnacl.dual
+import libnacl.base
 
 
-class PublicKey(libnacl.utils.BaseKey):
+class PublicKey(libnacl.base.BaseKey):
     '''
     This class is used to manage public keys
     '''
@@ -16,7 +18,7 @@ class PublicKey(libnacl.utils.BaseKey):
         self.pk = pk
 
 
-class SecretKey(libnacl.utils.BaseKey):
+class SecretKey(libnacl.base.BaseKey):
     '''
     This class is used to manage keypairs
     '''
@@ -25,7 +27,7 @@ class SecretKey(libnacl.utils.BaseKey):
         If a secret key is not passed in then it will be generated
         '''
         if sk is None:
-            self.sk, self.pk = libnacl.crypto_box_keypair()
+            self.pk, self.sk = libnacl.crypto_box_keypair()
         elif len(sk) == libnacl.crypto_box_SECRETKEYBYTES:
             self.sk = sk
             self.pk = libnacl.crypto_scalarmult_base(sk)
@@ -39,14 +41,14 @@ class Box(object):
     cryptographic boxes
     '''
     def __init__(self, sk, pk):
-        if isinstance(sk, SecretKey):
+        if isinstance(sk, (SecretKey, libnacl.dual.DualSecret)):
             sk = sk.sk
-        if isinstance(pk, SecretKey):
+        if isinstance(pk, (SecretKey, libnacl.dual.DualSecret)):
             raise ValueError('Passed in secret key as public key')
         if isinstance(pk, PublicKey):
             pk = pk.pk
         if pk and sk:
-            self._k = libnacl.crypto_box_beforenm(sk, pk)
+            self._k = libnacl.crypto_box_beforenm(pk, sk)
 
     def encrypt(self, msg, nonce=None, pack_nonce=True):
         '''
