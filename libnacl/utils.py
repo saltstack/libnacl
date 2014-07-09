@@ -58,7 +58,8 @@ def time_nonce(size=24):
     timestamp and appending 4 random chars
     '''
     size = max(int(size), 16)
-    front =  "{0:0x}".format(int(time.time() * 1000000)) # microseconds
+    front =  "{0:0x}".format(int(time.time() * 1000000))
     extra = size - len(front)
     back = binascii.hexlify(libnacl.randombytes(extra // 2 + extra % 2))
-    return ((front + back)[:size])
+    nonce = ((front + back.decode(encoding='UTF-8'))[:size])
+    return nonce.encode(encoding='UTF-8')
