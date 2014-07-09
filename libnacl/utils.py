@@ -50,14 +50,15 @@ def salsa_key():
     return libnacl.randombytes(libnacl.crypto_secretbox_KEYBYTES)
 
 
-def time_nonce():
+def time_nonce(size=24):
     '''
     Generates a safe nonce
 
     The nonce generated here is done by grabbing the 20 digit microsecond
     timestamp and appending 4 random chars
     '''
-    nonce = '{0}{1}'.format(
-            str(int(time.time() * 1000000)),
-            binascii.hexlify(libnacl.randombytes(24)).decode(encoding='UTF-8'))
-    return nonce.encode(encoding='UTF-8')[:libnacl.crypto_box_NONCEBYTES]
+    size = max(int(size), 16)
+    front =  "{0:0x}".format(int(time.time() * 1000000)) # microseconds
+    extra = size - len(front)
+    back = binascii.hexlify(libnacl.randombytes(extra // 2 + extra % 2))
+    return ((front + back)[:size])
