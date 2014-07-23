@@ -13,7 +13,7 @@ Contents:
    topics/raw_secret
    topics/raw_sign
    topics/raw_hash
-   topics/releases/*
+   topics/releases/index
 
 
 Indices and tables

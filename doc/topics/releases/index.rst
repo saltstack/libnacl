@@ -2,7 +2,7 @@
 Release notes
 =============
 
-.. releasestree::
+.. toctree::
     :maxdepth: 1
     :glob:
 
