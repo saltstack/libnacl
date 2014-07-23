@@ -9,6 +9,7 @@ Contents:
    topics/public
    topics/secret
    topics/sign
+   topics/dual
    topics/raw_public
    topics/raw_secret
    topics/raw_sign
