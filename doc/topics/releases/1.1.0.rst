@@ -1,0 +1,21 @@
+===========================
+libnacl 1.1.0 Release Notes
+===========================
+
+This release introduces the addition of high level classes that make using
+NaCl even easier.
+
+High level NaCl
+===============
+
+The addition of the high level classes give a more pythonic abstraction to
+using the underlying NaCl cryptography.
+
+These classes can be found in libnacl.public, libnacl.sign and libnacl.secret.
+
+Easy Nonce Generation
+=====================
+
+The new classes will automatically generate a nonce value per encrypted
+message. The default nonce which is generated can be found in
+`libnacl.utils.time_nonce`.
