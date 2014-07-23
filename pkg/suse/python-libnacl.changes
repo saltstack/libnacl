@@ -1,0 +1,15 @@
+-------------------------------------------------------------------
+Wed Jul  2 18:28:08 UTC 2014 - aboe76@gmail.com
+
+- Updated to 1.1.0
+
+-------------------------------------------------------------------
+Fri Jun 20 15:10:52 UTC 2014 - aboe76@gmail.com
+
+- Simplified BuildRequirements to libsodium-devel
+
+-------------------------------------------------------------------
+Mon Jun  9 10:53:12 UTC 2014 - aboe76@gmail.com
+
+- initial package
+

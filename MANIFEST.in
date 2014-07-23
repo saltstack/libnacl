@@ -1,0 +1,6 @@
+include LICENSE
+include AUTHORS
+include README.rst
+recursive-include tests *
+recursive-include doc *
+recursive-include pkg *
