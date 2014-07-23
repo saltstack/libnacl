@@ -1,0 +1,22 @@
+===========================
+libnacl 1.2.0 Release Notes
+===========================
+
+This release introduces the DualKey class, secure key saving and loading, as
+well as enhancements to the time_nonce function.
+
+Dual Key Class
+==============
+
+Dual Keys are classes which can encrypt and sign data. These classes generate
+and maintain both Curve25519 and Ed25519 keys, as well as all methods for both
+encryption and signing.
+
+Time Nonce Improvements
+=======================
+
+The original time nonce routine used the first 20 chars of the 24 char nonce
+for the microsecond timestamp (based on salt's jid), leaving 4 chars for random
+data. This new nonce uses far fewer chars for the timestamp by hex encoding the
+float of microseconds into just 13 chars, leaving 11 chars of random data. This
+makes the default nonce safer and more secure.
