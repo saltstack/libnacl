@@ -1,0 +1,13 @@
+===========================
+libnacl 1.0.0 Release Notes
+===========================
+
+This is the first stable release of libnacl, the python bindings for Daniel J.
+Bernstein's nacl library via libsodium or tweetnacl.
+
+NaCl Base Functions
+===================
+
+This release features direct access to the underlying functions from nacl
+exposed via importing libnacl. These functions are fully documented and can
+be safely used directly.
