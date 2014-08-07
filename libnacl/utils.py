@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import struct
+import time
+
 # Import nacl libs
 import libnacl
 import libnacl.encode
@@ -52,3 +55,14 @@ def rand_nonce():
     as crypto_box_NONCEBYTES
     '''
     return libnacl.randombytes(libnacl.crypto_box_NONCEBYTES)
+
+
+def time_nonce():
+    '''
+    Generates and returns a nonce as in rand_nonce() but using a timestamp for the first 8 bytes.
+    
+    This function now exists mostly for backwards compatibility, as rand_nonce() is usually preferred.
+    '''
+    nonce = rand_nonce()
+    return (struct.pack('=d', time.time()) + nonce)[:len(nonce)]
+
