@@ -19,8 +19,7 @@ have access to the same shared secret key. First generate a secret key, libnacl
 provides a convenience function for the generation of this key called
 libnacl.utils.salsa_key, then generate a nonce, a new nonce should be used
 every time a new message is encrypted. A convenience function to create a unique
-nonce based on a microsecond timestamp plus 4 random characters is provided
-by the libnacl.utils.time_nonce function:
+nonce based on random bytes:
 
 .. code-block:: python
 
@@ -28,7 +27,7 @@ by the libnacl.utils.time_nonce function:
     import libnacl.utils
 
     key = libnacl.utils.salsa_key()
-    nonce = libnacl.utils.time_nonce()
+    nonce = libnacl.utils.rand_nonce()
 
 With the key and nonce in hand, the cryptographic secret box can now be
 generated:
@@ -53,7 +52,7 @@ When placed all together the sequence looks like this:
     import libnacl.utils
 
     key = libnacl.utils.salsa_key()
-    nonce = libnacl.utils.time_nonce()
+    nonce = libnacl.utils.rand_nonce()
 
     msg = 'Who are you who are so wise in the ways of science?'
     box = libnacl.crypto_secretbox(msg, nonce, key)
