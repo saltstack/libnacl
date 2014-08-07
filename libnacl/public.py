@@ -53,11 +53,11 @@ class Box(object):
     def encrypt(self, msg, nonce=None, pack_nonce=True):
         '''
         Encrypt the given message with the given nonce, if the nonce is not
-        provided it will be generated from the libnacl.utils.time_nonce
+        provided it will be generated from the libnacl.utils.rand_nonce
         function
         '''
         if nonce is None:
-            nonce = libnacl.utils.time_nonce()
+            nonce = libnacl.utils.rand_nonce()
         elif len(nonce) != libnacl.crypto_box_NONCEBYTES:
             raise ValueError('Invalid nonce size')
         ctxt = libnacl.crypto_box_afternm(msg, nonce, self._k)
