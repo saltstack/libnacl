@@ -60,7 +60,7 @@ def rand_nonce():
 def time_nonce():
     '''
     Generates and returns a nonce as in rand_nonce() but using a timestamp for the first 8 bytes.
-    
+
     This function now exists mostly for backwards compatibility, as rand_nonce() is usually preferred.
     '''
     nonce = rand_nonce()
