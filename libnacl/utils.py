@@ -7,10 +7,6 @@ import libnacl.public
 import libnacl.sign
 import libnacl.dual
 
-# Import python libs
-import time
-import binascii
-
 
 def load_key(path, serial='json'):
     '''
@@ -50,16 +46,9 @@ def salsa_key():
     return libnacl.randombytes(libnacl.crypto_secretbox_KEYBYTES)
 
 
-def time_nonce(size=24):
+def rand_nonce():
     '''
-    Generates a safe nonce
-
-    The nonce generated here is done by grabbing the 20 digit microsecond
-    timestamp and appending 4 random chars
+    Generates and returns a random bytestring of the size defined in libsodium
+    as crypto_box_NONCEBYTES
     '''
-    size = max(int(size), 16)
-    front = '{0:0x}'.format(int(time.time() * 1000000))
-    extra = size - len(front)
-    back = binascii.hexlify(libnacl.randombytes(extra // 2 + extra % 2))
-    nonce = ((front + back.decode(encoding='UTF-8'))[:size])
-    return nonce.encode(encoding='UTF-8')
+    return libnacl.randombytes(libnacl.crypto_box_NONCEBYTES)
