@@ -29,7 +29,6 @@ to execute:
 
     Every encryption routine requires a nonce. The nonce is a 24 char string
     that must never be used twice with the same keypair. If no nonce is passed
-    in then a nonce is generated based on the time of the encryption plus
-    random data.
+    in then a nonce is generated based on random data.
     If it is desired to generate a nonce manually this can be done by passing
     it into the encrypt method.
