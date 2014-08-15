@@ -58,7 +58,8 @@ def _get_nacl():
             return ctypes.cdll.LoadLibrary('tweetnacl.so')
         except OSError:
             msg = ('Could not locate nacl lib, searched for libsodium.so, '
-                   'libsodium.so.5, libsodium.so.4, tweetnacl.so')
+                   'libsodium.so.10, libsodium.so.5, libsodium.so.4, '
+                   'tweetnacl.so')
             raise OSError(msg)
 
 nacl = _get_nacl()
