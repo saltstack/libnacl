@@ -40,7 +40,7 @@ class BaseKey(object):
         pk = self.hex_pk()
         vk = self.hex_vk()
         seed = self.hex_seed()
-        if sk:
+        if sk and pk:
             pre['priv'] = sk.decode(encoding='UTF-8')
         if pk:
             pre['pub'] = pk.decode(encoding='UTF-8')
