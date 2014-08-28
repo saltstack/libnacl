@@ -43,6 +43,10 @@ def _get_nacl():
         except OSError:
             pass
         try:
+            return ctypes.cdll.LoadLibrary('libsodium.so.13')
+        except OSError:
+            pass
+        try:
             return ctypes.cdll.LoadLibrary('libsodium.so.10')
         except OSError:
             pass
