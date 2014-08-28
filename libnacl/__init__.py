@@ -353,7 +353,7 @@ def crypto_auth(msg, key):
     using a given secret key
     '''
     tok = ctypes.create_string_buffer(crypto_auth_BYTES)
-    ret = nacl.crypto_auth(tok, msg, len(msg), key)
+    ret = nacl.crypto_auth(tok, msg, ctypes.c_ulonglong(len(msg)), key)
     if ret:
         raise ValueError('Failed to auth msg')
     return tok.raw[:crypto_auth_BYTES]
@@ -365,7 +365,7 @@ def crypto_auth_verify(msg, key):
     message and key
     '''
     tok = ctypes.create_string_buffer(crypto_auth_BYTES)
-    ret = nacl.crypto_auth_verify(tok, msg, len(msg), key)
+    ret = nacl.crypto_auth_verify(tok, msg, ctypes.c_ulonglong(len(msg)), key)
     if ret:
         raise ValueError('Failed to auth msg')
     return tok.raw[:crypto_auth_BYTES]
@@ -379,7 +379,7 @@ def crypto_onetimeauth(msg, key):
     a given secret key
     '''
     tok = ctypes.create_string_buffer(crypto_onetimeauth_BYTES)
-    ret = nacl.crypto_onetimeauth(tok, msg, len(msg), key)
+    ret = nacl.crypto_onetimeauth(tok, msg, ctypes.c_ulonglong(len(msg)), key)
     if ret:
         raise ValueError('Failed to auth msg')
     return tok.raw[:crypto_onetimeauth_BYTES]
@@ -391,7 +391,7 @@ def crypto_onetimeauth_verify(msg, key):
     message and key
     '''
     tok = ctypes.create_string_buffer(crypto_onetimeauth_BYTES)
-    ret = nacl.crypto_onetimeauth(tok, msg, len(msg), key)
+    ret = nacl.crypto_onetimeauth(tok, msg, ctypes.c_ulonglong(len(msg)), key)
     if ret:
         raise ValueError('Failed to auth msg')
     return tok.raw[:crypto_onetimeauth_BYTES]
@@ -404,7 +404,7 @@ def crypto_hash(msg):
     Compute a hash of the given message
     '''
     hbuf = ctypes.create_string_buffer(crypto_hash_BYTES)
-    nacl.crypto_hash(hbuf, msg, len(msg))
+    nacl.crypto_hash(hbuf, msg, ctypes.c_ulonglong(len(msg)))
     return hbuf.raw
 
 
@@ -413,7 +413,7 @@ def crypto_hash_sha256(msg):
     Compute the sha256 hash of the given message
     '''
     hbuf = ctypes.create_string_buffer(crypto_hash_sha256_BYTES)
-    nacl.crypto_hash_sha256(hbuf, msg, len(msg))
+    nacl.crypto_hash_sha256(hbuf, msg, ctypes.c_ulonglong(len(msg)))
     return hbuf.raw
 
 
@@ -422,7 +422,7 @@ def crypto_hash_sha512(msg):
     Compute the sha512 hash of the given message
     '''
     hbuf = ctypes.create_string_buffer(crypto_hash_sha512_BYTES)
-    nacl.crypto_hash_sha512(hbuf, msg, len(msg))
+    nacl.crypto_hash_sha512(hbuf, msg, ctypes.c_ulonglong(len(msg)))
     return hbuf.raw
 
 
@@ -474,9 +474,8 @@ def randombytes(size):
     '''
     Return a string of random bytes of the given size
     '''
-    size = int(size)
     buf = ctypes.create_string_buffer(size)
-    nacl.randombytes(buf, size)
+    nacl.randombytes(buf, ctypes.c_ulonglong(size))
     return buf.raw
 
 
