@@ -9,6 +9,10 @@ from libnacl.version import __version__
 import ctypes
 import sys
 
+# libsodium likes to change the soname frequently, this should work for the
+# forseeable future but we'll need to keep an eye on this.
+__MAX_SONAME_VER = 100
+
 
 def _get_nacl():
     '''
@@ -42,28 +46,19 @@ def _get_nacl():
             return ctypes.cdll.LoadLibrary('libsodium.so')
         except OSError:
             pass
-        try:
-            return ctypes.cdll.LoadLibrary('libsodium.so.13')
-        except OSError:
-            pass
-        try:
-            return ctypes.cdll.LoadLibrary('libsodium.so.10')
-        except OSError:
-            pass
-        try:
-            return ctypes.cdll.LoadLibrary('libsodium.so.5')
-        except OSError:
-            pass
-        try:
-            return ctypes.cdll.LoadLibrary('libsodium.so.4')
-        except OSError:
-            pass
+        for soname_ver in xrange(4, __MAX_SONAME_VER + 1):
+            try:
+                return ctypes.cdll.LoadLibrary(
+                    'libsodium.so.{0}'.format(soname_ver)
+                )
+            except OSError:
+                pass
         try:
             return ctypes.cdll.LoadLibrary('tweetnacl.so')
         except OSError:
             msg = ('Could not locate nacl lib, searched for libsodium.so, '
-                   'libsodium.so.10, libsodium.so.5, libsodium.so.4, '
-                   'tweetnacl.so')
+                   'libsodium.so.X (for X <= {0}), and tweetnacl.so'
+                   .format(__MAX_SONAME_VER))
             raise OSError(msg)
 
 nacl = _get_nacl()
