@@ -53,7 +53,7 @@ copyright = u'2014, Thomas S Hatch'
 # built documents.
 #
 # The short X.Y version.
-version = '1.3.3'
+version = '1.3.4'
 # The full version, including alpha/beta/rc tags.
 release = version
 
