@@ -1,0 +1,7 @@
+===========================
+libnacl 1.3.4 Release Notes
+===========================
+
+* Change the default ctype values to be more accurate and efficient
+* Update soname detection on Linux for libsodium 0.7.0
+* Make soname detection a little more future proof
