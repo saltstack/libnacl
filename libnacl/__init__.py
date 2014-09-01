@@ -46,7 +46,7 @@ def _get_nacl():
             return ctypes.cdll.LoadLibrary('libsodium.so')
         except OSError:
             pass
-        for soname_ver in xrange(4, __MAX_SONAME_VER + 1):
+        for soname_ver in range(4, __MAX_SONAME_VER + 1):
             try:
                 return ctypes.cdll.LoadLibrary(
                     'libsodium.so.{0}'.format(soname_ver)
