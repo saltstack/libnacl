@@ -13,7 +13,7 @@
 %global srcname libnacl
 
 Name:           python-%{srcname}
-Version:        1.3.2
+Version:        1.3.5
 Release:        1%{?dist}
 Summary:        Python bindings for libsodium/tweetnacl based on ctypes
 
@@ -131,6 +131,12 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Thu Sep  4 2014 Erik Johnson <erik@saltstack.com> - 1.3.5-1
+- Updated to 1.3.5
+
+* Fri Aug 22 2014 Erik Johnson <erik@saltstack.com> - 1.3.3-1
+- Updated to 1.3.3
+
 * Fri Aug  8 2014 Erik Johnson <erik@saltstack.com> - 1.3.2-1
 - Updated to 1.3.2
 
