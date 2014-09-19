@@ -499,7 +499,7 @@ def randombytes_random():
     '''
     Return a random 32-bit unsigned value
     '''
-    return nacl.randombytes_random().raw
+    return nacl.randombytes_random()
 
 
 def randombytes_stir():
@@ -516,7 +516,7 @@ def randombytes_uniform(upper_bound):
     '''
     Return a value between 0 and upper_bound using a uniform distribution
     '''
-    return nacl.randombytes_uniform(upper_bound).raw
+    return nacl.randombytes_uniform(upper_bound)
 
 
 # Utility functions
