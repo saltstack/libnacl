@@ -32,7 +32,7 @@ SecretKey encryption.
 
     import libnacl.utils
 
-    key = libnacl.utils.salsa_key
+    key = libnacl.utils.salsa_key()
 
 This routine is only required with the raw encryption functions, as the
 `libnacl.secret.SecretBox` will generate the key automatically.
