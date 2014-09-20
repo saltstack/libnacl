@@ -2,7 +2,7 @@
 Dual Key Management
 ===================
 
-The libnacl library abstracts a "Dual Key" model. Teh Dual Key creates a single
+The libnacl library abstracts a "Dual Key" model. The Dual Key creates a single
 key management object that can be used for both signing and encrypting, it
 generates and maintains a Curve25519 encryption key pair and an ED25519 signing
 keypair. All methods for encryption and signing work with and from Dual Keys.

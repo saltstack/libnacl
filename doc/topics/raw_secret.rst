@@ -2,7 +2,7 @@
 Raw Secret Key Encryption
 =========================
 
-.. note
+.. note::
 
     While these routines are perfectly safe, higher level convenience
     wrappers are under development to make these routines easier.
@@ -10,6 +10,7 @@ Raw Secret Key Encryption
 Secret key encryption is high speed encryption based on a shared secret key.
 
 .. note::
+
     The nacl library uses the salsa20 stream encryption cipher for secret key
     encryption, more information about the salsa20 cipher can be found here:
     http://cr.yp.to/salsa20.html
