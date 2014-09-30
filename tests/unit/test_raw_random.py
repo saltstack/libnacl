@@ -13,7 +13,7 @@ class TestRandomBytes(unittest.TestCase):
     def test_randombytes_uniform(self):
         self.assertIsInstance(libnacl.randombytes_uniform(200), int)
 
-        freq = {libnacl.randombytes_uniform(256): 1 for _ in xrange(65536)}
+        freq = {libnacl.randombytes_uniform(256): 1 for _ in range(65536)}
 
         self.assertEqual(256, len(freq))
         self.assertTrue(all(freq.values()))
