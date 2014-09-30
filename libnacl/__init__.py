@@ -22,6 +22,13 @@ def _get_nacl():
             return ctypes.cdll.LoadLibrary('libsodium')
         except OSError:
             pass
+        for soname_ver in __SONAMES:
+            try:
+                return ctypes.cdll.LoadLibrary(
+                    'libsodium-{0}'.format(soname_ver)
+                )
+            except OSError:
+                pass
         try:
             return ctypes.cdll.LoadLibrary('tweetnacl')
         except OSError:
