@@ -546,4 +546,6 @@ def sodium_version_string():
     '''
     Return the version string
     '''
-    return nacl.sodium_version_string()
+    func = nacl.sodium_version_string
+    func.restype = ctypes.c_char_p
+    return func()
