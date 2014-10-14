@@ -528,22 +528,24 @@ def randombytes_uniform(upper_bound):
 
 # Utility functions
 
-def sodium_version_major():
+def sodium_library_version_major():
     '''
     Return the major version number
     '''
-    return nacl.sodium_version_major()
+    return nacl.sodium_library_version_major()
 
 
-def sodium_version_minor():
+def sodium_library_version_minor():
     '''
     Return the minor version number
     '''
-    return nacl.sodium_version_minor()
+    return nacl.sodium_library_version_minor()
 
 
 def sodium_version_string():
     '''
     Return the version string
     '''
-    return nacl.sodium_version_string()
+    func = nacl.sodium_version_string
+    func.restype = ctypes.c_char_p
+    return func()
