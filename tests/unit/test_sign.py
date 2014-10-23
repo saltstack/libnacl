@@ -20,3 +20,4 @@ class TestSigning(unittest.TestCase):
         verified2 = veri.verify(signature + msg)
         self.assertEqual(verified, msg)
         self.assertEqual(verified2, msg)
+

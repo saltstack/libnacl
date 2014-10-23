@@ -51,6 +51,11 @@ def _get_nacl():
             return ctypes.cdll.LoadLibrary('libsodium.so')
         except OSError:
             pass
+        try:
+            return ctypes.cdll.LoadLibrary('/usr/local/lib/libsodium.so')
+        except OSERROR:
+            pass
+
         for soname_ver in __SONAMES:
             try:
                 return ctypes.cdll.LoadLibrary(
@@ -263,7 +268,7 @@ def crypto_sign_seed_keypair(seed):
     ret = nacl.crypto_sign_seed_keypair(vk, sk, seed)
     if ret:
         raise CryptError('Failed to generate keypair from seed')
-    return vk.raw, sk.raw
+    return (vk.raw, sk.raw)
 
 
 def crypto_sign_open(sig, vk):
