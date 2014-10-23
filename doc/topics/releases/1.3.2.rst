@@ -1,0 +1,5 @@
+===========================
+libnacl 1.3.2 Release Notes
+===========================
+
+Add detection of the libsodium.so.10 lib created by libsodium 0.6

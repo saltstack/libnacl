@@ -9,6 +9,8 @@ from libnacl.version import __version__
 import ctypes
 import sys
 
+__SONAMES = (13, 10, 5, 4)
+
 
 def _get_nacl():
     '''
@@ -20,6 +22,13 @@ def _get_nacl():
             return ctypes.cdll.LoadLibrary('libsodium')
         except OSError:
             pass
+        for soname_ver in __SONAMES:
+            try:
+                return ctypes.cdll.LoadLibrary(
+                    'libsodium-{0}'.format(soname_ver)
+                )
+            except OSError:
+                pass
         try:
             return ctypes.cdll.LoadLibrary('tweetnacl')
         except OSError:
@@ -42,19 +51,20 @@ def _get_nacl():
             return ctypes.cdll.LoadLibrary('libsodium.so')
         except OSError:
             pass
-        try:
-            return ctypes.cdll.LoadLibrary('libsodium.so.5')
-        except OSError:
-            pass
-        try:
-            return ctypes.cdll.LoadLibrary('libsodium.so.4')
-        except OSError:
-            pass
+        for soname_ver in __SONAMES:
+            try:
+                return ctypes.cdll.LoadLibrary(
+                    'libsodium.so.{0}'.format(soname_ver)
+                )
+            except OSError:
+                pass
         try:
             return ctypes.cdll.LoadLibrary('tweetnacl.so')
         except OSError:
-            msg = ('Could not locate nacl lib, searched for libsodium.so, '
-                   'libsodium.so.5, libsodium.so.4, tweetnacl.so')
+            msg = 'Could not locate nacl lib, searched for libsodium.so, '
+            for soname_ver in __SONAMES:
+                msg += 'libsodium.so.{0}, '.format(soname_ver)
+            msg += ' and tweetnacl.so'
             raise OSError(msg)
 
 nacl = _get_nacl()
@@ -348,7 +358,7 @@ def crypto_auth(msg, key):
     using a given secret key
     '''
     tok = ctypes.create_string_buffer(crypto_auth_BYTES)
-    ret = nacl.crypto_auth(tok, msg, len(msg), key)
+    ret = nacl.crypto_auth(tok, msg, ctypes.c_ulonglong(len(msg)), key)
     if ret:
         raise ValueError('Failed to auth msg')
     return tok.raw[:crypto_auth_BYTES]
@@ -360,7 +370,7 @@ def crypto_auth_verify(msg, key):
     message and key
     '''
     tok = ctypes.create_string_buffer(crypto_auth_BYTES)
-    ret = nacl.crypto_auth_verify(tok, msg, len(msg), key)
+    ret = nacl.crypto_auth_verify(tok, msg, ctypes.c_ulonglong(len(msg)), key)
     if ret:
         raise ValueError('Failed to auth msg')
     return tok.raw[:crypto_auth_BYTES]
@@ -374,7 +384,7 @@ def crypto_onetimeauth(msg, key):
     a given secret key
     '''
     tok = ctypes.create_string_buffer(crypto_onetimeauth_BYTES)
-    ret = nacl.crypto_onetimeauth(tok, msg, len(msg), key)
+    ret = nacl.crypto_onetimeauth(tok, msg, ctypes.c_ulonglong(len(msg)), key)
     if ret:
         raise ValueError('Failed to auth msg')
     return tok.raw[:crypto_onetimeauth_BYTES]
@@ -386,7 +396,7 @@ def crypto_onetimeauth_verify(msg, key):
     message and key
     '''
     tok = ctypes.create_string_buffer(crypto_onetimeauth_BYTES)
-    ret = nacl.crypto_onetimeauth(tok, msg, len(msg), key)
+    ret = nacl.crypto_onetimeauth(tok, msg, ctypes.c_ulonglong(len(msg)), key)
     if ret:
         raise ValueError('Failed to auth msg')
     return tok.raw[:crypto_onetimeauth_BYTES]
@@ -399,7 +409,7 @@ def crypto_hash(msg):
     Compute a hash of the given message
     '''
     hbuf = ctypes.create_string_buffer(crypto_hash_BYTES)
-    nacl.crypto_hash(hbuf, msg, len(msg))
+    nacl.crypto_hash(hbuf, msg, ctypes.c_ulonglong(len(msg)))
     return hbuf.raw
 
 
@@ -408,7 +418,7 @@ def crypto_hash_sha256(msg):
     Compute the sha256 hash of the given message
     '''
     hbuf = ctypes.create_string_buffer(crypto_hash_sha256_BYTES)
-    nacl.crypto_hash_sha256(hbuf, msg, len(msg))
+    nacl.crypto_hash_sha256(hbuf, msg, ctypes.c_ulonglong(len(msg)))
     return hbuf.raw
 
 
@@ -417,7 +427,7 @@ def crypto_hash_sha512(msg):
     Compute the sha512 hash of the given message
     '''
     hbuf = ctypes.create_string_buffer(crypto_hash_sha512_BYTES)
-    nacl.crypto_hash_sha512(hbuf, msg, len(msg))
+    nacl.crypto_hash_sha512(hbuf, msg, ctypes.c_ulonglong(len(msg)))
     return hbuf.raw
 
 
@@ -469,9 +479,8 @@ def randombytes(size):
     '''
     Return a string of random bytes of the given size
     '''
-    size = int(size)
     buf = ctypes.create_string_buffer(size)
-    nacl.randombytes(buf, size)
+    nacl.randombytes(buf, ctypes.c_ulonglong(size))
     return buf.raw
 
 
@@ -497,7 +506,7 @@ def randombytes_random():
     '''
     Return a random 32-bit unsigned value
     '''
-    return nacl.randombytes_random().raw
+    return nacl.randombytes_random()
 
 
 def randombytes_stir():
@@ -514,27 +523,29 @@ def randombytes_uniform(upper_bound):
     '''
     Return a value between 0 and upper_bound using a uniform distribution
     '''
-    return nacl.randombytes_uniform(upper_bound).raw
+    return nacl.randombytes_uniform(upper_bound)
 
 
 # Utility functions
 
-def sodium_version_major():
+def sodium_library_version_major():
     '''
     Return the major version number
     '''
-    return nacl.sodium_version_major()
+    return nacl.sodium_library_version_major()
 
 
-def sodium_version_minor():
+def sodium_library_version_minor():
     '''
     Return the minor version number
     '''
-    return nacl.sodium_version_minor()
+    return nacl.sodium_library_version_minor()
 
 
 def sodium_version_string():
     '''
     Return the version string
     '''
-    return nacl.sodium_version_string()
+    func = nacl.sodium_version_string
+    func.restype = ctypes.c_char_p
+    return func()

@@ -2,7 +2,7 @@
 Raw Public Key Encryption
 =========================
 
-.. note
+.. note::
 
     While these routines are perfectly safe, higher level convenience
     wrappers are under development to make these routines easier.
@@ -32,13 +32,12 @@ string which should only be used for this message, the nonce should never be
 reused. This means that the nonce needs to be generated in such a way that
 the probability of reusing the nonce string with the same keypair is very
 low. The libnacl wrapper ships with a convenience function which generates a
-nonce from the microsecond timestamp plus 4 random chars. This is a fairly safe
-way to generate the nonce:
+nonce from random bytes:
 
 .. code-block:: python
 
     import libnacl.utils
-    nonce = libnacl.utils.time_nonce()
+    nonce = libnacl.utils.rand_nonce()
 
 Now, with a nonce a cryptographic box can be created, Alice will send a
 message:
@@ -67,7 +66,7 @@ To bring it all together:
     alice_pk, alice_sk = libnacl.crypto_keypair()
     bob_pk, bob_sk = libnacl.crypto_keypair()
 
-    nonce = libnacl.utils.time_nonce()
+    nonce = libnacl.utils.rand_nonce()
 
     msg = 'Quiet, quiet.  Quiet!  There are ways of telling whether she is a witch.'
     box = libnacl.crypto_box(msg, nonce, bob_pk, alice_sk)

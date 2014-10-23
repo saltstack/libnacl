@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Import libnacl libs
 import libnacl.dual
+import libnacl.sign
 import libnacl.utils
 
 # Import pythonlibs
@@ -43,6 +44,16 @@ class TestSave(unittest.TestCase):
         self.assertEqual(alice_dec, msg)
         os.remove(bob_path)
         os.remove(alice_path)
+
+    def test_save_load_sign(self):
+        msg = b'then leap out of the rabbit, taking the French by surprise'
+        signer = libnacl.sign.Signer()
+        fh_, sign_path = tempfile.mkstemp()
+        signer.save(sign_path)
+        signer_load = libnacl.utils.load_key(sign_path)
+        signed1 = signer.sign(msg)
+        signed2 = signer_load.sign(msg)
+        self.assertEqual(signed1, signed2)
 
     def test_save_perms(self):
         bob = libnacl.dual.DualSecret()

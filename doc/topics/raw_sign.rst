@@ -2,7 +2,7 @@
 Raw Message Signatures
 ======================
 
-.. note
+.. note::
 
     While these routines are perfectly safe, higher level convenience
     wrappers are under development to make these routines easier.

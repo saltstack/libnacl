@@ -22,10 +22,10 @@ class SecretBox(libnacl.base.BaseKey):
     def encrypt(self, msg, nonce=None):
         '''
         Encrypt the given message. If a nonce is not given it will be
-        generated via the time_nonce function
+        generated via the rand_nonce function
         '''
         if nonce is None:
-            nonce = libnacl.utils.time_nonce()
+            nonce = libnacl.utils.rand_nonce()
         if len(nonce) != libnacl.crypto_secretbox_NONCEBYTES:
             raise ValueError('Invalid Nonce')
         ctxt = libnacl.crypto_secretbox(msg, nonce, self.sk)

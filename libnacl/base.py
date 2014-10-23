@@ -40,14 +40,14 @@ class BaseKey(object):
         pk = self.hex_pk()
         vk = self.hex_vk()
         seed = self.hex_seed()
-        if sk:
-            pre['priv'] = sk.decode(encoding='UTF-8')
+        if sk and pk:
+            pre['priv'] = sk.decode('utf-8')
         if pk:
-            pre['pub'] = pk.decode(encoding='UTF-8')
+            pre['pub'] = pk.decode('utf-8')
         if vk:
-            pre['verify'] = vk.decode(encoding='UTF-8')
+            pre['verify'] = vk.decode('utf-8')
         if seed:
-            pre['sign'] = seed.decode(encoding='UTF-8')
+            pre['sign'] = seed.decode('utf-8')
         if serial == 'msgpack':
             import msgpack
             packaged = msgpack.dumps(pre)

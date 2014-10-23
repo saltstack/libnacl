@@ -31,7 +31,7 @@ class TestPublic(unittest.TestCase):
     def test_box(self):
         msg = b'Are you suggesting coconuts migrate?'
         # run 1
-        nonce1 = libnacl.utils.time_nonce()
+        nonce1 = libnacl.utils.rand_nonce()
         pk1, sk1 = libnacl.crypto_box_keypair()
         pk2, sk2 = libnacl.crypto_box_keypair()
         enc_msg = libnacl.crypto_box(msg, nonce1, pk2, sk1)
@@ -39,7 +39,7 @@ class TestPublic(unittest.TestCase):
         clear_msg = libnacl.crypto_box_open(enc_msg, nonce1, pk1, sk2)
         self.assertEqual(clear_msg, msg)
         # run 2
-        nonce2 = libnacl.utils.time_nonce()
+        nonce2 = libnacl.utils.rand_nonce()
         pk3, sk3 = libnacl.crypto_box_keypair()
         pk4, sk4 = libnacl.crypto_box_keypair()
         enc_msg2 = libnacl.crypto_box(msg, nonce2, pk4, sk3)
@@ -53,7 +53,7 @@ class TestPublic(unittest.TestCase):
     def test_boxnm(self):
         msg = b'Are you suggesting coconuts migrate?'
         # run 1
-        nonce1 = libnacl.utils.time_nonce()
+        nonce1 = libnacl.utils.rand_nonce()
         pk1, sk1 = libnacl.crypto_box_keypair()
         pk2, sk2 = libnacl.crypto_box_keypair()
         k1 = libnacl.crypto_box_beforenm(pk2, sk1)

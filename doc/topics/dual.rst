@@ -2,7 +2,7 @@
 Dual Key Management
 ===================
 
-The libnacl library abstracts a "Dual Key" model. Teh Dual Key creates a single
+The libnacl library abstracts a "Dual Key" model. The Dual Key creates a single
 key management object that can be used for both signing and encrypting, it
 generates and maintains a Curve25519 encryption key pair and an ED25519 signing
 keypair. All methods for encryption and signing work with and from Dual Keys.
@@ -38,8 +38,7 @@ To encrypt messages using Dual Keys:
 
     Every encryption routine requires a nonce. The nonce is a 24 char string
     that must never be used twice with the same keypair. If no nonce is passed
-    in then a nonce is generated based on the time of the encryption plus
-    random data.
+    in then a nonce is generated based on random data.
     If it is desired to generate a nonce manually this can be done by passing
     it into the encrypt method.
 

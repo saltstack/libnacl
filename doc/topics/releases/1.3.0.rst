@@ -1,0 +1,6 @@
+===========================
+libnacl 1.3.0 Release Notes
+===========================
+
+This release removes the time_nonce function and replaces it with the
+rand_nonce function.

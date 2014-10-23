@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import struct
+import time
+
 # Import nacl libs
 import libnacl
 import libnacl.encode
 import libnacl.public
 import libnacl.sign
 import libnacl.dual
-
-# Import python libs
-import time
-import binascii
 
 
 def load_key(path, serial='json'):
@@ -25,7 +24,7 @@ def load_key(path, serial='json'):
     elif serial == 'json':
         import json
         key_data = json.loads(packaged.decode(encoding='UTF-8'))
-    if 'priv' and 'sign' in key_data:
+    if 'priv' in key_data and 'sign' in key_data:
         return libnacl.dual.DualSecret(
                 libnacl.encode.hex_decode(key_data['priv']),
                 libnacl.encode.hex_decode(key_data['sign']))
@@ -50,16 +49,20 @@ def salsa_key():
     return libnacl.randombytes(libnacl.crypto_secretbox_KEYBYTES)
 
 
-def time_nonce(size=24):
+def rand_nonce():
     '''
-    Generates a safe nonce
+    Generates and returns a random bytestring of the size defined in libsodium
+    as crypto_box_NONCEBYTES
+    '''
+    return libnacl.randombytes(libnacl.crypto_box_NONCEBYTES)
 
-    The nonce generated here is done by grabbing the 20 digit microsecond
-    timestamp and appending 4 random chars
+
+def time_nonce():
     '''
-    size = max(int(size), 16)
-    front = '{0:0x}'.format(int(time.time() * 1000000))
-    extra = size - len(front)
-    back = binascii.hexlify(libnacl.randombytes(extra // 2 + extra % 2))
-    nonce = ((front + back.decode(encoding='UTF-8'))[:size])
-    return nonce.encode(encoding='UTF-8')
+    Generates and returns a nonce as in rand_nonce() but using a timestamp for the first 8 bytes.
+
+    This function now exists mostly for backwards compatibility, as rand_nonce() is usually preferred.
+    '''
+    nonce = rand_nonce()
+    return (struct.pack('=d', time.time()) + nonce)[:len(nonce)]
+
