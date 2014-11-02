@@ -9,7 +9,7 @@ import os
 import stat
 import unittest
 import tempfile
-
+import sys
 
 class TestSave(unittest.TestCase):
     '''
@@ -19,7 +19,9 @@ class TestSave(unittest.TestCase):
         bob = libnacl.dual.DualSecret()
         alice = libnacl.dual.DualSecret()
         fh_, bob_path = tempfile.mkstemp()
+        os.close(fh_)
         fh_, alice_path = tempfile.mkstemp()
+        os.close(fh_)
         bob.save(bob_path)
         alice.save(alice_path)
         bob_box = libnacl.public.Box(bob, alice.pk)
@@ -49,16 +51,20 @@ class TestSave(unittest.TestCase):
         msg = b'then leap out of the rabbit, taking the French by surprise'
         signer = libnacl.sign.Signer()
         fh_, sign_path = tempfile.mkstemp()
+        os.close(fh_)
         signer.save(sign_path)
         signer_load = libnacl.utils.load_key(sign_path)
         signed1 = signer.sign(msg)
         signed2 = signer_load.sign(msg)
         self.assertEqual(signed1, signed2)
+        os.remove(sign_path)
 
     def test_save_perms(self):
         bob = libnacl.dual.DualSecret()
         fh_, bob_path = tempfile.mkstemp()
+        os.close(fh_)
         bob.save(bob_path)
         stats = os.stat(bob_path)
-        self.assertEqual(stats[stat.ST_MODE], 33152)
+        expected_perms = 0100600 if sys.platform != 'win32' else 0100666
+        self.assertEqual(stats[stat.ST_MODE], expected_perms)
         os.remove(bob_path)

@@ -3,18 +3,18 @@
 # Import python libs
 import os
 import sys
-# Import libnacl libs
-from libnacl.version import __version__
 
-if 'USE_SETUPTOOLS' in os.environ or 'setuptools' in sys.modules:
-    from setuptools import setup
-else:
-    from distutils.core import setup
+from setuptools import setup
 
 NAME = 'libnacl'
 DESC = ('Python bindings for libsodium/tweetnacl based on ctypes')
-VERSION = __version__
 
+# Version info -- read without importing
+_locals = {}
+with open('libnacl/version.py') as fp:
+    exec(fp.read(), None, _locals)
+VERSION = _locals['__version__']
+ 
 setup(name=NAME,
       version=VERSION,
       description=DESC,
