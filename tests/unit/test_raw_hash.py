@@ -5,7 +5,7 @@ import libnacl
 import unittest
 
 
-class TestSecretBox(unittest.TestCase):
+class TestHash(unittest.TestCase):
     '''
     Test sign functions
     '''
