@@ -65,6 +65,6 @@ class TestSave(unittest.TestCase):
         os.close(fh_)
         bob.save(bob_path)
         stats = os.stat(bob_path)
-        expected_perms = 0100600 if sys.platform != 'win32' else 0100666
+        expected_perms = 0o100600 if sys.platform != 'win32' else 0o100666
         self.assertEqual(stats[stat.ST_MODE], expected_perms)
         os.remove(bob_path)
