@@ -15,6 +15,7 @@ Contents:
    topics/raw_secret
    topics/raw_sign
    topics/raw_hash
+   topics/raw_generichash
    topics/releases/index
 
 
