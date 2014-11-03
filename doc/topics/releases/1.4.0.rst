@@ -1,0 +1,14 @@
+===========================
+libnacl 1.4.0 Release Notes
+===========================
+
+Blake Hash Support
+==================
+
+Initial support has been added for the blake2b hash algorithm
+
+Misc Fixes
+==========
+
+* Fix issue with keyfile saves on windows
+* Fix libsodium detection for Ubuntu manual installs and Windows dll detection
