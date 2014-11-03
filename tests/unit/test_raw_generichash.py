@@ -17,3 +17,23 @@ class TestGenericHash(unittest.TestCase):
         self.assertNotEqual(msg1, chash1)
         self.assertNotEqual(msg2, chash2)
         self.assertNotEqual(chash2, chash1)
+
+    def test_key_generichash(self):
+        msg1 = b'Are you suggesting coconuts migrate?'
+        msg2 = b'Not at all, they could be carried.'
+        key1 = libnacl.utils.rand_nonce()
+        key2 = libnacl.utils.rand_nonce()
+        khash1_1 = libnacl.crypto_generichash(msg1, key1)
+        khash1_1_2 = libnacl.crypto_generichash(msg1, key1)
+        khash1_2 = libnacl.crypto_generichash(msg1, key2)
+        khash2_1 = libnacl.crypto_generichash(msg2, key1)
+        khash2_2 = libnacl.crypto_generichash(msg2, key2)
+        self.assertNotEqual(msg1, khash1_1)
+        self.assertNotEqual(msg1, khash1_2)
+        self.assertNotEqual(msg2, khash2_1)
+        self.assertNotEqual(msg2, khash2_2)
+        self.assertNotEqual(khash1_1, khash1_2)
+        self.assertNotEqual(khash2_1, khash2_2)
+        self.assertNotEqual(khash1_1, khash2_1)
+        self.assertNotEqual(khash1_2, khash2_2)
+        self.assertEqual(khash1_1, khash1_1_2)
