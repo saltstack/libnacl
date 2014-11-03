@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 '''
-Impliment the base key object for other keys to inherit convenience functions
+Implement the base key object for other keys to inherit convenience functions
 '''
 # Import libnacl libs
 import libnacl.encode
 
 # Import python libs
 import os
-
+import stat
 
 class BaseKey(object):
     '''
@@ -54,7 +54,11 @@ class BaseKey(object):
         elif serial == 'json':
             import json
             packaged = json.dumps(pre)
-        cumask = os.umask(191)
+
+        perm_other = stat.S_IWOTH | stat.S_IXOTH | stat.S_IWOTH
+        perm_group = stat.S_IXGRP | stat.S_IWGRP | stat.S_IRWXG
+        
+        cumask = os.umask(perm_other | perm_group)
         with open(path, 'w+') as fp_:
             fp_.write(packaged)
         os.umask(cumask)
