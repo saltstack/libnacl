@@ -34,3 +34,11 @@ class Blake2b(object):
         Return the hex digest of the string
         '''
         return binascii.hexlify(self.raw_digest)
+
+
+def blake2b(msg, key=None):
+    '''
+    Create and return a Blake2b object to mimic the behavior of the python
+    hashlib functions
+    '''
+    return Blake2b(msg, key)
