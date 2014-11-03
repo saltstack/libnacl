@@ -53,7 +53,7 @@ def _get_nacl():
             pass
         try:
             return ctypes.cdll.LoadLibrary('/usr/local/lib/libsodium.so')
-        except OSERROR:
+        except OSError:
             pass
 
         for soname_ver in __SONAMES:
@@ -100,6 +100,11 @@ crypto_auth_KEYBYTES = nacl.crypto_auth_keybytes()
 crypto_onetimeauth_BYTES = nacl.crypto_onetimeauth_bytes()
 crypto_onetimeauth_KEYBYTES = nacl.crypto_onetimeauth_keybytes()
 crypto_generichash_BYTES = nacl.crypto_generichash_bytes()
+crypto_generichash_BYTES_MIN = nacl.crypto_generichash_bytes_min()
+crypto_generichash_BYTES_MAX = nacl.crypto_generichash_bytes_max()
+crypto_generichash_KEYBYTES = nacl.crypto_generichash_keybytes()
+crypto_generichash_KEYBYTES_MIN = nacl.crypto_generichash_keybytes_min()
+crypto_generichash_KEYBYTES_MAX = nacl.crypto_generichash_keybytes_max()
 crypto_scalarmult_curve25519_BYTES = nacl.crypto_scalarmult_curve25519_bytes()
 crypto_hash_BYTES = nacl.crypto_hash_sha512_bytes()
 crypto_hash_sha256_BYTES = nacl.crypto_hash_sha256_bytes()
@@ -435,8 +440,29 @@ def crypto_hash_sha512(msg):
     nacl.crypto_hash_sha512(hbuf, msg, ctypes.c_ulonglong(len(msg)))
     return hbuf.raw
 
+# Generic Hash
+
+
+def crypto_generichash(msg, key=None):
+    '''
+    Compute the blake2 hash of the given message with a given key
+    '''
+    hbuf = ctypes.create_string_buffer(crypto_generichash_BYTES)
+    if key:
+        key_len = len(key)
+    else:
+        key_len = 0
+    nacl.crypto_generichash(
+            hbuf,
+            ctypes.c_ulonglong(len(hbuf)),
+            msg,
+            ctypes.c_ulonglong(len(msg)),
+            key,
+            ctypes.c_ulonglong(key_len))
+    return hbuf.raw
 
 # scalarmult
+
 
 def crypto_scalarmult_base(n):
     '''
