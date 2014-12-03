@@ -501,7 +501,7 @@ def crypto_verify_32(string1, string2):
     matching prefix of string1 and string2. This often allows for easy
     timing attacks.
     '''
-    return not nacl.crypto_verify_16(string1, string2)
+    return not nacl.crypto_verify_32(string1, string2)
 
 
 # Random byte generation
