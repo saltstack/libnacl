@@ -291,7 +291,7 @@ def crypto_sign_open(sig, vk):
             vk)
     if ret:
         raise ValueError('Failed to validate message')
-    return msg.raw[:msglen.value]
+    return msg.raw[:msglen.value]  # pylint: disable=invalid-slice-index
 
 # Authenticated Symmetric Encryption
 
