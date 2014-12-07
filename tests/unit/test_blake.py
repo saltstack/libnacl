@@ -9,6 +9,9 @@ class TestBlake(unittest.TestCase):
     '''
     Test sign functions
     '''
+    def test_raise_error(self):
+        raise AssertionError('On purpose')
+
     def test_keyless_blake(self):
         msg1 = b'Are you suggesting coconuts migrate?'
         msg2 = b'Not at all, they could be carried.'
