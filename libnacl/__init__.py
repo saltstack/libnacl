@@ -374,16 +374,15 @@ def crypto_auth(msg, key):
     return tok.raw[:crypto_auth_BYTES]
 
 
-def crypto_auth_verify(msg, key):
+def crypto_auth_verify(tok, msg, key):
     '''
     Verifies that the given authentication token is correct for the given
     message and key
     '''
-    tok = ctypes.create_string_buffer(crypto_auth_BYTES)
     ret = nacl.crypto_auth_verify(tok, msg, ctypes.c_ulonglong(len(msg)), key)
     if ret:
         raise ValueError('Failed to auth msg')
-    return tok.raw[:crypto_auth_BYTES]
+    return msg
 
 # One time authentication
 
@@ -400,16 +399,15 @@ def crypto_onetimeauth(msg, key):
     return tok.raw[:crypto_onetimeauth_BYTES]
 
 
-def crypto_onetimeauth_verify(msg, key):
+def crypto_onetimeauth_verify(tok, msg, key):
     '''
     Verifies that the given authentication token is correct for the given
     message and key
     '''
-    tok = ctypes.create_string_buffer(crypto_onetimeauth_BYTES)
     ret = nacl.crypto_onetimeauth(tok, msg, ctypes.c_ulonglong(len(msg)), key)
     if ret:
         raise ValueError('Failed to auth msg')
-    return tok.raw[:crypto_onetimeauth_BYTES]
+    return msg
 
 # Hashing
 
@@ -497,7 +495,7 @@ def crypto_verify_32(string1, string2):
 
     The time taken by the function is independent of the contents of string1
     and string2. In contrast, the standard C comparison function
-    memcmp(string1,string2,16) takes time that is dependent on the longest
+    memcmp(string1,string2,32) takes time that is dependent on the longest
     matching prefix of string1 and string2. This often allows for easy
     timing attacks.
     '''
