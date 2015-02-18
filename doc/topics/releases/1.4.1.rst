@@ -1,0 +1,9 @@
+===========================
+libnacl 1.4.1 Release Notes
+===========================
+
+Misc Fixes
+==========
+
+* Fix for crypto_auth_verify and crypto_auth_onetimeverify
+* Lint fixes and updates
