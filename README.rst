@@ -15,3 +15,19 @@ Higher Level Classes
 The libnacl code also ships with many high level classes which make nacl
 cryptography easy and safe, for documentation please see:
 http://libnacl.readthedocs.org/
+
+Why libnacl
+===========
+
+There are a number of libraries out there binding to libsodium, so why make
+libnacl?
+
+1. libnacl does not have any non-python hard deps outside of libsodium
+2. libnacl does not need to be compiled
+3. libnacl is easy to package and very portable
+4. Inclusion of high level pythonic encryption classes
+5. Ability to have a single embeddable and transferable bindings file
+   that can be added directly to python applications without needing
+   to dep libnacl
+
+This makes libnacl very portable, very easy to use and easy to distribute.
