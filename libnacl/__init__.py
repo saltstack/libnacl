@@ -452,11 +452,11 @@ def crypto_generichash(msg, key=None):
         key_len = 0
     nacl.crypto_generichash(
             hbuf,
-            ctypes.c_ulonglong(len(hbuf)),
+            ctypes.c_size_t(len(hbuf)),
             msg,
             ctypes.c_ulonglong(len(msg)),
             key,
-            ctypes.c_ulonglong(key_len))
+            ctypes.c_size_t(key_len))
     return hbuf.raw
 
 # scalarmult
