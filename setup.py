@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 # Import python libs
 import os
 import sys
 
-from setuptools import setup
+if 'USE_SETUPTOOLS' in os.environ or 'setuptools' in sys.modules:
+    from setuptools import setup
+else:
+    from distutils.core import setup
 
 NAME = 'libnacl'
 DESC = ('Python bindings for libsodium/tweetnacl based on ctypes')
@@ -14,7 +18,7 @@ _locals = {}
 with open('libnacl/version.py') as fp:
     exec(fp.read(), None, _locals)
 VERSION = _locals['__version__']
- 
+
 setup(name=NAME,
       version=VERSION,
       description=DESC,
