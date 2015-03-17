@@ -6,6 +6,7 @@ import time
 # Import nacl libs
 import libnacl
 import libnacl.encode
+import libnacl.secret
 import libnacl.public
 import libnacl.sign
 import libnacl.dual
@@ -28,7 +29,7 @@ def load_key(path, serial='json'):
         return libnacl.dual.DualSecret(
                 libnacl.encode.hex_decode(key_data['priv']),
                 libnacl.encode.hex_decode(key_data['sign']))
-    elif 'priv' in key_data:
+    elif 'priv' in key_data and 'pub' in key_data:
         return libnacl.public.SecretKey(
                 libnacl.encode.hex_decode(key_data['priv']))
     elif 'sign' in key_data:
@@ -39,6 +40,8 @@ def load_key(path, serial='json'):
                 libnacl.encode.hex_decode(key_data['pub']))
     elif 'verify' in key_data:
         return libnacl.sign.Verifier(key_data['verify'])
+    elif 'priv' in key_data:
+        return libnacl.secret.SecretBox(key_data['priv'])
     raise ValueError('Found no key data')
 
 
