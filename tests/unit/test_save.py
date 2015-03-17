@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Import libnacl libs
 import libnacl.dual
+import libnacl.secret
 import libnacl.sign
 import libnacl.utils
 
@@ -46,6 +47,17 @@ class TestSave(unittest.TestCase):
         self.assertEqual(alice_dec, msg)
         os.remove(bob_path)
         os.remove(alice_path)
+
+    def test_save_load_secret(self):
+        msg = b'then leap out of the rabbit, taking the French by surprise'
+        box = libnacl.secret.SecretBox()
+        fh_, box_path = tempfile.mkstemp()
+        os.close(fh_)
+        box.save(box_path)
+        lbox = libnacl.utils.load_key(box_path)
+        ctxt = box.encrypt(msg)
+        out_msg = lbox.decrypt(ctxt)
+        self.assertEqual(msg, out_msg)
 
     def test_save_load_sign(self):
         msg = b'then leap out of the rabbit, taking the French by surprise'
