@@ -1,0 +1,8 @@
+===========================
+libnacl 1.4.2 Release Notes
+===========================
+
+SecretBox key save and load
+===========================
+
+* Add support to save and load SecretBox keys
