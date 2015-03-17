@@ -41,7 +41,8 @@ def load_key(path, serial='json'):
     elif 'verify' in key_data:
         return libnacl.sign.Verifier(key_data['verify'])
     elif 'priv' in key_data:
-        return libnacl.secret.SecretBox(key_data['priv'])
+        return libnacl.secret.SecretBox(
+                libnacl.encode.hex_decode(key_data['priv']))
     raise ValueError('Found no key data')
 
 
