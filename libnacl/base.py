@@ -31,9 +31,9 @@ class BaseKey(object):
         if hasattr(self, 'seed'):
             return libnacl.encode.hex_encode(self.seed)
 
-    def save(self, path, serial='json'):
+    def for_json(self):
         '''
-        Safely save keys with perms of 0400
+        Return a dictionary of the secret values we need to store.
         '''
         pre = {}
         sk = self.hex_sk()
@@ -48,6 +48,15 @@ class BaseKey(object):
             pre['verify'] = vk.decode('utf-8')
         if seed:
             pre['sign'] = seed.decode('utf-8')
+
+        return pre
+
+    def save(self, path, serial='json'):
+        '''
+        Safely save keys with perms of 0400
+        '''
+        pre = self.for_json()
+
         if serial == 'msgpack':
             import msgpack
             packaged = msgpack.dumps(pre)

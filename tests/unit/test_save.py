@@ -45,6 +45,12 @@ class TestSave(unittest.TestCase):
         alice_dec = bob_load_box.decrypt(alice_enc)
         self.assertEqual(bob_dec, msg)
         self.assertEqual(alice_dec, msg)
+
+        bob2 = libnacl.utils.load_key(file(bob_path, 'rb'))
+        self.assertEqual(bob.sk, bob2.sk)
+        self.assertEqual(bob.pk, bob2.pk)
+        self.assertEqual(bob.vk, bob2.vk)
+
         os.remove(bob_path)
         os.remove(alice_path)
 

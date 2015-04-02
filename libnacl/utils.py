@@ -12,19 +12,27 @@ import libnacl.sign
 import libnacl.dual
 
 
-def load_key(path, serial='json'):
+def load_key(path_or_file, serial='json'):
     '''
     Read in a key from a file and return the applicable key object based on
     the contents of the file
     '''
-    with open(path, 'rb') as fp_:
-        packaged = fp_.read()
-    if serial == 'msgpack':
-        import msgpack
-        key_data = msgpack.loads(packaged)
-    elif serial == 'json':
-        import json
-        key_data = json.loads(packaged.decode(encoding='UTF-8'))
+    if hasattr(path_or_file, 'read'):
+        stream = path_or_file
+    else:
+        stream = open(path_or_file, 'rb')
+
+    try:
+        if serial == 'msgpack':
+            import msgpack
+            key_data = msgpack.load(stream)
+        elif serial == 'json':
+            import json
+            key_data = json.load(stream, encoding='UTF-8')
+    finally:
+        if stream != path_or_file:
+            stream.close()
+
     if 'priv' in key_data and 'sign' in key_data and 'pub' in key_data:
         return libnacl.dual.DualSecret(
                 libnacl.encode.hex_decode(key_data['priv']),
