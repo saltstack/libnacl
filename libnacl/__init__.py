@@ -55,6 +55,13 @@ def _get_nacl():
             return ctypes.cdll.LoadLibrary('/usr/local/lib/libsodium.so')
         except OSError:
             pass
+        try:
+            libidx = __file__.find('lib')
+            if libidx > 0:
+                libpath = __file__[0:libidx+3] + '/libsodium.so'
+                return ctypes.cdll.LoadLibrary(libpath)
+        except OSError:
+            pass
 
         for soname_ver in __SONAMES:
             try:
