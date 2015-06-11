@@ -20,7 +20,10 @@ def load_key(path_or_file, serial='json'):
     if hasattr(path_or_file, 'read'):
         stream = path_or_file
     else:
-        stream = open(path_or_file, 'rb')
+        if serial == 'json':
+            stream = open(path_or_file, 'r')
+        else:
+            stream = open(path_or_file, 'rb')
 
     try:
         if serial == 'msgpack':
@@ -28,7 +31,7 @@ def load_key(path_or_file, serial='json'):
             key_data = msgpack.load(stream)
         elif serial == 'json':
             import json
-            key_data = json.load(stream, encoding='UTF-8')
+            key_data = json.loads(stream.read(), encoding='UTF-8')
     finally:
         if stream != path_or_file:
             stream.close()
