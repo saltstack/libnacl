@@ -411,7 +411,7 @@ def crypto_onetimeauth_verify(tok, msg, key):
     Verifies that the given authentication token is correct for the given
     message and key
     '''
-    ret = nacl.crypto_onetimeauth(tok, msg, ctypes.c_ulonglong(len(msg)), key)
+    ret = nacl.crypto_onetimeauth_verify(tok, msg, ctypes.c_ulonglong(len(msg)), key)
     if ret:
         raise ValueError('Failed to auth msg')
     return msg
