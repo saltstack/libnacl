@@ -1,0 +1,17 @@
+===========================
+libnacl 1.4.3 Release Notes
+===========================
+
+crypto_onetimeauth_verify fixes
+===============================
+
+* Fix a call to the crypto_onetimeauth_verify routine into the right libsodium system
+* Add tests for crypto_onetimeauth_verify
+
+Improved support for MacOSX
+===========================
+
+* Improved the lookup procedure for finding libsodium on MacOSX
+
+Add support for reading file streams for key loading
+====================================================
