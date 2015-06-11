@@ -18,6 +18,7 @@ class TestAuthVerify(unittest.TestCase):
         sig2 = libnacl.crypto_auth(msg, key2)
 
         self.assertTrue(libnacl.crypto_auth_verify(sig1, msg, key1))
+        self.assertTrue(libnacl.crypto_auth_verify(sig2, msg, key2))
         with self.assertRaises(ValueError) as context:
             libnacl.crypto_auth_verify(sig1, msg, key2)
         self.assertTrue('Failed to auth msg' in context.exception)
@@ -25,7 +26,6 @@ class TestAuthVerify(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             libnacl.crypto_auth_verify(sig2, msg, key1)
         self.assertTrue('Failed to auth msg' in context.exception)
-        self.assertTrue(libnacl.crypto_auth_verify(sig2, msg, key2))
 
     '''
     Test onetimeauth functions
@@ -39,6 +39,7 @@ class TestAuthVerify(unittest.TestCase):
         sig2 = libnacl.crypto_onetimeauth(msg, key2)
 
         self.assertTrue(libnacl.crypto_onetimeauth_verify(sig1, msg, key1))
+        self.assertTrue(libnacl.crypto_onetimeauth_verify(sig2, msg, key2))
         with self.assertRaises(ValueError) as context:
             libnacl.crypto_onetimeauth_verify(sig1, msg, key2)
         self.assertTrue('Failed to auth msg' in context.exception)
@@ -46,4 +47,4 @@ class TestAuthVerify(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             libnacl.crypto_onetimeauth_verify(sig2, msg, key1)
         self.assertTrue('Failed to auth msg' in context.exception)
-        self.assertTrue(libnacl.crypto_onetimeauth_verify(sig2, msg, key2))
+
