@@ -12,8 +12,8 @@ class TestAuthVerify(unittest.TestCase):
     '''
     def test_auth_verify(self):
         msg = b'Anybody can invent a cryptosystem he cannot break himself. Except Bruce Schneier.'
-        key1 = libnacl.utils.rand_nonce()
-        key2 = libnacl.utils.rand_nonce()
+        key1 = libnacl.utils.salsa_key()
+        key2 = libnacl.utils.salsa_key()
 
         sig1 = libnacl.crypto_auth(msg, key1)
         sig2 = libnacl.crypto_auth(msg, key2)
