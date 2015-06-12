@@ -31,3 +31,31 @@ libnacl?
    to dep libnacl
 
 This makes libnacl very portable, very easy to use and easy to distribute.
+
+Install
+=======
+
+The libnacl code is easiy installed via a setup.py from the source or via pip.
+
+From Source:
+
+.. code-block:: bash
+
+    tar xvf libnacl-1.4.3.tar.gz
+    cd libnacl-1.4.3
+    python setup.py install
+
+Via Pip:
+
+.. code-block:: bash
+
+    pip install libnacl
+
+Remember that libnacl can be installed for python 2 and 3.
+
+Linux distributions
+-------------------
+
+Libnacl is shiped with many linux distributions, check your distribution
+package manager for the package ``python-libnacl``, ``python2-libnacl``
+and/or ``python3-libnacl``.
