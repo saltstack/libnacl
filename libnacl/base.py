@@ -64,8 +64,8 @@ class BaseKey(object):
             import json
             packaged = json.dumps(pre)
 
-        perm_other = stat.S_IWOTH | stat.S_IXOTH | stat.S_IWOTH
-        perm_group = stat.S_IXGRP | stat.S_IWGRP | stat.S_IRWXG
+        perm_other = stat.S_IROTH | stat.S_IWOTH | stat.S_IXOTH
+        perm_group = stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP
 
         cumask = os.umask(perm_other | perm_group)
         with open(path, 'w+') as fp_:
