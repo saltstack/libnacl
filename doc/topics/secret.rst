@@ -17,7 +17,7 @@ to execute:
     box = libnacl.secret.SecretBox()
     # Messages can now be safely encrypted
     ctxt = box.encrypt(msg)
-    # An addition box can be created from the original box secret key
+    # An additional box can be created from the original box secret key
     box2 = libnacl.secret.SecretBox(box.sk)
     # Messages can now be easily encrypted and decrypted
     clear1 = box.decrypt(ctxt)
