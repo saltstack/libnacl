@@ -55,3 +55,6 @@ doc/_build/
 
 # Local VIM RC
 .lvimrc
+
+# pycharm
+.idea*
