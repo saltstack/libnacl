@@ -32,7 +32,7 @@ between Alice and Bob:
     bclear = alice_box.decrypt(bob_ctxt)
     # Alice can send encrypted messages which only Bob can decrypt
     alice_ctxt = alice_box.encrypt(msg)
-    aclear = alice_box.decrypt(alice_ctxt)
+    aclear = bob_box.decrypt(alice_ctxt)
 
 .. note::
 
