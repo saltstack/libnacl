@@ -9,7 +9,7 @@ from libnacl.version import __version__
 import ctypes
 import sys
 
-__SONAMES = (13, 10, 5, 4)
+__SONAMES = (17, 13, 10, 5, 4)
 
 
 def _get_nacl():
