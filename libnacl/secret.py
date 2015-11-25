@@ -19,7 +19,7 @@ class SecretBox(libnacl.base.BaseKey):
             raise ValueError('Invalid key')
         self.sk = key
 
-    def encrypt(self, msg, nonce=None):
+    def encrypt(self, msg, nonce=None, pack_nonce=True):
         '''
         Encrypt the given message. If a nonce is not given it will be
         generated via the rand_nonce function
@@ -27,9 +27,12 @@ class SecretBox(libnacl.base.BaseKey):
         if nonce is None:
             nonce = libnacl.utils.rand_nonce()
         if len(nonce) != libnacl.crypto_secretbox_NONCEBYTES:
-            raise ValueError('Invalid Nonce')
+            raise ValueError('Invalid nonce size')
         ctxt = libnacl.crypto_secretbox(msg, nonce, self.sk)
-        return nonce + ctxt
+        if pack_nonce:
+            return nonce + ctxt
+        else:
+            return nonce, ctxt
 
     def decrypt(self, ctxt, nonce=None):
         '''
