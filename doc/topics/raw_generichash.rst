@@ -28,4 +28,4 @@ Without a key:
     import libnacl
 
     msg = 'Is there someone else up there we could talk to?'
-    h_msg = libnacl.crypto_genrichash(msg)
+    h_msg = libnacl.crypto_generichash(msg)
