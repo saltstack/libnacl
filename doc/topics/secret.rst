@@ -4,7 +4,7 @@ Secret Key Encryption
 
 Secret key encryption is the method of using a single key for both encryption
 and decryption of messages. One of the classic examples from history of secret
-key, or symetric, encryption is the Enigma machine.
+key, or symmetric, encryption is the Enigma machine.
 
 The SecretBox class in libnacl.secret makes this type of encryption very easy
 to execute:
