@@ -76,7 +76,7 @@ Saving Keys to Disk
 All libnacl key objects can be safely saved to disk via the save method. This
 method changes the umask before saving the key file to ensure that the saved
 file can only be read by the user creating it and cannot be written to.
-When using dual keys the encrypting and signing keys will be safed togather in
+When using dual keys the encrypting and signing keys will be saved togather in
 a single file.
 
 .. code-block:: python
