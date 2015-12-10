@@ -88,6 +88,18 @@ def _get_nacl():
 
 nacl = _get_nacl()
 
+
+# Define exceptions
+class CryptError(Exception):
+    """
+    Base Exception for cryptographic errors
+    """
+
+sodium_init = nacl.sodium_init
+sodium_init.res_type = ctypes.c_int
+if sodium_init() < 0:
+    raise RuntimeError('sodium_init() call failed!')
+
 # Define constants
 crypto_box_SECRETKEYBYTES = nacl.crypto_box_secretkeybytes()
 crypto_box_PUBLICKEYBYTES = nacl.crypto_box_publickeybytes()
@@ -125,12 +137,6 @@ crypto_hash_sha256_BYTES = nacl.crypto_hash_sha256_bytes()
 crypto_hash_sha512_BYTES = nacl.crypto_hash_sha512_bytes()
 # pylint: enable=C0103
 
-
-# Define exceptions
-class CryptError(Exception):
-    '''
-    Base Exception for cryptographic errors
-    '''
 
 # Pubkey defs
 
