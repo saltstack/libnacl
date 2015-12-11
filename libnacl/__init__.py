@@ -310,23 +310,48 @@ def crypto_sign_open(sig, vk):
 # Authenticated Symmetric Encryption
 
 
-def crypto_secretbox(msg, nonce, key):
-    '''
-    Encrypts and authenticates a message using the given secret key, and nonce
-    '''
-    pad = b'\x00' * crypto_secretbox_ZEROBYTES + msg
+def crypto_secretbox(message, nonce, key):
+    """Encrypts and authenticates a message using the given secret key, and nonce
+
+    Args:
+        message (bytes): a message to encrypt
+        nonce (bytes): nonce, does not have to be confidential must be
+            `crypto_secretbox_NONCEBYTES` in length
+        key (bytes): secret key, must be `crypto_secretbox_KEYBYTES` in
+            length
+
+    Returns:
+        bytes: the ciphertext
+
+    Raises:
+        ValueError: if arguments' length is wrong or the operation has failed.
+    """
+    if len(key) != crypto_secretbox_KEYBYTES:
+        raise ValueError('Invalid key')
+
+    if len(nonce) != crypto_secretbox_NONCEBYTES:
+        raise ValueError('Invalid nonce')
+
+    pad = b'\x00' * crypto_secretbox_ZEROBYTES + message
     ctxt = ctypes.create_string_buffer(len(pad))
-    ret = nacl.crypto_secretbox(ctxt, pad, ctypes.c_ulonglong(len(pad)), nonce, key)
+    ret = nacl.crypto_secretbox(
+        ctxt, pad, ctypes.c_ulonglong(len(pad)), nonce, key)
     if ret:
         raise ValueError('Failed to encrypt message')
     return ctxt.raw[crypto_secretbox_BOXZEROBYTES:]
 
 
 def crypto_secretbox_open(ctxt, nonce, key):
-    '''
+    """
     Decrypts a ciphertext ctxt given the receivers private key, and senders
     public key
-    '''
+    """
+    if len(key) != crypto_secretbox_KEYBYTES:
+        raise ValueError('Invalid key')
+
+    if len(nonce) != crypto_secretbox_NONCEBYTES:
+        raise ValueError('Invalid nonce')
+
     pad = b'\x00' * crypto_secretbox_BOXZEROBYTES + ctxt
     msg = ctypes.create_string_buffer(len(pad))
     ret = nacl.crypto_secretbox_open(
