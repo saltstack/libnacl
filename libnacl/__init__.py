@@ -123,6 +123,9 @@ crypto_scalarmult_curve25519_BYTES = nacl.crypto_scalarmult_curve25519_bytes()
 crypto_hash_BYTES = nacl.crypto_hash_sha512_bytes()
 crypto_hash_sha256_BYTES = nacl.crypto_hash_sha256_bytes()
 crypto_hash_sha512_BYTES = nacl.crypto_hash_sha512_bytes()
+crypto_verify_16_BYTES = nacl.crypto_verify_16_bytes()
+crypto_verify_32_BYTES = nacl.crypto_verify_32_bytes()
+crypto_verify_64_BYTES = nacl.crypto_verify_64_bytes()
 # pylint: enable=C0103
 
 
@@ -516,7 +519,20 @@ def crypto_verify_32(string1, string2):
     return not nacl.crypto_verify_32(string1, string2)
 
 
+def crypto_verify_64(string1, string2):
+    '''
+    Compares the first crypto_verify_64_BYTES of the given strings
+
+    The time taken by the function is independent of the contents of string1
+    and string2. In contrast, the standard C comparison function
+    memcmp(string1,string2,64) takes time that is dependent on the longest
+    matching prefix of string1 and string2. This often allows for easy
+    timing attacks.
+    '''
+    return not nacl.crypto_verify_64(string1, string2)
+
 # Random byte generation
+
 
 def randombytes(size):
     '''
