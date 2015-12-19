@@ -29,12 +29,8 @@ def _get_nacl():
                 )
             except OSError:
                 pass
-        try:
-            return ctypes.cdll.LoadLibrary('tweetnacl')
-        except OSError:
-            msg = ('Could not locate nacl lib, searched for libsodium, '
-                   'tweetnacl')
-            raise OSError(msg)
+        msg = 'Could not locate nacl lib, searched for libsodium'
+        raise OSError(msg)
     elif sys.platform.startswith('darwin'):
         try:
             return ctypes.cdll.LoadLibrary('libsodium.dylib')
@@ -46,12 +42,7 @@ def _get_nacl():
                 libpath = __file__[0:libidx+3] + '/libsodium.dylib'
                 return ctypes.cdll.LoadLibrary(libpath)
         except OSError:
-            pass
-        try:
-            return ctypes.cdll.LoadLibrary('tweetnacl.dylib')
-        except OSError:
-            msg = ('Could not locate nacl lib, searched for libsodium, '
-                   'tweetnacl')
+            msg = 'Could not locate nacl lib, searched for libsodium'
             raise OSError(msg)
     else:
         try:
@@ -77,14 +68,10 @@ def _get_nacl():
                 )
             except OSError:
                 pass
-        try:
-            return ctypes.cdll.LoadLibrary('tweetnacl.so')
-        except OSError:
-            msg = 'Could not locate nacl lib, searched for libsodium.so, '
-            for soname_ver in __SONAMES:
-                msg += 'libsodium.so.{0}, '.format(soname_ver)
-            msg += ' and tweetnacl.so'
-            raise OSError(msg)
+        msg = 'Could not locate nacl lib, searched for libsodium.so, '
+        for soname_ver in __SONAMES:
+            msg += 'libsodium.so.{0}, '.format(soname_ver)
+        raise OSError(msg)
 
 nacl = _get_nacl()
 
