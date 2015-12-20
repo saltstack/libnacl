@@ -13,9 +13,9 @@
 %global srcname libnacl
 
 Name:           python-%{srcname}
-Version:        1.3.5
+Version:        1.4.3
 Release:        1%{?dist}
-Summary:        Python bindings for libsodium/tweetnacl based on ctypes
+Summary:        Python bindings for libsodium based on ctypes
 
 Group:          Development/Libraries
 License:        ASL 2.0
@@ -41,7 +41,7 @@ BuildRequires:  python3-setuptools
 
 %description
 This library is used to gain direct access to the functions exposed by Daniel
-J. Bernstein's nacl library via libsodium or tweetnacl. It has been constructed
+J. Bernstein's nacl library via libsodium. It has been constructed
 to maintain extensive documentation on how to use nacl as well as being
 completely portable. The file in libnacl/__init__.py can be pulled out and
 placed directly in any project to give a single file binding to all of nacl.
@@ -50,13 +50,13 @@ This is the Python 2 build of the module.
 
 %if 0%{?with_python3}
 %package -n python3-%{srcname}
-Summary:  Python bindings for libsodium/tweetnacl based on ctypes
+Summary:  Python bindings for libsodium based on ctypes
 Group:    Development/Libraries
 Requires: libsodium
 
 %description -n python3-%{srcname}
 This library is used to gain direct access to the functions exposed by Daniel
-J. Bernstein's nacl library via libsodium or tweetnacl. It has been constructed
+J. Bernstein's nacl library via libsodium. It has been constructed
 to maintain extensive documentation on how to use nacl as well as being
 completely portable. The file in libnacl/__init__.py can be pulled out and
 placed directly in any project to give a single file binding to all of nacl.
@@ -66,7 +66,7 @@ This is the Python 3 build of the module.
 
 %if 0%{?rhel} == 5
 %package -n python26-%{srcname}
-Summary:        Python bindings for libsodium/tweetnacl based on ctypes
+Summary:        Python bindings for libsodium based on ctypes
 Group:          Development/Libraries
 BuildRequires:  python26
 BuildRequires:  libsodium
@@ -76,7 +76,7 @@ Requires:       libsodium
 
 %description -n python26-%{srcname}
 This library is used to gain direct access to the functions exposed by Daniel
-J. Bernstein's nacl library via libsodium or tweetnacl. It has been constructed
+J. Bernstein's nacl library via libsodium. It has been constructed
 to maintain extensive documentation on how to use nacl as well as being
 completely portable. The file in libnacl/__init__.py can be pulled out and
 placed directly in any project to give a single file binding to all of nacl.

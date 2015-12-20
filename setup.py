@@ -11,7 +11,7 @@ else:
     from distutils.core import setup
 
 NAME = 'libnacl'
-DESC = ('Python bindings for libsodium/tweetnacl based on ctypes')
+DESC = 'Python bindings for libsodium based on ctypes'
 
 # Version info -- read without importing
 _locals = {}
