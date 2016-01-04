@@ -1,0 +1,30 @@
+===========================
+libnacl 1.4.4 Release Notes
+===========================
+
+Add pack_nonce options to secretbox
+===================================
+
+* libnacl secretbox has been packing the nonce in each message, the new pack_nonce
+  option allows for the nonce to be omitted which allows for more flexible options
+
+Add soversion 17 detection
+==========================
+
+* Added explicit soversion support for libsodium 17
+
+Fix crypto_onetimeauth tests
+============================
+
+* The crypto onetimeauth test issues have been resolved
+
+Remove tweetnacl Support
+========================
+
+* The tweetnacl support was never really tested, and since the tweetnacl api
+  is not complete we have removed support for it
+
+Add sodium_init calls
+=====================
+
+* Added calls to sodium_init when the lib is loaded
