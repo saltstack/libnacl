@@ -41,8 +41,8 @@ From Source:
 
 .. code-block:: bash
 
-    tar xvf libnacl-1.4.3.tar.gz
-    cd libnacl-1.4.3
+    tar xvf libnacl-1.4.4.tar.gz
+    cd libnacl-1.4.4
     python setup.py install
 
 Via Pip:
