@@ -26,7 +26,7 @@ BuildRoot:      %{_tmppath}/%{srcname}-%{version}-%{release}-root-%(%{__id_u} -n
 BuildArch:      noarch
 
 BuildRequires:  libsodium
-Requires:       libsodium
+Requires:       libsodium >= 0.5.0
 
 %if ! (0%{?rhel} == 5)
 BuildRequires:  python
