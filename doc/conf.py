@@ -48,7 +48,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'libnacl'
-copyright = u'2015, Thomas S Hatch'
+copyright = u'2016, Thomas S Hatch'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

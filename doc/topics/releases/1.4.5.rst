@@ -1,0 +1,14 @@
+===========================
+libnacl 1.4.5 Release Notes
+===========================
+
+Set low end libsodium version to 0.5
+====================================
+
+* libnacl will only function with libsodium 0.5 and above
+
+Add soversion 18 detection
+==========================
+
+* Added explicit soversion support for libsodium 18
+
