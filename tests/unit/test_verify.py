@@ -49,10 +49,17 @@ class TestVerify(unittest.TestCase):
 
 
 class TestVerifyBytesEq(unittest.TestCase):
-    def test_valid(self):
+    def test_equal(self):
         a = libnacl.randombytes_buf(122)
         b = a[:]
-        self.assertTrue(libnacl.bytes_eq(a, bytes(b)))
+        self.assertTrue(libnacl.bytes_eq(a, b))
+
+    def test_different(self):
+        a = libnacl.randombytes_buf(122)
+        b = bytearray(a)
+        b[87] += 1
+        b = bytes(b)
+        self.assertFalse(libnacl.bytes_eq(a, b))
 
     def test_invalid_type(self):
         a = libnacl.randombytes_buf(122)
