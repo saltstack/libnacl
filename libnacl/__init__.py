@@ -593,6 +593,28 @@ def crypto_verify_64(string1, string2):
     '''
     return not nacl.crypto_verify_64(string1, string2)
 
+
+def bytes_eq(a, b):
+    '''
+    Compares two byte instances with one another. If `a` and `b` have
+    different lengths, return `False` immediately. Otherwise `a` and `b`
+    will be compared in constant time.
+
+    Return `True` in case `a` and `b` are equal. Otherwise `False`.
+
+    Raises :exc:`TypeError` in case `a` and `b` are not both of the type
+    :class:`bytes`.
+    '''
+    if not isinstance(a, bytes) or not isinstance(b, bytes):
+        raise TypeError('Both arguments must be bytes.')
+
+    len_a = len(a)
+    len_b = len(b)
+    if len_a != len_b:
+        return False
+
+    return nacl.sodium_memcmp(a, b, len_a) == 0
+
 # Random byte generation
 
 
