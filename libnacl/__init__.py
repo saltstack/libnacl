@@ -62,12 +62,6 @@ def _get_nacl():
         except OSError:
             pass
 
-        try:
-            # fall back to shipped libsodium
-            libpath = os.path.join(os.path.dirname(__file__), 'libsodium.so')
-            return ctypes.cdll.LoadLibrary(libpath)
-        except OSError:
-            pass
         for soname_ver in __SONAMES:
             try:
                 return ctypes.cdll.LoadLibrary(
@@ -75,6 +69,12 @@ def _get_nacl():
                 )
             except OSError:
                 pass
+        try:
+            # fall back to shipped libsodium, trust os version first
+            libpath = os.path.join(os.path.dirname(__file__), 'libsodium.so')
+            return ctypes.cdll.LoadLibrary(libpath)
+        except OSError:
+            pass
         msg = 'Could not locate nacl lib, searched for libsodium.so, '
         for soname_ver in __SONAMES:
             msg += 'libsodium.so.{0}, '.format(soname_ver)
