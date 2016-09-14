@@ -1,0 +1,19 @@
+===========================
+libnacl 1.5.0 Release Notes
+===========================
+
+Add Built In libsodium.so Support
+=================================
+
+Added the ability to place a `libsodium.so` file in the libnacl
+python directory as a last resort fallback. To use this feature
+just copy your `libsodium.so` file to the same directory as the libnacl
+`__init__.py` file.
+
+This was added to make total portability of the library easier.
+
+Add `bytes_eq`
+==============
+
+Added the `bytes_eq` function to allow better byte comparison
+
