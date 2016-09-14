@@ -8,6 +8,7 @@ from libnacl.version import __version__
 # Import python libs
 import ctypes
 import sys
+import os
 
 __SONAMES = (18, 17, 13, 10, 5, 4)
 
@@ -61,6 +62,12 @@ def _get_nacl():
         except OSError:
             pass
 
+        try:
+            # fall back to shipped libsodium
+            libpath = os.path.join(os.path.dirname(__file__), 'libsodium.so')
+            return ctypes.cdll.LoadLibrary(libpath)
+        except OSError:
+            pass
         for soname_ver in __SONAMES:
             try:
                 return ctypes.cdll.LoadLibrary(
