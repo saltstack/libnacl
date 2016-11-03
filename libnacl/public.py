@@ -15,7 +15,10 @@ class PublicKey(libnacl.base.BaseKey):
     This class is used to manage public keys
     '''
     def __init__(self, pk):
-        self.pk = pk
+        if len(pk) == libnacl.crypto_box_PUBLICKEYBYTES:
+            self.pk = pk
+        else:
+            raise ValueError('Passed in invalid public key')
 
 
 class SecretKey(libnacl.base.BaseKey):
