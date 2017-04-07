@@ -101,6 +101,7 @@ crypto_box_NONCEBYTES = nacl.crypto_box_noncebytes()
 crypto_box_ZEROBYTES = nacl.crypto_box_zerobytes()
 crypto_box_BOXZEROBYTES = nacl.crypto_box_boxzerobytes()
 crypto_box_BEFORENMBYTES = nacl.crypto_box_beforenmbytes()
+crypto_box_SEALBYTES = nacl.crypto_box_sealbytes()
 crypto_scalarmult_BYTES = nacl.crypto_scalarmult_bytes()
 crypto_scalarmult_SCALARBYTES = nacl.crypto_scalarmult_scalarbytes()
 crypto_sign_BYTES = nacl.crypto_sign_bytes()
@@ -245,6 +246,34 @@ def crypto_box_open_afternm(ctxt, nonce, k):
     if ret:
         raise ValueError('unable to decrypt message')
     return msg.raw[crypto_box_ZEROBYTES:]
+
+def crypto_box_seal(msg, pk):
+    '''
+    Using a public key to encrypt the given message. The identity of the sender cannot be verified.
+
+    enc_msg = nacl.crypto_box_seal('secret message', <public key string>)
+    '''
+    if len(pk) != crypto_box_PUBLICKEYBYTES:
+        raise ValueError('Invalid public key')
+    c = ctypes.create_string_buffer(len(msg) + crypto_box_SEALBYTES)
+    ret = nacl.crypto_box_seal(c, msg, ctypes.c_ulonglong(len(msg)), pk)
+    if ret:
+        raise CryptError('Unable to encrypt message')
+    return c.raw
+
+def crypto_box_seal_open(ctxt, pk, sk):
+    '''
+    Decrypts a message given the receiver's public and private key.
+    '''
+    if len(pk) != crypto_box_PUBLICKEYBYTES:
+        raise ValueError('Invalid public key')
+    if len(sk) != crypto_box_SECRETKEYBYTES:
+        raise ValueError('Invalid secret key')
+    c = ctypes.create_string_buffer(len(ctxt) - crypto_box_SEALBYTES)
+    ret = nacl.crypto_box_seal_open(c, ctxt, ctypes.c_ulonglong(len(ctxt)), pk, sk)
+    if ret:
+        raise CryptError('Unable to decrypt message')
+    return c.raw
 
 # Signing functions
 
