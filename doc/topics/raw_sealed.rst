@@ -2,11 +2,6 @@
 Raw Sealed Box Encryption
 =========================
 
-.. note::
-
-    While these routines are perfectly safe, higher level convenience
-    wrappers are under development to make these routines easier.
-
 Sealed box is a variant of :doc:`public key encryption scheme </raw_public.rst>`
 where the sender is not authenticated. This is done by generating an
 ephemeral key pair, which the public key is prefixed to the cipher text.
