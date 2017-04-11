@@ -42,6 +42,8 @@ between Alice and Bob:
     If it is desired to generate a nonce manually this can be done by passing
     it into the encrypt method.
 
+.. _secretkey-object:
+
 SecretKey Object
 ================
 
@@ -70,6 +72,8 @@ available for the public keys:
 
 By saving only the binary keys in memory libnacl ensures that the minimal
 memory footprint is needed.
+
+.. _publickey-object:
 
 PublicKey Object
 ================

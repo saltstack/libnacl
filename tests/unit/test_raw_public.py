@@ -43,7 +43,7 @@ class TestPublic(unittest.TestCase):
         pk3, sk3 = libnacl.crypto_box_keypair()
         pk4, sk4 = libnacl.crypto_box_keypair()
         enc_msg2 = libnacl.crypto_box(msg, nonce2, pk4, sk3)
-        self.assertNotEqual(msg, enc_msg)
+        self.assertNotEqual(msg, enc_msg2)
         clear_msg2 = libnacl.crypto_box_open(enc_msg2, nonce2, pk3, sk4)
         self.assertEqual(clear_msg2, msg)
         # Check bits
@@ -62,3 +62,20 @@ class TestPublic(unittest.TestCase):
         self.assertNotEqual(msg, enc_msg)
         clear_msg = libnacl.crypto_box_open_afternm(enc_msg, nonce1, k2)
         self.assertEqual(clear_msg, msg)
+    
+    def test_box_seal(self):
+        msg = b'Are you suggesting coconuts migrate?'
+        # run 1
+        pk, sk = libnacl.crypto_box_keypair()
+        enc_msg = libnacl.crypto_box_seal(msg, pk)
+        self.assertNotEqual(msg, enc_msg)
+        clear_msg = libnacl.crypto_box_seal_open(enc_msg, pk, sk)
+        self.assertEqual(clear_msg, msg)
+        # run 2
+        pk2, sk2 = libnacl.crypto_box_keypair()
+        enc_msg2 = libnacl.crypto_box_seal(msg, pk2)
+        self.assertNotEqual(msg, enc_msg2)
+        clear_msg2 = libnacl.crypto_box_seal_open(enc_msg2, pk2, sk2)
+        self.assertEqual(clear_msg2, msg)
+        # Check bits
+        self.assertNotEqual(enc_msg, enc_msg2)
