@@ -255,6 +255,9 @@ def crypto_box_seal(msg, pk):
     '''
     if len(pk) != crypto_box_PUBLICKEYBYTES:
         raise ValueError('Invalid public key')
+    if not isinstance(msg, bytes):
+        raise TypeError('Message must be bytes')
+
     c = ctypes.create_string_buffer(len(msg) + crypto_box_SEALBYTES)
     ret = nacl.crypto_box_seal(c, msg, ctypes.c_ulonglong(len(msg)), pk)
     if ret:
@@ -269,6 +272,9 @@ def crypto_box_seal_open(ctxt, pk, sk):
         raise ValueError('Invalid public key')
     if len(sk) != crypto_box_SECRETKEYBYTES:
         raise ValueError('Invalid secret key')
+    if not isinstance(ctxt, bytes):
+        raise TypeError('Message must be bytes')
+    
     c = ctypes.create_string_buffer(len(ctxt) - crypto_box_SEALBYTES)
     ret = nacl.crypto_box_seal_open(c, ctxt, ctypes.c_ulonglong(len(ctxt)), pk, sk)
     if ret:
