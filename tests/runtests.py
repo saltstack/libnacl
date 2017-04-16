@@ -4,6 +4,7 @@
 # Import python libs
 import os
 import sys
+import string
 import unittest
 
 NACL_ROOT = os.path.abspath(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
