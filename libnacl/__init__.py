@@ -315,7 +315,7 @@ def crypto_sign(msg, sk):
 
 def crypto_sign_seed_keypair(seed):
     '''
-    Computes and returns the secret adn verify keys from the given seed
+    Computes and returns the secret and verify keys from the given seed
     '''
     if len(seed) != crypto_sign_SEEDBYTES:
         raise ValueError('Invalid Seed')
