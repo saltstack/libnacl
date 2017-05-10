@@ -743,8 +743,8 @@ def crypto_box_seed_keypair(seed):
     '''
     if len(seed) != crypto_box_SEEDBYTES:
         raise ValueError('Invalid Seed')
-    pk = ctypes.create_string_buffer(crypto_box_SECRETKEYBYTES)
-    sk = ctypes.create_string_buffer(crypto_box_PUBLICKEYBYTES)
+    pk = ctypes.create_string_buffer(crypto_box_PUBLICKEYBYTES)
+    sk = ctypes.create_string_buffer(crypto_box_SECRETKEYBYTES)
 
     ret = nacl.crypto_box_seed_keypair(pk, sk, seed)
     if ret:
