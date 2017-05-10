@@ -96,6 +96,7 @@ if sodium_init() < 0:
 
 # Define constants
 crypto_box_SECRETKEYBYTES = nacl.crypto_box_secretkeybytes()
+crypto_box_SEEDBYTES = nacl.crypto_box_seedbytes()
 crypto_box_PUBLICKEYBYTES = nacl.crypto_box_publickeybytes()
 crypto_box_NONCEBYTES = nacl.crypto_box_noncebytes()
 crypto_box_ZEROBYTES = nacl.crypto_box_zerobytes()
