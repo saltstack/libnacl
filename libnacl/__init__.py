@@ -96,6 +96,7 @@ if sodium_init() < 0:
 
 # Define constants
 crypto_box_SECRETKEYBYTES = nacl.crypto_box_secretkeybytes()
+crypto_box_SEEDBYTES = nacl.crypto_box_seedbytes()
 crypto_box_PUBLICKEYBYTES = nacl.crypto_box_publickeybytes()
 crypto_box_NONCEBYTES = nacl.crypto_box_noncebytes()
 crypto_box_ZEROBYTES = nacl.crypto_box_zerobytes()
@@ -734,3 +735,18 @@ def sodium_version_string():
     func = nacl.sodium_version_string
     func.restype = ctypes.c_char_p
     return func()
+
+
+def crypto_box_seed_keypair(seed):
+    '''
+    Computes and returns the public and secret keys from the given seed
+    '''
+    if len(seed) != crypto_box_SEEDBYTES:
+        raise ValueError('Invalid Seed')
+    pk = ctypes.create_string_buffer(crypto_box_PUBLICKEYBYTES)
+    sk = ctypes.create_string_buffer(crypto_box_SECRETKEYBYTES)
+
+    ret = nacl.crypto_box_seed_keypair(pk, sk, seed)
+    if ret:
+        raise CryptError('Failed to generate keypair from seed')
+    return (pk.raw, sk.raw)
