@@ -223,7 +223,7 @@ def crypto_box_afternm(msg, nonce, k):
     ctxt = ctypes.create_string_buffer(len(pad))
     ret = nacl.crypto_box_afternm(ctxt, pad, ctypes.c_ulonglong(len(pad)), nonce, k)
     if ret:
-        raise ValueError('Unable to encrypt messsage')
+        raise CryptError('Unable to encrypt messsage')
     return ctxt.raw[crypto_box_BOXZEROBYTES:]
 
 
@@ -244,7 +244,7 @@ def crypto_box_open_afternm(ctxt, nonce, k):
             nonce,
             k)
     if ret:
-        raise ValueError('unable to decrypt message')
+        raise CryptError('unable to decrypt message')
     return msg.raw[crypto_box_ZEROBYTES:]
 
 def crypto_box_seal(msg, pk):
