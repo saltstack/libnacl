@@ -736,6 +736,7 @@ def sodium_version_string():
     func.restype = ctypes.c_char_p
     return func()
 
+
 def crypto_box_seed_keypair(seed):
     '''
     Computes and returns the public and secret keys from the given seed
