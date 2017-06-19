@@ -1,0 +1,9 @@
+===========================
+libnacl 1.5.1 Release Notes
+===========================
+
+Add Sealed Box Support
+======================
+
+A big thanks to Manatsawin Hanmongkolchai for adding in support for libsodium
+`Sealed Boxes`!

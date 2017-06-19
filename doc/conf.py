@@ -48,7 +48,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'libnacl'
-copyright = u'2016, Thomas S Hatch'
+copyright = u'2017, Thomas S Hatch'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -267,7 +267,7 @@ texinfo_documents = [
 epub_title = u'libnacl'
 epub_author = u'Thomas S Hatch'
 epub_publisher = u'Thomas S Hatch'
-epub_copyright = u'2014, Thomas S Hatch'
+epub_copyright = u'2017, Thomas S Hatch'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = u'libnacl'
