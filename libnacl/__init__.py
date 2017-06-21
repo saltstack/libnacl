@@ -95,6 +95,12 @@ if sodium_init() < 0:
     raise RuntimeError('sodium_init() call failed!')
 
 # Define constants
+try:
+    crypto_box_SEALBYTES = nacl.crypto_box_sealbytes()
+    HAS_SEAL = True
+except AttributeError:
+    HAS_SEAL = False
+
 crypto_box_SECRETKEYBYTES = nacl.crypto_box_secretkeybytes()
 crypto_box_SEEDBYTES = nacl.crypto_box_seedbytes()
 crypto_box_PUBLICKEYBYTES = nacl.crypto_box_publickeybytes()
@@ -102,7 +108,6 @@ crypto_box_NONCEBYTES = nacl.crypto_box_noncebytes()
 crypto_box_ZEROBYTES = nacl.crypto_box_zerobytes()
 crypto_box_BOXZEROBYTES = nacl.crypto_box_boxzerobytes()
 crypto_box_BEFORENMBYTES = nacl.crypto_box_beforenmbytes()
-crypto_box_SEALBYTES = nacl.crypto_box_sealbytes()
 crypto_scalarmult_BYTES = nacl.crypto_scalarmult_bytes()
 crypto_scalarmult_SCALARBYTES = nacl.crypto_scalarmult_scalarbytes()
 crypto_sign_BYTES = nacl.crypto_sign_bytes()
@@ -254,6 +259,8 @@ def crypto_box_seal(msg, pk):
 
     enc_msg = nacl.crypto_box_seal('secret message', <public key string>)
     '''
+    if not HAS_SEAL:
+        raise ValueError('Underlying Sodium library does not support sealed boxes')
     if len(pk) != crypto_box_PUBLICKEYBYTES:
         raise ValueError('Invalid public key')
     if not isinstance(msg, bytes):
@@ -269,6 +276,8 @@ def crypto_box_seal_open(ctxt, pk, sk):
     '''
     Decrypts a message given the receiver's public and private key.
     '''
+    if not HAS_SEAL:
+        raise ValueError('Underlying Sodium library does not support sealed boxes')
     if len(pk) != crypto_box_PUBLICKEYBYTES:
         raise ValueError('Invalid public key')
     if len(sk) != crypto_box_SECRETKEYBYTES:
