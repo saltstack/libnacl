@@ -62,7 +62,7 @@ class TestPublic(unittest.TestCase):
         self.assertNotEqual(msg, enc_msg)
         clear_msg = libnacl.crypto_box_open_afternm(enc_msg, nonce1, k2)
         self.assertEqual(clear_msg, msg)
-    
+
     def test_box_seal(self):
         msg = b'Are you suggesting coconuts migrate?'
         # run 1

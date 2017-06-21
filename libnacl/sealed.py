@@ -14,10 +14,10 @@ class SealedBox(object):
         if isinstance(pk, (libnacl.public.SecretKey, libnacl.dual.DualSecret)):
             self.pk = pk.pk
             self.sk = pk.sk
-        
+
         if isinstance(pk, libnacl.public.PublicKey):
             self.pk = pk.pk
-    
+
     def encrypt(self, msg):
         '''
         Encrypt the given message using the receiver's public key
