@@ -120,6 +120,12 @@ crypto_secretbox_NONCEBYTES = nacl.crypto_secretbox_noncebytes()
 crypto_secretbox_ZEROBYTES = nacl.crypto_secretbox_zerobytes()
 crypto_secretbox_BOXZEROBYTES = nacl.crypto_secretbox_boxzerobytes()
 crypto_secretbox_MACBYTES = crypto_secretbox_ZEROBYTES - crypto_secretbox_BOXZEROBYTES
+crypto_aead_aes256gcm_KEYBYTES = nacl.crypto_aead_aes256gcm_keybytes()
+crypto_aead_aes256gcm_NPUBBYTES = nacl.crypto_aead_aes256gcm_npubbytes()
+crypto_aead_aes256gcm_ABYTES = nacl.crypto_aead_aes256gcm_abytes()
+crypto_aead_chacha20poly1305_ietf_KEYBYTES = nacl.crypto_aead_chacha20poly1305_ietf_keybytes()
+crypto_aead_chacha20poly1305_ietf_NPUBBYTES = nacl.crypto_aead_chacha20poly1305_ietf_npubbytes()
+crypto_aead_chacha20poly1305_ietf_ABYTES = nacl.crypto_aead_chacha20poly1305_ietf_abytes()
 crypto_stream_KEYBYTES = nacl.crypto_stream_keybytes()
 crypto_stream_NONCEBYTES = nacl.crypto_stream_noncebytes()
 crypto_auth_BYTES = nacl.crypto_auth_bytes()
@@ -411,6 +417,135 @@ def crypto_secretbox_open(ctxt, nonce, key):
     if ret:
         raise ValueError('Failed to decrypt message')
     return msg.raw[crypto_secretbox_ZEROBYTES:]
+
+# Authenticated Symmetric Encryption with Additional Data
+
+
+def crypto_aead_aes256gcm_encrypt(message, aad, nonce, key):
+    """Encrypts and authenticates a message with public additional data using the given secret key, and nonce
+
+    Args:
+        message (bytes): a message to encrypt
+        aad  (bytes): additional public data to authenticate
+        nonce (bytes): nonce, does not have to be confidential must be
+            `crypto_aead_aes256gcm_NPUBBYTES` in length
+        key (bytes): secret key, must be `crypto_aead_aes256gcm_KEYBYTES` in
+            length
+
+    Returns:
+        bytes: the ciphertext
+
+    Raises:
+        ValueError: if arguments' length is wrong or the operation has failed.
+    """
+    if len(key) != crypto_aead_aes256gcm_KEYBYTES:
+        raise ValueError('Invalid key')
+
+    if len(nonce) != crypto_aead_aes256gcm_NPUBBYTES:
+        raise ValueError('Invalid nonce')
+
+    length = len(message) + crypto_aead_aes256gcm_ABYTES
+    clen = ctypes.c_ulonglong()
+    c = ctypes.create_string_buffer(length)
+    ret = nacl.crypto_aead_aes256gcm_encrypt(
+        c, ctypes.pointer(clen),
+        message, ctypes.c_ulonglong(len(message)),
+        aad, ctypes.c_ulonglong(len(aad)),
+        None,
+        nonce, key)
+    if ret:
+        raise ValueError('Failed to encrypt message')
+    return c.raw
+
+
+def crypto_aead_chacha20poly1305_ietf_encrypt(message, aad, nonce, key):
+    """Encrypts and authenticates a message with public additional data using the given secret key, and nonce
+
+    Args:
+        message (bytes): a message to encrypt
+        aad  (bytes): additional public data to authenticate
+        nonce (bytes): nonce, does not have to be confidential must be
+            `crypto_aead_chacha20poly1305_ietf_NPUBBYTES` in length
+        key (bytes): secret key, must be `crypto_aead_chacha20poly1305_ietf_KEYBYTES` in
+            length
+
+    Returns:
+        bytes: the ciphertext
+
+    Raises:
+        ValueError: if arguments' length is wrong or the operation has failed.
+    """
+    if len(key) != crypto_aead_chacha20poly1305_ietf_KEYBYTES:
+        raise ValueError('Invalid key')
+
+    if len(nonce) != crypto_aead_chacha20poly1305_ietf_NPUBBYTES:
+        raise ValueError('Invalid nonce')
+
+    length = len(message) + crypto_aead_chacha20poly1305_ietf_ABYTES
+    clen = ctypes.c_ulonglong()
+    c = ctypes.create_string_buffer(length)
+    ret = nacl.crypto_aead_chacha20poly1305_ietf_encrypt(
+        c, ctypes.pointer(clen),
+        message, ctypes.c_ulonglong(len(message)),
+        aad, ctypes.c_ulonglong(len(aad)),
+        None,
+        nonce, key)
+    if ret:
+        raise ValueError('Failed to encrypt message')
+    return c.raw
+
+
+def crypto_aead_aes256gcm_decrypt(ctxt, aad, nonce, key):
+    """
+    Decrypts a ciphertext ctxt given the key, nonce, and aad. If the aad
+    or ciphertext were altered then the decryption will fail.
+    """
+    if len(key) != crypto_aead_aes256gcm_KEYBYTES:
+        raise ValueError('Invalid key')
+
+    if len(nonce) != crypto_aead_aes256gcm_NPUBBYTES:
+        raise ValueError('Invalid nonce')
+
+    length = len(ctxt)-crypto_aead_aes256gcm_ABYTES
+    mlen = ctypes.c_ulonglong()
+    m = ctypes.create_string_buffer(length)
+
+    ret = nacl.crypto_aead_aes256gcm_decrypt(
+        m, mlen,
+        None,
+        ctxt, ctypes.c_ulonglong(len(ctxt)),
+        aad, ctypes.c_ulonglong(len(aad)),
+        nonce, key)
+    if ret:
+        raise ValueError('Failed to decrypt message')
+    return m.raw
+
+
+def crypto_aead_chacha20poly1305_ietf_decrypt(ctxt, aad, nonce, key):
+    """
+    Decrypts a ciphertext ctxt given the key, nonce, and aad. If the aad
+    or ciphertext were altered then the decryption will fail.
+    """
+    if len(key) != crypto_aead_chacha20poly1305_ietf_KEYBYTES:
+        raise ValueError('Invalid key')
+
+    if len(nonce) != crypto_aead_chacha20poly1305_ietf_NPUBBYTES:
+        raise ValueError('Invalid nonce')
+
+    length = len(ctxt)-crypto_aead_chacha20poly1305_ietf_ABYTES
+    mlen = ctypes.c_ulonglong()
+    m = ctypes.create_string_buffer(length)
+
+    ret = nacl.crypto_aead_chacha20poly1305_ietf_decrypt(
+        m, mlen,
+        None,
+        ctxt, ctypes.c_ulonglong(len(ctxt)),
+        aad, ctypes.c_ulonglong(len(aad)),
+        nonce, key)
+    if ret:
+        raise ValueError('Failed to decrypt message')
+    return m.raw
+
 
 # Symmetric Encryption
 

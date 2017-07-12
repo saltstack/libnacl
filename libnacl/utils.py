@@ -64,6 +64,21 @@ def salsa_key():
     return libnacl.randombytes(libnacl.crypto_secretbox_KEYBYTES)
 
 
+def aead_key():
+    '''
+    Generates an AEAD key (both implementations use the same size)
+    '''
+    return libnacl.randombytes(libnacl.crypto_aead_aes256gcm_KEYBYTES)
+
+
+def rand_aead_nonce():
+    '''
+    Generates and returns a random bytestring of the size defined in libsodium
+    as crypto_aead_aes256gcm_NPUBBYTES and crypto_aead_chacha20poly1305_ietf_NPUBBYTES
+    '''
+    return libnacl.randombytes(libnacl.crypto_aead_aes256gcm_NPUBBYTES)
+
+
 def rand_nonce():
     '''
     Generates and returns a random bytestring of the size defined in libsodium
