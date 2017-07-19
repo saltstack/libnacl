@@ -100,6 +100,16 @@ try:
     HAS_SEAL = True
 except AttributeError:
     HAS_SEAL = False
+try:
+    crypto_aead_aes256gcm_KEYBYTES = nacl.crypto_aead_aes256gcm_keybytes()
+    crypto_aead_aes256gcm_NPUBBYTES = nacl.crypto_aead_aes256gcm_npubbytes()
+    crypto_aead_aes256gcm_ABYTES = nacl.crypto_aead_aes256gcm_abytes()
+    crypto_aead_chacha20poly1305_ietf_KEYBYTES = nacl.crypto_aead_chacha20poly1305_ietf_keybytes()
+    crypto_aead_chacha20poly1305_ietf_NPUBBYTES = nacl.crypto_aead_chacha20poly1305_ietf_npubbytes()
+    crypto_aead_chacha20poly1305_ietf_ABYTES = nacl.crypto_aead_chacha20poly1305_ietf_abytes()
+    HAS_AEAD = True
+except AttributeError:
+    HAS_AEAD = False
 
 crypto_box_SECRETKEYBYTES = nacl.crypto_box_secretkeybytes()
 crypto_box_SEEDBYTES = nacl.crypto_box_seedbytes()
@@ -120,12 +130,6 @@ crypto_secretbox_NONCEBYTES = nacl.crypto_secretbox_noncebytes()
 crypto_secretbox_ZEROBYTES = nacl.crypto_secretbox_zerobytes()
 crypto_secretbox_BOXZEROBYTES = nacl.crypto_secretbox_boxzerobytes()
 crypto_secretbox_MACBYTES = crypto_secretbox_ZEROBYTES - crypto_secretbox_BOXZEROBYTES
-crypto_aead_aes256gcm_KEYBYTES = nacl.crypto_aead_aes256gcm_keybytes()
-crypto_aead_aes256gcm_NPUBBYTES = nacl.crypto_aead_aes256gcm_npubbytes()
-crypto_aead_aes256gcm_ABYTES = nacl.crypto_aead_aes256gcm_abytes()
-crypto_aead_chacha20poly1305_ietf_KEYBYTES = nacl.crypto_aead_chacha20poly1305_ietf_keybytes()
-crypto_aead_chacha20poly1305_ietf_NPUBBYTES = nacl.crypto_aead_chacha20poly1305_ietf_npubbytes()
-crypto_aead_chacha20poly1305_ietf_ABYTES = nacl.crypto_aead_chacha20poly1305_ietf_abytes()
 crypto_stream_KEYBYTES = nacl.crypto_stream_keybytes()
 crypto_stream_NONCEBYTES = nacl.crypto_stream_noncebytes()
 crypto_auth_BYTES = nacl.crypto_auth_bytes()
