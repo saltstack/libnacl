@@ -1,0 +1,11 @@
+===========================
+libnacl 1.5.2 Release Notes
+===========================
+
+Add Support for AEAD AES and chacha20poly1305
+=============================================
+
+Big thanks to Nicholas O'Brien for adding support for libsodium's AEAD
+encryption systems. The raw functions are all available to access
+libsodium directly along with the high level AEAD class that cleanly
+follows libnacl's key management model.
