@@ -7,3 +7,11 @@ Add Sealed Box Support
 
 A big thanks to Manatsawin Hanmongkolchai for adding in support for libsodium
 `Sealed Boxes`!
+
+Change Exception on Encrypt/Decrypt Failure
+===========================================
+
+If encryption or decryption fails, `CryptError` is raised instead of
+`ValueError`. This might be a breaking change for your application. See
+`#91 <https://github.com/saltstack/libnacl/issues/91>`__ and
+`#74 <https://github.com/saltstack/libnacl/issues/74>`__.
