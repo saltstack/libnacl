@@ -6,6 +6,7 @@ import unittest
 class TestAEAD(unittest.TestCase):
     '''
     '''
+    @unittest.skipUnless(libnacl.HAS_AEAD_AES256GCM, 'AES256-GCM AEAD not available')
     def test_gcm_aead(self):
         msg = b"You've got two empty halves of coconuts and your bangin' 'em together."
         aad = b'\x00\x11\x22\x33'
@@ -22,6 +23,7 @@ class TestAEAD(unittest.TestCase):
         clear3 = box.decrypt(ctxt2, len(aad))
         self.assertEqual(clear3, msg)
 
+    @unittest.skipUnless(libnacl.HAS_AEAD_CHACHA20POLY1305_IETF, 'IETF variant of ChaCha20Poly1305 AEAD not available')
     def test_ietf_aead(self):
         msg = b"Our King? Well i didn't vote for you!!"
         aad = b'\x00\x11\x22\x33'

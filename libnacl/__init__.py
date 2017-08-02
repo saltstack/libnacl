@@ -101,14 +101,21 @@ try:
 except AttributeError:
     HAS_SEAL = False
 try:
-    crypto_aead_aes256gcm_KEYBYTES = nacl.crypto_aead_aes256gcm_keybytes()
-    crypto_aead_aes256gcm_NPUBBYTES = nacl.crypto_aead_aes256gcm_npubbytes()
-    crypto_aead_aes256gcm_ABYTES = nacl.crypto_aead_aes256gcm_abytes()
+    if nacl.crypto_aead_aes256gcm_is_available():
+        crypto_aead_aes256gcm_KEYBYTES = nacl.crypto_aead_aes256gcm_keybytes()
+        crypto_aead_aes256gcm_NPUBBYTES = nacl.crypto_aead_aes256gcm_npubbytes()
+        crypto_aead_aes256gcm_ABYTES = nacl.crypto_aead_aes256gcm_abytes()
+        HAS_AEAD_AES256GCM = True
+    else:
+        HAS_AEAD_AES256GCM = False
     crypto_aead_chacha20poly1305_ietf_KEYBYTES = nacl.crypto_aead_chacha20poly1305_ietf_keybytes()
     crypto_aead_chacha20poly1305_ietf_NPUBBYTES = nacl.crypto_aead_chacha20poly1305_ietf_npubbytes()
     crypto_aead_chacha20poly1305_ietf_ABYTES = nacl.crypto_aead_chacha20poly1305_ietf_abytes()
+    HAS_AEAD_CHACHA20POLY1305_IETF = True
     HAS_AEAD = True
 except AttributeError:
+    HAS_AEAD_AES256GCM = False
+    HAS_AEAD_CHACHA20POLY1305_IETF = False
     HAS_AEAD = False
 
 crypto_box_SECRETKEYBYTES = nacl.crypto_box_secretkeybytes()
@@ -442,6 +449,9 @@ def crypto_aead_aes256gcm_encrypt(message, aad, nonce, key):
     Raises:
         ValueError: if arguments' length is wrong or the operation has failed.
     """
+    if not HAS_AEAD_AES256GCM:
+        raise ValueError('Underlying Sodium library does not support AES256-GCM AEAD')
+
     if len(key) != crypto_aead_aes256gcm_KEYBYTES:
         raise ValueError('Invalid key')
 
@@ -479,6 +489,9 @@ def crypto_aead_chacha20poly1305_ietf_encrypt(message, aad, nonce, key):
     Raises:
         ValueError: if arguments' length is wrong or the operation has failed.
     """
+    if not HAS_AEAD_CHACHA20POLY1305_IETF:
+        raise ValueError('Underlying Sodium library does not support IETF variant of ChaCha20Poly1305 AEAD')
+
     if len(key) != crypto_aead_chacha20poly1305_ietf_KEYBYTES:
         raise ValueError('Invalid key')
 
@@ -504,6 +517,9 @@ def crypto_aead_aes256gcm_decrypt(ctxt, aad, nonce, key):
     Decrypts a ciphertext ctxt given the key, nonce, and aad. If the aad
     or ciphertext were altered then the decryption will fail.
     """
+    if not HAS_AEAD_AES256GCM:
+        raise ValueError('Underlying Sodium library does not support AES256-GCM AEAD')
+
     if len(key) != crypto_aead_aes256gcm_KEYBYTES:
         raise ValueError('Invalid key')
 
@@ -530,6 +546,9 @@ def crypto_aead_chacha20poly1305_ietf_decrypt(ctxt, aad, nonce, key):
     Decrypts a ciphertext ctxt given the key, nonce, and aad. If the aad
     or ciphertext were altered then the decryption will fail.
     """
+    if not HAS_AEAD_CHACHA20POLY1305_IETF:
+        raise ValueError('Underlying Sodium library does not support IETF variant of ChaCha20Poly1305 AEAD')
+
     if len(key) != crypto_aead_chacha20poly1305_ietf_KEYBYTES:
         raise ValueError('Invalid key')
 
