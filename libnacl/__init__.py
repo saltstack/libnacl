@@ -101,13 +101,10 @@ try:
 except AttributeError:
     HAS_SEAL = False
 try:
-    if nacl.crypto_aead_aes256gcm_is_available():
-        crypto_aead_aes256gcm_KEYBYTES = nacl.crypto_aead_aes256gcm_keybytes()
-        crypto_aead_aes256gcm_NPUBBYTES = nacl.crypto_aead_aes256gcm_npubbytes()
-        crypto_aead_aes256gcm_ABYTES = nacl.crypto_aead_aes256gcm_abytes()
-        HAS_AEAD_AES256GCM = True
-    else:
-        HAS_AEAD_AES256GCM = False
+    crypto_aead_aes256gcm_KEYBYTES = nacl.crypto_aead_aes256gcm_keybytes()
+    crypto_aead_aes256gcm_NPUBBYTES = nacl.crypto_aead_aes256gcm_npubbytes()
+    crypto_aead_aes256gcm_ABYTES = nacl.crypto_aead_aes256gcm_abytes()
+    HAS_AEAD_AES256GCM = bool(nacl.crypto_aead_aes256gcm_is_available())
     crypto_aead_chacha20poly1305_ietf_KEYBYTES = nacl.crypto_aead_chacha20poly1305_ietf_keybytes()
     crypto_aead_chacha20poly1305_ietf_NPUBBYTES = nacl.crypto_aead_chacha20poly1305_ietf_npubbytes()
     crypto_aead_chacha20poly1305_ietf_ABYTES = nacl.crypto_aead_chacha20poly1305_ietf_abytes()
