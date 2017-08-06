@@ -59,7 +59,7 @@ version of the key the pk_hex method is available:
 
     import libnacl.dual
     
-    fred = libnacl.dual.DualKey()
+    fred = libnacl.dual.DualSecret()
 
     raw_sk = fred.sk
     hex_sk = fred.hex_sk()
@@ -83,5 +83,5 @@ a single file.
 
     import libnacl.dual
 
-    fred = libnacl.dual.DualKey()
+    fred = libnacl.dual.DualSecret()
     fred.save('/etc/nacl/fred.key')
