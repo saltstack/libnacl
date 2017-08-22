@@ -128,6 +128,8 @@ crypto_sign_BYTES = nacl.crypto_sign_bytes()
 crypto_sign_SEEDBYTES = nacl.crypto_sign_secretkeybytes() // 2
 crypto_sign_PUBLICKEYBYTES = nacl.crypto_sign_publickeybytes()
 crypto_sign_SECRETKEYBYTES = nacl.crypto_sign_secretkeybytes()
+crypto_sign_ed25519_PUBLICKEYBYTES = nacl.crypto_sign_ed25519_publickeybytes()
+crypto_sign_ed25519_SECRETKEYBYTES = nacl.crypto_sign_ed25519_secretkeybytes()
 crypto_box_MACBYTES = crypto_box_ZEROBYTES - crypto_box_BOXZEROBYTES
 crypto_secretbox_KEYBYTES = nacl.crypto_secretbox_keybytes()
 crypto_secretbox_NONCEBYTES = nacl.crypto_secretbox_noncebytes()
@@ -171,6 +173,29 @@ def crypto_box_keypair():
     return pk.raw, sk.raw
 
 
+def crypto_box_seed_keypair(seed):
+    '''
+    Generate and return a keypair from a key seed 
+    '''
+    if len(seed) != crypto_box_SEEDBYTES:
+        raise ValueError('Invalid key seed')
+    pk = ctypes.create_string_buffer(crypto_box_PUBLICKEYBYTES)
+    sk = ctypes.create_string_buffer(crypto_box_SECRETKEYBYTES)
+    nacl.crypto_box_seed_keypair(pk, sk, seed)
+    return pk.raw, sk.raw
+
+
+def crypto_scalarmult_base(sk):
+    '''
+    Generate a public key from a secret key 
+    '''
+    if len(sk) != crypto_box_SECRETKEYBYTES:
+        raise ValueError('Invalid secret key')
+    pk = ctypes.create_string_buffer(crypto_box_PUBLICKEYBYTES)
+    nacl.crypto_scalarmult_base(pk, sk)
+    return pk.raw
+    
+    
 def crypto_box(msg, nonce, pk, sk):
     '''
     Using a public key and a secret key encrypt the given message. A nonce
@@ -194,7 +219,7 @@ def crypto_box(msg, nonce, pk, sk):
 
 def crypto_box_open(ctxt, nonce, pk, sk):
     '''
-    Decrypts a message given the receivers private key, and senders public key
+    Decrypts a message given the receiver's private key, and sender's public key
     '''
     if len(pk) != crypto_box_PUBLICKEYBYTES:
         raise ValueError('Invalid public key')
@@ -208,6 +233,49 @@ def crypto_box_open(ctxt, nonce, pk, sk):
             msg,
             pad,
             ctypes.c_ulonglong(len(pad)),
+            nonce,
+            pk,
+            sk)
+    if ret:
+        raise CryptError('Unable to decrypt ciphertext')
+    return msg.raw[crypto_box_ZEROBYTES:]
+
+
+def crypto_box_easy(msg, nonce, pk, sk):
+    '''
+    Using a public key and a secret key encrypt the given message. A nonce
+    must also be passed in, never reuse the nonce
+
+    enc_msg = nacl.crypto_box_easy('secret message', <unique nonce>, <public key string>, <secret key string>)
+    '''
+    if len(pk) != crypto_box_PUBLICKEYBYTES:
+        raise ValueError('Invalid public key')
+    if len(sk) != crypto_box_SECRETKEYBYTES:
+        raise ValueError('Invalid secret key')
+    if len(nonce) != crypto_box_NONCEBYTES:
+        raise ValueError('Invalid nonce')
+    c = ctypes.create_string_buffer(len(msg) + crypto_box_MACBYTES)
+    ret = nacl.crypto_box(c, msg, ctypes.c_ulonglong(len(msg)), nonce, pk, sk)
+    if ret:
+        raise CryptError('Unable to encrypt message')
+    return c.raw
+
+
+def crypto_box_open_easy(ctxt, nonce, pk, sk):
+    '''
+    Decrypts a message given the receiver's private key, and sender's public key
+    '''
+    if len(pk) != crypto_box_PUBLICKEYBYTES:
+        raise ValueError('Invalid public key')
+    if len(sk) != crypto_box_SECRETKEYBYTES:
+        raise ValueError('Invalid secret key')
+    if len(nonce) != crypto_box_NONCEBYTES:
+        raise ValueError('Invalid nonce')
+    msg = ctypes.create_string_buffer(len(ctxt) - crypto_box_MACBYTES)
+    ret = nacl.crypto_box_open(
+            msg,
+            ctxt,
+            ctypes.c_ulonglong(len(ctxt)),
             nonce,
             pk,
             sk)
@@ -267,6 +335,45 @@ def crypto_box_open_afternm(ctxt, nonce, k):
         raise CryptError('unable to decrypt message')
     return msg.raw[crypto_box_ZEROBYTES:]
 
+
+def crypto_box_easy_afternm(msg, nonce, k):
+    '''
+    Using a precalculated shared key, encrypt the given message. A nonce
+    must also be passed in, never reuse the nonce
+
+    enc_msg = nacl.crypto_box_easy_afternm('secret message', <unique nonce>, <shared key string>)
+    '''
+    if len(k) != crypto_box_BEFORENMBYTES:
+        raise ValueError('Invalid shared key')
+    if len(nonce) != crypto_box_NONCEBYTES:
+        raise ValueError('Invalid nonce')
+    ctxt = ctypes.create_string_buffer(len(msg) + crypto_box_MACBYTES)
+    ret = nacl.crypto_box_easy_afternm(ctxt, msg, ctypes.c_ulonglong(len(msg)), nonce, k)
+    if ret:
+        raise CryptError('Unable to encrypt messsage')
+    return ctxt.raw
+
+
+def crypto_box_open_easy_afternm(ctxt, nonce, k):
+    '''
+    Decrypts a ciphertext ctxt given k
+    '''
+    if len(k) != crypto_box_BEFORENMBYTES:
+        raise ValueError('Invalid shared key')
+    if len(nonce) != crypto_box_NONCEBYTES:
+        raise ValueError('Invalid nonce')
+    msg = ctypes.create_string_buffer(len(ctxt) - crypto_box_MACBYTES)
+    ret = nacl.crypto_box_open_easy_afternm(
+            msg,
+            ctxt,
+            ctypes.c_ulonglong(len(ctxt)),
+            nonce,
+            k)
+    if ret:
+        raise CryptError('unable to decrypt message')
+    return msg.raw
+
+
 def crypto_box_seal(msg, pk):
     '''
     Using a public key to encrypt the given message. The identity of the sender cannot be verified.
@@ -285,6 +392,7 @@ def crypto_box_seal(msg, pk):
     if ret:
         raise CryptError('Unable to encrypt message')
     return c.raw
+
 
 def crypto_box_seal_open(ctxt, pk, sk):
     '''
@@ -320,9 +428,43 @@ def crypto_sign_keypair():
     return vk.raw, sk.raw
 
 
+def crypto_sign_ed25519_keypair():
+    '''
+    Generates a signing/verification Ed25519 key pair
+    '''
+    vk = ctypes.create_string_buffer(crypto_sign_ed25519_PUBLICKEYBYTES)
+    sk = ctypes.create_string_buffer(crypto_sign_ed25519_SECRETKEYBYTES)
+    ret = nacl.crypto_sign_ed25519_keypair(vk, sk)
+    if ret:
+        raise ValueError('Failed to generate keypair')
+    return vk.raw, sk.raw
+
+
+def crypto_sign_ed25519_sk_to_pk(sk):
+    '''
+    Extract the public key from the secret key
+    '''
+    pk = ctypes.create_string_buffer(crypto_sign_PUBLICKEYBYTES)
+    ret = nacl.crypto_sign_ed25519_sk_to_pk(pk, sk)
+    if ret:
+        raise ValueError('Failed to generate public key')
+    return pk.raw
+
+
+def crypto_sign_ed25519_sk_to_seed(sk):
+    '''
+    Extract the seed from the secret key 
+    '''
+    seed = ctypes.create_string_buffer(crypto_sign_SEEDBYTES)
+    ret = nacl.crypto_sign_ed25519_sk_to_seed(seed, sk)
+    if ret:
+        raise ValueError('Failed to generate seed')
+    return seed.raw
+
+
 def crypto_sign(msg, sk):
     '''
-    Sign the given message witht he given signing key
+    Sign the given message with the given signing key
     '''
     sig = ctypes.create_string_buffer(len(msg) + crypto_sign_BYTES)
     slen = ctypes.pointer(ctypes.c_ulonglong())
@@ -335,6 +477,23 @@ def crypto_sign(msg, sk):
     if ret:
         raise ValueError('Failed to sign message')
     return sig.raw
+
+
+def crypto_sign_detached(msg, sk):
+    '''
+    Return signature for the given message with the given signing key
+    '''
+    sig = ctypes.create_string_buffer(crypto_sign_BYTES)
+    slen = ctypes.pointer(ctypes.c_ulonglong())
+    ret = nacl.crypto_sign_detached(
+            sig,
+            slen,
+            msg,
+            ctypes.c_ulonglong(len(msg)),
+            sk)
+    if ret:
+        raise ValueError('Failed to sign message')
+    return sig.raw[:slen.contents.value]
 
 
 def crypto_sign_seed_keypair(seed):
@@ -368,6 +527,21 @@ def crypto_sign_open(sig, vk):
     if ret:
         raise ValueError('Failed to validate message')
     return msg.raw[:msglen.value]  # pylint: disable=invalid-slice-index
+
+
+def crypto_sign_verify_detached(sig, msg, vk):
+    '''
+    Verifies that sig is a valid signature for the message msg using the signer's verification key
+    '''
+    ret = nacl.crypto_sign_verify_detached(
+            sig,
+            msg,
+            ctypes.c_ulonglong(len(msg)),
+            vk)
+    if ret:
+        raise ValueError('Failed to validate message')
+    return msg
+
 
 # Authenticated Symmetric Encryption
 
@@ -914,3 +1088,31 @@ def crypto_box_seed_keypair(seed):
     if ret:
         raise CryptError('Failed to generate keypair from seed')
     return (pk.raw, sk.raw)
+
+
+def crypto_sign_ed25519_pk_to_curve25519(ed25519_pk):
+    '''
+    Convert an Ed25519 public key to a Curve25519 public key
+    '''
+    if len(ed25519_pk) != crypto_sign_ed25519_PUBLICKEYBYTES:
+        raise ValueError('Invalid Ed25519 Key')
+    
+    curve25519_pk = ctypes.create_string_buffer(crypto_scalarmult_curve25519_BYTES)
+    ret = nacl.crypto_sign_ed25519_pk_to_curve25519(curve25519_pk, ed25519_pk)
+    if ret:
+        raise CryptError('Failed to generate Curve25519 public key')
+    return curve25519_pk.raw
+
+
+def crypto_sign_ed25519_sk_to_curve25519(ed25519_sk):
+    '''
+    Convert an Ed25519 secret key to a Curve25519 secret key
+    '''
+    if len(ed25519_sk) != crypto_sign_ed25519_SECRETKEYBYTES:
+        raise ValueError('Invalid Ed25519 Key')
+    
+    curve25519_sk = ctypes.create_string_buffer(crypto_scalarmult_curve25519_BYTES)
+    ret = nacl.crypto_sign_ed25519_sk_to_curve25519(curve25519_sk, ed25519_sk)
+    if ret:
+        raise CryptError('Failed to generate Curve25519 secret key')
+    return curve25519_sk.raw
