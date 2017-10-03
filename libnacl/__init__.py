@@ -702,7 +702,7 @@ def crypto_aead_aes256gcm_decrypt(ctxt, aad, nonce, key):
     m = ctypes.create_string_buffer(length)
 
     ret = nacl.crypto_aead_aes256gcm_decrypt(
-        m, mlen,
+        m, ctypes.byref(mlen),
         None,
         ctxt, ctypes.c_ulonglong(len(ctxt)),
         aad, ctypes.c_ulonglong(len(aad)),
@@ -731,7 +731,7 @@ def crypto_aead_chacha20poly1305_ietf_decrypt(ctxt, aad, nonce, key):
     m = ctypes.create_string_buffer(length)
 
     ret = nacl.crypto_aead_chacha20poly1305_ietf_decrypt(
-        m, mlen,
+        m, ctypes.byref(mlen),
         None,
         ctxt, ctypes.c_ulonglong(len(ctxt)),
         aad, ctypes.c_ulonglong(len(aad)),
