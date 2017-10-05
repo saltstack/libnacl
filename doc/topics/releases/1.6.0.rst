@@ -1,0 +1,21 @@
+===========================
+libnacl 1.6.0 Release Notes
+===========================
+
+Add Bindings for More Libsodium Function
+========================================
+
+Add bindings for crypto_box_seed_keypair() and crypto_scalarmult_base()
+Add bindings for crypto_box_easy() and crypto_box_open_easy()
+Add bindings for crypto_box_easy_afternm() and crypto_box_open_easy_afternm()
+Add bindings for crypto_sign_ed25519_keypair(), crypto_sign_ed25519_sk_to_pk() and crypto_sign_ed25519_sk_to_seed()
+Add bindings for crypto_sign_detached() and crypto_sign_verify_detached()
+Add bindings for crypto_sign_ed25519_pk_to_curve25519() and crypto_sign_ed25519_sk_to_curve25519()
+
+Please Note The Exception Change From the 1.5.1 Release
+=======================================================
+
+If encryption or decryption fails, `CryptError` is raised instead of
+`ValueError`. This might be a breaking change for your application. See
+`#91 <https://github.com/saltstack/libnacl/issues/91>`__ and
+`#74 <https://github.com/saltstack/libnacl/issues/74>`__.
