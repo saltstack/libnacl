@@ -5,4 +5,4 @@ libnacl 1.6.0 Release Notes
 Add support for libsodium 1.0.15
 ================================
 
-Make sure that libnacl runns correctly on the 1.0.15 release of libsodium
+Make sure that libnacl runs correctly on the 1.0.15 release of libsodium
