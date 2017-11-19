@@ -444,6 +444,9 @@ def crypto_sign_ed25519_sk_to_pk(sk):
     '''
     Extract the public key from the secret key
     '''
+    if len(sk) != crypto_sign_ed25519_SECRETKEYBYTES:
+        raise ValueError('Invalid secret key')
+
     pk = ctypes.create_string_buffer(crypto_sign_PUBLICKEYBYTES)
     ret = nacl.crypto_sign_ed25519_sk_to_pk(pk, sk)
     if ret:
@@ -455,6 +458,9 @@ def crypto_sign_ed25519_sk_to_seed(sk):
     '''
     Extract the seed from the secret key 
     '''
+    if len(sk) != crypto_sign_ed25519_SECRETKEYBYTES:
+        raise ValueError('Invalid secret key')
+
     seed = ctypes.create_string_buffer(crypto_sign_SEEDBYTES)
     ret = nacl.crypto_sign_ed25519_sk_to_seed(seed, sk)
     if ret:
@@ -466,6 +472,9 @@ def crypto_sign(msg, sk):
     '''
     Sign the given message with the given signing key
     '''
+    if len(sk) != crypto_sign_SECRETKEYBYTES:
+        raise ValueError('Invalid secret key')
+
     sig = ctypes.create_string_buffer(len(msg) + crypto_sign_BYTES)
     slen = ctypes.pointer(ctypes.c_ulonglong())
     ret = nacl.crypto_sign(
@@ -483,6 +492,9 @@ def crypto_sign_detached(msg, sk):
     '''
     Return signature for the given message with the given signing key
     '''
+    if len(sk) != crypto_sign_SECRETKEYBYTES:
+        raise ValueError('Invalid secret key')
+
     sig = ctypes.create_string_buffer(crypto_sign_BYTES)
     slen = ctypes.pointer(ctypes.c_ulonglong())
     ret = nacl.crypto_sign_detached(
@@ -502,6 +514,7 @@ def crypto_sign_seed_keypair(seed):
     '''
     if len(seed) != crypto_sign_SEEDBYTES:
         raise ValueError('Invalid Seed')
+
     sk = ctypes.create_string_buffer(crypto_sign_SECRETKEYBYTES)
     vk = ctypes.create_string_buffer(crypto_sign_PUBLICKEYBYTES)
 
@@ -515,6 +528,9 @@ def crypto_sign_open(sig, vk):
     '''
     Verifies the signed message sig using the signer's verification key
     '''
+    if len(vk) != crypto_sign_PUBLICKEYBYTES:
+        raise ValueError('Invalid public key')
+
     msg = ctypes.create_string_buffer(len(sig))
     msglen = ctypes.c_ulonglong()
     msglenp = ctypes.pointer(msglen)
@@ -533,6 +549,11 @@ def crypto_sign_verify_detached(sig, msg, vk):
     '''
     Verifies that sig is a valid signature for the message msg using the signer's verification key
     '''
+    if len(sig) != crypto_sign_BYTES:
+        raise ValueError('Invalid signature')
+    if len(vk) != crypto_sign_PUBLICKEYBYTES:
+        raise ValueError('Invalid public key')
+
     ret = nacl.crypto_sign_verify_detached(
             sig,
             msg,
@@ -748,6 +769,11 @@ def crypto_stream(slen, nonce, key):
     '''
     Generates a stream using the given secret key and nonce
     '''
+    if len(key) != crypto_stream_KEYBYTES:
+        raise ValueError('Invalid secret key')
+    if len(nonce) != crypto_stream_NONCEBYTES:
+        raise ValueError('Invalid nonce')
+
     stream = ctypes.create_string_buffer(slen)
     ret = nacl.crypto_stream(stream, ctypes.c_ulonglong(slen), nonce, key)
     if ret:
@@ -763,6 +789,11 @@ def crypto_stream_xor(msg, nonce, key):
     plaintext (xor) the output of crypto_stream. Consequently
     crypto_stream_xor can also be used to decrypt
     '''
+    if len(key) != crypto_stream_KEYBYTES:
+        raise ValueError('Invalid secret key')
+    if len(nonce) != crypto_stream_NONCEBYTES:
+        raise ValueError('Invalid nonce')
+
     stream = ctypes.create_string_buffer(len(msg))
     ret = nacl.crypto_stream_xor(
             stream,
@@ -783,6 +814,9 @@ def crypto_auth(msg, key):
     Constructs a one time authentication token for the given message msg
     using a given secret key
     '''
+    if len(key) != crypto_auth_KEYBYTES:
+        raise ValueError('Invalid secret key')
+
     tok = ctypes.create_string_buffer(crypto_auth_BYTES)
     ret = nacl.crypto_auth(tok, msg, ctypes.c_ulonglong(len(msg)), key)
     if ret:
@@ -795,6 +829,11 @@ def crypto_auth_verify(tok, msg, key):
     Verifies that the given authentication token is correct for the given
     message and key
     '''
+    if len(key) != crypto_auth_KEYBYTES:
+        raise ValueError('Invalid secret key')
+    if len(tok) != crypto_auth_BYTES:
+        raise ValueError('Invalid authenticator')
+
     ret = nacl.crypto_auth_verify(tok, msg, ctypes.c_ulonglong(len(msg)), key)
     if ret:
         raise ValueError('Failed to auth msg')
@@ -946,7 +985,8 @@ def crypto_verify_16(string1, string2):
     matching prefix of string1 and string2. This often allows for easy
     timing attacks.
     '''
-    return not nacl.crypto_verify_16(string1, string2)
+    a, b, c = (len(string1) >= 16), (len(string2) >= 16), (not nacl.crypto_verify_16(string1, string2))
+    return a & b & c
 
 
 def crypto_verify_32(string1, string2):
@@ -959,7 +999,8 @@ def crypto_verify_32(string1, string2):
     matching prefix of string1 and string2. This often allows for easy
     timing attacks.
     '''
-    return not nacl.crypto_verify_32(string1, string2)
+    a, b, c = (len(string1) >= 32), (len(string2) >= 32), (not nacl.crypto_verify_32(string1, string2))
+    return a & b & c
 
 
 def crypto_verify_64(string1, string2):
@@ -972,7 +1013,8 @@ def crypto_verify_64(string1, string2):
     matching prefix of string1 and string2. This often allows for easy
     timing attacks.
     '''
-    return not nacl.crypto_verify_64(string1, string2)
+    a, b, c = (len(string1) >= 64), (len(string2) >= 64), (not nacl.crypto_verify_64(string1, string2))
+    return a & b & c
 
 
 def bytes_eq(a, b):
