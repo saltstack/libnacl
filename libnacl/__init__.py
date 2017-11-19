@@ -958,19 +958,6 @@ def crypto_generichash(msg, key=None):
             ctypes.c_size_t(key_len))
     return hbuf.raw
 
-# scalarmult
-
-
-def crypto_scalarmult_base(n):
-    '''
-    Computes and returns the scalar product of a standard group element and an
-    integer "n".
-    '''
-    buf = ctypes.create_string_buffer(crypto_scalarmult_BYTES)
-    ret = nacl.crypto_scalarmult_base(buf, n)
-    if ret:
-        raise CryptError('Failed to compute scalar product')
-    return buf.raw
 
 # String cmp
 
@@ -1115,21 +1102,6 @@ def sodium_version_string():
     func = nacl.sodium_version_string
     func.restype = ctypes.c_char_p
     return func()
-
-
-def crypto_box_seed_keypair(seed):
-    '''
-    Computes and returns the public and secret keys from the given seed
-    '''
-    if len(seed) != crypto_box_SEEDBYTES:
-        raise ValueError('Invalid Seed')
-    pk = ctypes.create_string_buffer(crypto_box_PUBLICKEYBYTES)
-    sk = ctypes.create_string_buffer(crypto_box_SECRETKEYBYTES)
-
-    ret = nacl.crypto_box_seed_keypair(pk, sk, seed)
-    if ret:
-        raise CryptError('Failed to generate keypair from seed')
-    return (pk.raw, sk.raw)
 
 
 def crypto_sign_ed25519_pk_to_curve25519(ed25519_pk):
