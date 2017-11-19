@@ -187,15 +187,19 @@ def crypto_box_seed_keypair(seed):
 
 def crypto_scalarmult_base(sk):
     '''
-    Generate a public key from a secret key 
+    Compute and return the scalar product of a standard group element and the given integer.
+
+    This can be used to derive a Curve25519 public key from a Curve25519 secret key,
+    such as for usage with crypto_box and crypto_box_seal.
     '''
     if len(sk) != crypto_box_SECRETKEYBYTES:
         raise ValueError('Invalid secret key')
     pk = ctypes.create_string_buffer(crypto_box_PUBLICKEYBYTES)
-    nacl.crypto_scalarmult_base(pk, sk)
+    if nacl.crypto_scalarmult_base(pk, sk):
+        raise CryptError('Failed to compute scalar product')
     return pk.raw
-    
-    
+
+
 def crypto_box(msg, nonce, pk, sk):
     '''
     Using a public key and a secret key encrypt the given message. A nonce
