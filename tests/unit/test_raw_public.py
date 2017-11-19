@@ -79,3 +79,13 @@ class TestPublic(unittest.TestCase):
         self.assertEqual(clear_msg2, msg)
         # Check bits
         self.assertNotEqual(enc_msg, enc_msg2)
+
+    def test_scalarmult_rejects_wrong_length(self):
+        good_key = b'This valid key is 32 bytes long.'
+
+        for bad_key in (b'too short', b'too long' * 100):
+            with self.assertRaises(ValueError) as context:
+                libnacl.crypto_scalarmult_base(bad_key)
+            self.assertEqual(context.exception.args, ('Invalid secret key',))
+
+        self.assertEqual(libnacl.crypto_box_PUBLICKEYBYTES, len(libnacl.crypto_scalarmult_base(good_key)))
