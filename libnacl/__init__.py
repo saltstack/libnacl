@@ -187,15 +187,19 @@ def crypto_box_seed_keypair(seed):
 
 def crypto_scalarmult_base(sk):
     '''
-    Generate a public key from a secret key 
+    Compute and return the scalar product of a standard group element and the given integer.
+
+    This can be used to derive a Curve25519 public key from a Curve25519 secret key,
+    such as for usage with crypto_box and crypto_box_seal.
     '''
     if len(sk) != crypto_box_SECRETKEYBYTES:
         raise ValueError('Invalid secret key')
     pk = ctypes.create_string_buffer(crypto_box_PUBLICKEYBYTES)
-    nacl.crypto_scalarmult_base(pk, sk)
+    if nacl.crypto_scalarmult_base(pk, sk):
+        raise CryptError('Failed to compute scalar product')
     return pk.raw
-    
-    
+
+
 def crypto_box(msg, nonce, pk, sk):
     '''
     Using a public key and a secret key encrypt the given message. A nonce
@@ -444,6 +448,9 @@ def crypto_sign_ed25519_sk_to_pk(sk):
     '''
     Extract the public key from the secret key
     '''
+    if len(sk) != crypto_sign_ed25519_SECRETKEYBYTES:
+        raise ValueError('Invalid secret key')
+
     pk = ctypes.create_string_buffer(crypto_sign_PUBLICKEYBYTES)
     ret = nacl.crypto_sign_ed25519_sk_to_pk(pk, sk)
     if ret:
@@ -455,6 +462,9 @@ def crypto_sign_ed25519_sk_to_seed(sk):
     '''
     Extract the seed from the secret key 
     '''
+    if len(sk) != crypto_sign_ed25519_SECRETKEYBYTES:
+        raise ValueError('Invalid secret key')
+
     seed = ctypes.create_string_buffer(crypto_sign_SEEDBYTES)
     ret = nacl.crypto_sign_ed25519_sk_to_seed(seed, sk)
     if ret:
@@ -466,6 +476,9 @@ def crypto_sign(msg, sk):
     '''
     Sign the given message with the given signing key
     '''
+    if len(sk) != crypto_sign_SECRETKEYBYTES:
+        raise ValueError('Invalid secret key')
+
     sig = ctypes.create_string_buffer(len(msg) + crypto_sign_BYTES)
     slen = ctypes.pointer(ctypes.c_ulonglong())
     ret = nacl.crypto_sign(
@@ -483,6 +496,9 @@ def crypto_sign_detached(msg, sk):
     '''
     Return signature for the given message with the given signing key
     '''
+    if len(sk) != crypto_sign_SECRETKEYBYTES:
+        raise ValueError('Invalid secret key')
+
     sig = ctypes.create_string_buffer(crypto_sign_BYTES)
     slen = ctypes.pointer(ctypes.c_ulonglong())
     ret = nacl.crypto_sign_detached(
@@ -502,6 +518,7 @@ def crypto_sign_seed_keypair(seed):
     '''
     if len(seed) != crypto_sign_SEEDBYTES:
         raise ValueError('Invalid Seed')
+
     sk = ctypes.create_string_buffer(crypto_sign_SECRETKEYBYTES)
     vk = ctypes.create_string_buffer(crypto_sign_PUBLICKEYBYTES)
 
@@ -515,6 +532,9 @@ def crypto_sign_open(sig, vk):
     '''
     Verifies the signed message sig using the signer's verification key
     '''
+    if len(vk) != crypto_sign_PUBLICKEYBYTES:
+        raise ValueError('Invalid public key')
+
     msg = ctypes.create_string_buffer(len(sig))
     msglen = ctypes.c_ulonglong()
     msglenp = ctypes.pointer(msglen)
@@ -533,6 +553,11 @@ def crypto_sign_verify_detached(sig, msg, vk):
     '''
     Verifies that sig is a valid signature for the message msg using the signer's verification key
     '''
+    if len(sig) != crypto_sign_BYTES:
+        raise ValueError('Invalid signature')
+    if len(vk) != crypto_sign_PUBLICKEYBYTES:
+        raise ValueError('Invalid public key')
+
     ret = nacl.crypto_sign_verify_detached(
             sig,
             msg,
@@ -748,6 +773,11 @@ def crypto_stream(slen, nonce, key):
     '''
     Generates a stream using the given secret key and nonce
     '''
+    if len(key) != crypto_stream_KEYBYTES:
+        raise ValueError('Invalid secret key')
+    if len(nonce) != crypto_stream_NONCEBYTES:
+        raise ValueError('Invalid nonce')
+
     stream = ctypes.create_string_buffer(slen)
     ret = nacl.crypto_stream(stream, ctypes.c_ulonglong(slen), nonce, key)
     if ret:
@@ -763,6 +793,11 @@ def crypto_stream_xor(msg, nonce, key):
     plaintext (xor) the output of crypto_stream. Consequently
     crypto_stream_xor can also be used to decrypt
     '''
+    if len(key) != crypto_stream_KEYBYTES:
+        raise ValueError('Invalid secret key')
+    if len(nonce) != crypto_stream_NONCEBYTES:
+        raise ValueError('Invalid nonce')
+
     stream = ctypes.create_string_buffer(len(msg))
     ret = nacl.crypto_stream_xor(
             stream,
@@ -783,6 +818,9 @@ def crypto_auth(msg, key):
     Constructs a one time authentication token for the given message msg
     using a given secret key
     '''
+    if len(key) != crypto_auth_KEYBYTES:
+        raise ValueError('Invalid secret key')
+
     tok = ctypes.create_string_buffer(crypto_auth_BYTES)
     ret = nacl.crypto_auth(tok, msg, ctypes.c_ulonglong(len(msg)), key)
     if ret:
@@ -795,6 +833,11 @@ def crypto_auth_verify(tok, msg, key):
     Verifies that the given authentication token is correct for the given
     message and key
     '''
+    if len(key) != crypto_auth_KEYBYTES:
+        raise ValueError('Invalid secret key')
+    if len(tok) != crypto_auth_BYTES:
+        raise ValueError('Invalid authenticator')
+
     ret = nacl.crypto_auth_verify(tok, msg, ctypes.c_ulonglong(len(msg)), key)
     if ret:
         raise ValueError('Failed to auth msg')
@@ -919,19 +962,6 @@ def crypto_generichash(msg, key=None):
             ctypes.c_size_t(key_len))
     return hbuf.raw
 
-# scalarmult
-
-
-def crypto_scalarmult_base(n):
-    '''
-    Computes and returns the scalar product of a standard group element and an
-    integer "n".
-    '''
-    buf = ctypes.create_string_buffer(crypto_scalarmult_BYTES)
-    ret = nacl.crypto_scalarmult_base(buf, n)
-    if ret:
-        raise CryptError('Failed to compute scalar product')
-    return buf.raw
 
 # String cmp
 
@@ -946,7 +976,8 @@ def crypto_verify_16(string1, string2):
     matching prefix of string1 and string2. This often allows for easy
     timing attacks.
     '''
-    return not nacl.crypto_verify_16(string1, string2)
+    a, b, c = (len(string1) >= 16), (len(string2) >= 16), (not nacl.crypto_verify_16(string1, string2))
+    return a & b & c
 
 
 def crypto_verify_32(string1, string2):
@@ -959,7 +990,8 @@ def crypto_verify_32(string1, string2):
     matching prefix of string1 and string2. This often allows for easy
     timing attacks.
     '''
-    return not nacl.crypto_verify_32(string1, string2)
+    a, b, c = (len(string1) >= 32), (len(string2) >= 32), (not nacl.crypto_verify_32(string1, string2))
+    return a & b & c
 
 
 def crypto_verify_64(string1, string2):
@@ -972,7 +1004,8 @@ def crypto_verify_64(string1, string2):
     matching prefix of string1 and string2. This often allows for easy
     timing attacks.
     '''
-    return not nacl.crypto_verify_64(string1, string2)
+    a, b, c = (len(string1) >= 64), (len(string2) >= 64), (not nacl.crypto_verify_64(string1, string2))
+    return a & b & c
 
 
 def bytes_eq(a, b):
@@ -1075,28 +1108,13 @@ def sodium_version_string():
     return func()
 
 
-def crypto_box_seed_keypair(seed):
-    '''
-    Computes and returns the public and secret keys from the given seed
-    '''
-    if len(seed) != crypto_box_SEEDBYTES:
-        raise ValueError('Invalid Seed')
-    pk = ctypes.create_string_buffer(crypto_box_PUBLICKEYBYTES)
-    sk = ctypes.create_string_buffer(crypto_box_SECRETKEYBYTES)
-
-    ret = nacl.crypto_box_seed_keypair(pk, sk, seed)
-    if ret:
-        raise CryptError('Failed to generate keypair from seed')
-    return (pk.raw, sk.raw)
-
-
 def crypto_sign_ed25519_pk_to_curve25519(ed25519_pk):
     '''
     Convert an Ed25519 public key to a Curve25519 public key
     '''
     if len(ed25519_pk) != crypto_sign_ed25519_PUBLICKEYBYTES:
-        raise ValueError('Invalid Ed25519 Key')
-    
+        raise ValueError('Invalid public key')
+
     curve25519_pk = ctypes.create_string_buffer(crypto_scalarmult_curve25519_BYTES)
     ret = nacl.crypto_sign_ed25519_pk_to_curve25519(curve25519_pk, ed25519_pk)
     if ret:
@@ -1109,8 +1127,8 @@ def crypto_sign_ed25519_sk_to_curve25519(ed25519_sk):
     Convert an Ed25519 secret key to a Curve25519 secret key
     '''
     if len(ed25519_sk) != crypto_sign_ed25519_SECRETKEYBYTES:
-        raise ValueError('Invalid Ed25519 Key')
-    
+        raise ValueError('Invalid secret key')
+
     curve25519_sk = ctypes.create_string_buffer(crypto_scalarmult_curve25519_BYTES)
     ret = nacl.crypto_sign_ed25519_sk_to_curve25519(curve25519_sk, ed25519_sk)
     if ret:
