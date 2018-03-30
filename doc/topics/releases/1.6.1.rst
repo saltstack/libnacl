@@ -1,5 +1,5 @@
 ===========================
-libnacl 1.6.0 Release Notes
+libnacl 1.6.1 Release Notes
 ===========================
 
 Add support for libsodium 1.0.15
