@@ -162,7 +162,14 @@ if not DOC_RUN:
     crypto_verify_16_BYTES = nacl.crypto_verify_16_bytes()
     crypto_verify_32_BYTES = nacl.crypto_verify_32_bytes()
     crypto_verify_64_BYTES = nacl.crypto_verify_64_bytes()
+    
     randombytes_SEEDBYTES = nacl.randombytes_seedbytes()
+    crypto_kdf_PRIMITIVE = nacl.crypto_kdf_primitive()
+    crypto_kdf_BYTES_MIN = nacl.crypto_kdf_bytes_min()
+    crypto_kdf_BYTES_MAX = nacl.crypto_kdf_bytes_max()
+    crypto_kdf_CONTEXTBYTES = nacl.crypto_kdf_contextbytes()
+    crypto_kdf_KEYBYTES = nacl.crypto_kdf_keybytes()
+
     # pylint: enable=C0103
 
 # Pubkey defs
@@ -1103,6 +1110,24 @@ def randombytes_uniform(upper_bound):
     '''
     return nacl.randombytes_uniform(upper_bound)
 
+def crypto_kdf_keygen():
+    '''
+    Returns a string of random bytes to generate a master key
+    '''
+    size = crypto_kdf_KEYBYTES
+    buf = ctypes.create_string_buffer(size)
+    nacl.crypto_kdf_keygen(buf)
+    return buf.raw 
+
+def crypto_kdf_derive_from_key(subkey_size, subkey_id, context, master_key): 
+    '''
+    Returns a subkey generated from a master key for a given subkey_id. 
+    For a given subkey_id, the subkey will always be the same string.
+    '''
+    size = int(subkey_size)
+    buf = ctypes.create_string_buffer(size)
+    nacl.crypto_kdf_derive_from_key(buf, subkey_size, subkey_id, context, master_key)
+    return buf.raw
 
 # Utility functions
 
@@ -1155,3 +1180,5 @@ def crypto_sign_ed25519_sk_to_curve25519(ed25519_sk):
     if ret:
         raise CryptError('Failed to generate Curve25519 secret key')
     return curve25519_sk.raw
+
+
