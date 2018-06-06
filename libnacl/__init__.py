@@ -162,8 +162,8 @@ if not DOC_RUN:
     crypto_verify_16_BYTES = nacl.crypto_verify_16_bytes()
     crypto_verify_32_BYTES = nacl.crypto_verify_32_bytes()
     crypto_verify_64_BYTES = nacl.crypto_verify_64_bytes()
+    randombytes_SEEDBYTES = nacl.randombytes_seedbytes()
     # pylint: enable=C0103
-
 
 # Pubkey defs
 
@@ -1057,6 +1057,20 @@ def randombytes_buf(size):
     nacl.randombytes_buf(buf, size)
     return buf.raw
 
+def randombytes_buf_deterministic(size, seed):
+    '''
+    Returns a string of random byles of the given size for a given seed. 
+    For a given seed, this function will always output the same sequence. 
+    Size can be up to 2^70 (256 GB).
+    '''
+
+    if len(seed) != randombytes_SEEDBYTES:
+        raise ValueError('Invalid key seed')
+
+    size = int(size)
+    buf = ctypes.create_string_buffer(size)
+    nacl.randombytes_buf_deterministic(buf, size, seed)
+    return buf.raw 
 
 def randombytes_close():
     '''

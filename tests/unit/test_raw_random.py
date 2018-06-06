@@ -27,3 +27,19 @@ class TestRandomBytes(unittest.TestCase):
 
         self.assertEqual(256, len(freq))
         self.assertTrue(all(freq.values()))
+
+    def test_randombytes_buf_deterministic(self):
+
+        seed = libnacl.randombytes_buf(32)
+        seed2 = libnacl.randombytes_buf(32)
+        data = libnacl.randombytes_buf_deterministic(32, seed)
+        data2 = libnacl.randombytes_buf_deterministic(32, seed)
+        data3 = libnacl.randombytes_buf_deterministic(32, seed2)
+
+        self.assertEqual(data, data2)
+        self.assertEqual(len(data), len(data3))
+        self.assertNotEqual(data, data3)
+
+
+
+
