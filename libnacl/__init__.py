@@ -1115,6 +1115,8 @@ def randombytes_uniform(upper_bound):
     '''
     return nacl.randombytes_uniform(upper_bound)
 
+# Key derivation API 
+
 def crypto_kdf_keygen():
     '''
     Returns a string of random bytes to generate a master key
@@ -1133,6 +1135,8 @@ def crypto_kdf_derive_from_key(subkey_size, subkey_id, context, master_key):
     buf = ctypes.create_string_buffer(size)
     nacl.crypto_kdf_derive_from_key(buf, subkey_size, subkey_id, context, master_key)
     return buf.raw
+
+# Key Exchange API
 
 def crypto_kx_keypair():
     '''
@@ -1154,7 +1158,7 @@ def crypto_kx_seed_keypair(seed):
     nacl.crypto_kx_seed_keypair(pk, sk, seed)
     return pk.raw, sk.raw
 
-def crypto_kx_client_session_keys(rx, tx, client_pk, client_sk, server_pk):
+def crypto_kx_client_session_keys(client_pk, client_sk, server_pk):
     '''
     Computes a pair of shared keys (rx and tx) using the client's public key client_pk, 
     the client's secret key client_sk and the server's public key server_pk.
@@ -1163,9 +1167,9 @@ def crypto_kx_client_session_keys(rx, tx, client_pk, client_sk, server_pk):
     rx = ctypes.create_string_buffer(crypto_kx_SESSIONKEYBYTES)
     tx = ctypes.create_string_buffer(crypto_kx_SESSIONKEYBYTES)
     status = nacl.crypto_kx_client_session_keys(rx, tx, client_pk, client_sk, server_pk)
-    return rx, tx, status
+    return rx.raw, tx.raw, status
 
-def crypto_kx_server_session_keys(rx, tx, server_pk, server_sk, client_pk):
+def crypto_kx_server_session_keys(server_pk, server_sk, client_pk):
     '''
     Computes a pair of shared keys (rx and tx) using the server's public key server_pk, 
     the server's secret key server_sk and the client's public key client_pk.

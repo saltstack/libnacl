@@ -51,7 +51,6 @@ class TestRandomBytes(unittest.TestCase):
         self.assertEqual(32, len(master_key))
         self.assertTrue(all(freq.values()))
 
-
     def test_crypto_kdf_derive_from_key(self):
 
       master_key = libnacl.crypto_kdf_keygen()
@@ -65,4 +64,41 @@ class TestRandomBytes(unittest.TestCase):
       self.assertEqual(subkey, subkey2)
       self.assertNotEqual(subkey, subkey3)
       
+    def test_crypto_kx_keypair(self):
+      pk, sk = libnacl.crypto_kx_keypair()
+      self.assertEqual(32, len(pk))
+      self.assertEqual(32, len(sk))
 
+    def test_crypto_kx_seed_keypair(self):
+      seed = libnacl.randombytes_buf(32)
+      seed2 = libnacl.randombytes_buf(32)
+      pk, sk = libnacl.crypto_kx_seed_keypair(seed)
+      pk2, sk2 = libnacl.crypto_kx_seed_keypair(seed)
+      pk3, sk3 = libnacl.crypto_kx_seed_keypair(seed2)
+
+      self.assertEqual(pk, pk2)
+      self.assertNotEqual(pk, pk3)
+      self.assertEqual(sk, sk2)
+      self.assertNotEqual(sk, sk3)
+
+    def test_crypto_kx_client_session_keys(self):
+      client_pk, client_sk = libnacl.crypto_kx_keypair()
+      server_pk, server_sk = libnacl.crypto_kx_keypair()
+      rx, tx, status = libnacl.crypto_kx_client_session_keys(client_pk, client_sk, server_pk)
+      rx2, tx2, status = libnacl.crypto_kx_client_session_keys(client_pk, client_sk, server_pk)
+  
+      self.assertEqual(32, len(rx))
+      self.assertEqual(32, len(tx))
+      self.assertEqual(rx, rx2)
+      self.assertEqual(tx, tx2)
+
+    def test_crypto_kx_server_session_keys(self):
+      client_pk, client_sk = libnacl.crypto_kx_keypair()
+      server_pk, server_sk = libnacl.crypto_kx_keypair()
+      rx, tx, status = libnacl.crypto_kx_server_session_keys(client_pk, client_sk, server_pk)
+      rx2, tx2, status = libnacl.crypto_kx_server_session_keys(client_pk, client_sk, server_pk)
+      
+      self.assertEqual(32, len(rx))
+      self.assertEqual(32, len(tx))
+      self.assertEqual(rx, rx2)
+      self.assertEqual(tx, tx2)
