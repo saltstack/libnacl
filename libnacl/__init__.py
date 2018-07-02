@@ -6,6 +6,7 @@ Wrap libsodium routines
 # Import libnacl libs
 from libnacl.version import __version__
 # Import python libs
+import ctypes.util
 import ctypes
 import sys
 import os
@@ -38,9 +39,8 @@ def _get_nacl():
         except OSError:
             pass
         try:
-            libidx = __file__.find('lib')
-            if libidx > 0:
-                libpath = __file__[0:libidx+3] + '/libsodium.dylib'
+            libpath = ctypes.util.find_library('libsodium.dylib')
+            if libpath is not None:
                 return ctypes.cdll.LoadLibrary(libpath)
         except OSError:
             msg = 'Could not locate nacl lib, searched for libsodium'
