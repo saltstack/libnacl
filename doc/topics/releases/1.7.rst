@@ -1,0 +1,18 @@
+=========================
+libnacl 1.7 Release Notes
+=========================
+
+Bindings for kdf in libsodium
+=============================
+
+Thanks to Michael Mendoza, PR #109
+
+Added extra key validation
+==========================
+
+Thanks to Kent Ross, PR #106
+
+Add Crypto_box_easy
+===================
+
+Thanks to jheling PR #114
