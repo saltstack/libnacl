@@ -14,7 +14,8 @@ class TestVerify(unittest.TestCase):
         self.assertTrue(libnacl.crypto_verify_16(v16, v16x))
         self.assertTrue(libnacl.bytes_eq(v16, v16x))
         v16x = bytearray(v16x)
-        v16x[libnacl.randombytes_random() & 15] += 1
+        i = libnacl.randombytes_random() & 15
+        v16x[i] = (v16x[i] + 1) % 256
         v16x = bytes(v16x)
         self.assertFalse(libnacl.crypto_verify_16(v16, v16x))
         self.assertFalse(libnacl.bytes_eq(v16, v16x))
@@ -27,7 +28,8 @@ class TestVerify(unittest.TestCase):
         self.assertTrue(libnacl.crypto_verify_32(v32, v32x))
         self.assertTrue(libnacl.bytes_eq(v32, v32x))
         v32x = bytearray(v32x)
-        v32x[libnacl.randombytes_random() & 31] += 1
+        i = libnacl.randombytes_random() & 31
+        v32x[i] = (v32x[i] + 1) % 256
         v32x = bytes(v32x)
         self.assertFalse(libnacl.crypto_verify_32(v32, v32x))
         self.assertFalse(libnacl.bytes_eq(v32, v32x))
@@ -40,7 +42,8 @@ class TestVerify(unittest.TestCase):
         self.assertTrue(libnacl.crypto_verify_64(v64, v64x))
         self.assertTrue(libnacl.bytes_eq(v64, v64x))
         v64x = bytearray(v64x)
-        v64x[libnacl.randombytes_random() & 63] += 1
+        i = libnacl.randombytes_random() & 63
+        v64x[i] = (v64x[i] + 1) % 256
         v64x = bytes(v64x)
         self.assertFalse(libnacl.crypto_verify_64(v64, v64x))
         self.assertFalse(libnacl.bytes_eq(v64, v64x))
@@ -57,7 +60,7 @@ class TestVerifyBytesEq(unittest.TestCase):
     def test_different(self):
         a = libnacl.randombytes_buf(122)
         b = bytearray(a)
-        b[87] += 1
+        b[87] = (b[87] + 1) % 256
         b = bytes(b)
         self.assertFalse(libnacl.bytes_eq(a, b))
 
