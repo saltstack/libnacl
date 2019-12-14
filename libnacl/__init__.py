@@ -1209,7 +1209,7 @@ def crypto_kx_server_session_keys(server_pk, server_sk, client_pk):
     rx = ctypes.create_string_buffer(crypto_kx_SESSIONKEYBYTES)
     tx = ctypes.create_string_buffer(crypto_kx_SESSIONKEYBYTES)
     status = nacl.crypto_kx_server_session_keys(rx, tx, server_pk, server_sk, client_pk)
-    return rx, tx, status
+    return rx.raw, tx.raw, status
 
 
 
