@@ -162,18 +162,32 @@ if not DOC_RUN:
     crypto_verify_16_BYTES = nacl.crypto_verify_16_bytes()
     crypto_verify_32_BYTES = nacl.crypto_verify_32_bytes()
     crypto_verify_64_BYTES = nacl.crypto_verify_64_bytes()
-    
-    randombytes_SEEDBYTES = nacl.randombytes_seedbytes()
-    crypto_kdf_PRIMITIVE = nacl.crypto_kdf_primitive()
-    crypto_kdf_BYTES_MIN = nacl.crypto_kdf_bytes_min()
-    crypto_kdf_BYTES_MAX = nacl.crypto_kdf_bytes_max()
-    crypto_kdf_CONTEXTBYTES = nacl.crypto_kdf_contextbytes()
-    crypto_kdf_KEYBYTES = nacl.crypto_kdf_keybytes()
-    crypto_kx_PUBLICKEYBYTES = nacl.crypto_kx_publickeybytes()
-    crypto_kx_SECRETKEYBYTES = nacl.crypto_kx_secretkeybytes()
-    crypto_kx_SEEDBYTES = nacl.crypto_kx_seedbytes()
-    crypto_kx_SESSIONKEYBYTES = nacl.crypto_kx_sessionkeybytes()
-    crypto_kx_PRIMITIVE = nacl.crypto_kx_primitive()
+
+    try:
+        randombytes_SEEDBYTES = nacl.randombytes_seedbytes()
+        HAS_RAND_SEED = True
+    except AttributeError:
+        HAS_RAND_SEED = False
+
+    try:
+        crypto_kdf_PRIMITIVE = nacl.crypto_kdf_primitive()
+        crypto_kdf_BYTES_MIN = nacl.crypto_kdf_bytes_min()
+        crypto_kdf_BYTES_MAX = nacl.crypto_kdf_bytes_max()
+        crypto_kdf_CONTEXTBYTES = nacl.crypto_kdf_contextbytes()
+        crypto_kdf_KEYBYTES = nacl.crypto_kdf_keybytes()
+        HAS_CRYPT_KDF = True
+    except AttributeError:
+        HAS_CRYPT_KDF = False
+
+    try:
+        crypto_kx_PUBLICKEYBYTES = nacl.crypto_kx_publickeybytes()
+        crypto_kx_SECRETKEYBYTES = nacl.crypto_kx_secretkeybytes()
+        crypto_kx_SEEDBYTES = nacl.crypto_kx_seedbytes()
+        crypto_kx_SESSIONKEYBYTES = nacl.crypto_kx_sessionkeybytes()
+        crypto_kx_PRIMITIVE = nacl.crypto_kx_primitive()
+        HAS_CRYPT_KX = True
+    except AttributeError:
+        HAS_CRYPT_KX = False
 
     # pylint: enable=C0103
 
@@ -1107,6 +1121,8 @@ def randombytes_buf_deterministic(size, seed):
     Size can be up to 2^70 (256 GB).
     '''
 
+    if not HAS_RAND_SEED:
+        raise ValueError('Underlying Sodium library does not support randombytes_seedbytes')
     if len(seed) != randombytes_SEEDBYTES:
         raise ValueError('Invalid key seed')
 
@@ -1152,12 +1168,14 @@ def crypto_kdf_keygen():
     '''
     Returns a string of random bytes to generate a master key
     '''
+    if not HAS_CRYPT_KDF:
+        raise ValueError('Underlying Sodium library does not support crypto_kdf_keybytes')
     size = crypto_kdf_KEYBYTES
     buf = ctypes.create_string_buffer(size)
     nacl.crypto_kdf_keygen(buf)
     return buf.raw 
 
-def crypto_kdf_derive_from_key(subkey_size, subkey_id, context, master_key): 
+def crypto_kdf_derive_from_key(subkey_size, subkey_id, context, master_key):
     '''
     Returns a subkey generated from a master key for a given subkey_id. 
     For a given subkey_id, the subkey will always be the same string.
@@ -1173,6 +1191,8 @@ def crypto_kx_keypair():
     '''
     Generate and return a new keypair
     '''
+    if not HAS_CRYPT_KX:
+        raise ValueError('Underlying Sodium library does not support crypto_kx')
     pk = ctypes.create_string_buffer(crypto_kx_PUBLICKEYBYTES)
     sk = ctypes.create_string_buffer(crypto_kx_SECRETKEYBYTES)
     nacl.crypto_kx_keypair(pk, sk)
@@ -1180,8 +1200,11 @@ def crypto_kx_keypair():
 
 def crypto_kx_seed_keypair(seed):
     '''
-    Generate and return a keypair from a key seed 
+    Generate and return a keypair from a key seed
     '''
+    if not HAS_CRYPT_KX:
+        raise ValueError('Underlying Sodium library does not support crypto_kx')
+
     if len(seed) != crypto_kx_SEEDBYTES:
         raise ValueError('Invalid key seed')
     pk = ctypes.create_string_buffer(crypto_kx_PUBLICKEYBYTES)
@@ -1195,6 +1218,9 @@ def crypto_kx_client_session_keys(client_pk, client_sk, server_pk):
     the client's secret key client_sk and the server's public key server_pk.
     Status returns 0 on success, or -1 if the server's public key is not acceptable.
     '''
+    if not HAS_CRYPT_KX:
+        raise ValueError('Underlying Sodium library does not support crypto_kx')
+
     rx = ctypes.create_string_buffer(crypto_kx_SESSIONKEYBYTES)
     tx = ctypes.create_string_buffer(crypto_kx_SESSIONKEYBYTES)
     status = nacl.crypto_kx_client_session_keys(rx, tx, client_pk, client_sk, server_pk)
@@ -1206,6 +1232,9 @@ def crypto_kx_server_session_keys(server_pk, server_sk, client_pk):
     the server's secret key server_sk and the client's public key client_pk.
     Status returns 0 on success, or -1 if the client's public key is not acceptable.
     '''
+    if not HAS_CRYPT_KX:
+        raise ValueError('Underlying Sodium library does not support crypto_kx')
+
     rx = ctypes.create_string_buffer(crypto_kx_SESSIONKEYBYTES)
     tx = ctypes.create_string_buffer(crypto_kx_SESSIONKEYBYTES)
     status = nacl.crypto_kx_server_session_keys(rx, tx, server_pk, server_sk, client_pk)
