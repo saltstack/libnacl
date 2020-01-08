@@ -267,7 +267,7 @@ texinfo_documents = [
 epub_title = u'libnacl'
 epub_author = u'Thomas S Hatch'
 epub_publisher = u'Thomas S Hatch'
-epub_copyright = u'2017, Thomas S Hatch'
+epub_copyright = u'2020, Thomas S Hatch'
 
 # The basename for the epub file. It defaults to the project name.
 #epub_basename = u'libnacl'

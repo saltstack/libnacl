@@ -1,0 +1,21 @@
+===========================
+libnacl 1.7.1 Release Notes
+===========================
+
+This release fixes a few minor bugs, primarily in tests, and restores
+functionality with older versions of libsodium.
+
+Compatibility With Older libsodium
+==================================
+
+PR #118 fixes compatibility with Debian 8.
+
+Test Fixes
+==========
+
+Some unreliability in tests were found by the Debian team. These
+issues were fixed in PRs #115 and #116.
+
+Travis no longer supports the same pypy tests on all platforms,
+these were removed in PR #119.
+
