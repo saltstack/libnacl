@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import struct
+import sys
 import time
 
 # Import nacl libs
@@ -31,7 +32,10 @@ def load_key(path_or_file, serial='json'):
             key_data = msgpack.load(stream)
         elif serial == 'json':
             import json
-            key_data = json.loads(stream.read(), encoding='UTF-8')
+            if sys.version_info[0] >= 3:
+                key_data = json.loads(stream.read())
+            else:
+                key_data = json.loads(stream.read(), encoding='UTF-8')
     finally:
         if stream != path_or_file:
             stream.close()
@@ -95,4 +99,3 @@ def time_nonce():
     '''
     nonce = rand_nonce()
     return (struct.pack('=d', time.time()) + nonce)[:len(nonce)]
-
