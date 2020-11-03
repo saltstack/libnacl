@@ -1,1 +1,2 @@
-__version__ = '1.7.1'
+# -*- coding: utf-8 -*-
+version = "1.7.2"
