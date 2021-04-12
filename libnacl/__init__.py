@@ -1180,7 +1180,7 @@ def crypto_kdf_derive_from_key(subkey_size, subkey_id, context, master_key):
     '''
     size = int(subkey_size)
     buf = ctypes.create_string_buffer(size)
-    nacl.crypto_kdf_derive_from_key(buf, subkey_size, subkey_id, context, master_key)
+    nacl.crypto_kdf_derive_from_key(buf, subkey_size, ctypes.c_ulonglong(subkey_id), context, master_key)
     return buf.raw
 
 # Key Exchange API
