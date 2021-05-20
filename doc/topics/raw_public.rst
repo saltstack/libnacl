@@ -20,8 +20,8 @@ parties, who for tradition's sake, will be referred to as Alice and Bob:
 
     import libnacl
 
-    alice_pk, alice_sk = libnacl.crypto_keypair()
-    bob_pk, bob_sk = libnacl.crypto_keypair()
+    alice_pk, alice_sk = libnacl.crypto_box_keypair()
+    bob_pk, bob_sk = libnacl.crypto_box_keypair()
 
 Once the keys have been generated a cryptographic box needs to be created. The
 cryptographic box takes the party's secret key and the receiving party's public
@@ -63,8 +63,8 @@ To bring it all together:
     import libnacl
     import libnacl.utils
 
-    alice_pk, alice_sk = libnacl.crypto_keypair()
-    bob_pk, bob_sk = libnacl.crypto_keypair()
+    alice_pk, alice_sk = libnacl.crypto_box_keypair()
+    bob_pk, bob_sk = libnacl.crypto_box_keypair()
 
     nonce = libnacl.utils.rand_nonce()
 
