@@ -37,7 +37,7 @@ With the signing keypair in hand a message can be signed:
 
 The signed message is really just the plain text of the message prepended with
 the signature. The crypto_sign_open function will read the signed message
-and return me original message without the signature:
+and return the original message without the signature:
 
 .. code-block:: python
 
