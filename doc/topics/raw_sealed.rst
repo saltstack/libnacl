@@ -12,7 +12,7 @@ First, generate a keypair for the receiver. The sender doesn't need a keypair.
 
     import libnacl
 
-    pk, sk = libnacl.crypto_keypair()
+    pk, sk = libnacl.crypto_box_keypair()
 
 Then a sealed box is created by the sender, using the receiver's public key
 
@@ -33,7 +33,7 @@ To bring it all together:
 
     import libnacl
 
-    pk, sk = libnacl.crypto_keypair()
+    pk, sk = libnacl.crypto_box_keypair()
 
     msg = 'Quiet, quiet.  Quiet!  There are ways of telling whether she is a witch.'
     box = libnacl.crypto_box_seal(msg, pk)
