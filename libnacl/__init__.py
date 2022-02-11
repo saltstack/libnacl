@@ -4,7 +4,7 @@ Wrap libsodium routines
 '''
 # pylint: disable=C0103
 # Import python libs
-import ctypes
+import ctypes, ctypes.util
 import sys
 import os
 
@@ -16,6 +16,10 @@ def _get_nacl():
     Locate the nacl c libs to use
     '''
     # Import libsodium
+    l_path = ctypes.util.find_library('sodium')
+    if l_path is not None:
+        return ctypes.cdll.LoadLibrary(l_path)
+
     if sys.platform.startswith('win'):
         try:
             return ctypes.cdll.LoadLibrary('libsodium')
