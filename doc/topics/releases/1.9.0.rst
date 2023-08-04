@@ -1,0 +1,7 @@
+===========================
+libnacl 1.9.0 Release Notes
+===========================
+
+This release is a little overdue, it fixes a number of documentation issues
+and adds a few convenience features. It also migrates the build system to poetry
+and fixes the documentation build on readthedocs
