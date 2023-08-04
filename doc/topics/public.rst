@@ -84,7 +84,9 @@ To manage only the public key end, a public key object exists:
 
     import libnacl.public
 
-    tom = libnacl.public.PublicKey(tom_public_key_hex)
+    tom_secret = libnacl.public.SecretKey()
+
+    tom = libnacl.public.PublicKey(tom_secret.pk)
 
     raw_pk = tom.pk
     hex_pk = tom.hex_pk()
