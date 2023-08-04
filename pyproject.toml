@@ -26,6 +26,9 @@ classifiers = [
         "Intended Audience :: Developers",
         "Topic :: Security :: Cryptography",
     ]
+include = [
+    { path = "test", format = "sdist" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.4"
