@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "libnacl"
+version = "1.9.0"
+description = "Python bindings for libsodium based on ctypes"
+authors = ["Thomas S Hatch <thatch45@gmail.com>"]
+license = "Apache-2.0"
+homepage="https://libnacl.readthedocs.org"
+repository="https://github.com/saltstack/libnacl"
+documentation="https://libnacl.readthedocs.org"
+readme = "README.rst"
+classifiers = [
+        "Operating System :: OS Independent",
+        "License :: OSI Approved :: Apache Software License",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2.6",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Development Status :: 5 - Production/Stable",
+        "Intended Audience :: Developers",
+        "Topic :: Security :: Cryptography",
+    ]
+
+[tool.poetry.dependencies]
+python = "^3.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
