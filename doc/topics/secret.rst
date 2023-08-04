@@ -6,7 +6,7 @@ Secret key encryption is the method of using a single key for both encryption
 and decryption of messages. One of the classic examples from history of secret
 key, or symmetric, encryption is the Enigma machine.
 
-The SecretBox class in libnacl.secret makes this type of encryption very easy
+The SecretBoxEasy class in libnacl.secret_easy makes this type of encryption very easy
 to execute:
 
 .. code-block:: python
@@ -14,11 +14,11 @@ to execute:
     msg = b'But then of course African swallows are not migratory.'
     # Create a SecretBox object, if not passed in the secret key is
     # Generated purely from random data
-    box = libnacl.secret.SecretBox()
+    box = libnacl.secret_easy.SecretBoxEasy()
     # Messages can now be safely encrypted
     ctxt = box.encrypt(msg)
     # An additional box can be created from the original box secret key
-    box2 = libnacl.secret.SecretBox(box.sk)
+    box2 = libnacl.secret_easy.SecretBoxEasy(box.sk)
     # Messages can now be easily encrypted and decrypted
     clear1 = box.decrypt(ctxt)
     clear2 = box2.decrypt(ctxt)
