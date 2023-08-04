@@ -24,6 +24,7 @@ class Signer(libnacl.base.BaseKey):
             seed = libnacl.randombytes(libnacl.crypto_sign_SEEDBYTES)
             self.vk, self.sk = libnacl.crypto_sign_seed_keypair(seed)
         self.seed = seed
+        super().__init__()
 
     def sign(self, msg):
         '''
@@ -47,6 +48,7 @@ class Verifier(libnacl.base.BaseKey):
         Create a verification key from a hex encoded vkey
         '''
         self.vk = libnacl.encode.hex_decode(vk_hex)
+        super().__init__()
 
     def verify(self, msg):
         '''

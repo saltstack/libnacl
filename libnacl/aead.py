@@ -20,6 +20,7 @@ class AEAD(libnacl.base.BaseKey):
             raise ValueError('Invalid key')
         self.sk = key
         self.usingAES = False
+        super().__init__()
 
     def useAESGCM(self):
         self.usingAES = True

@@ -25,6 +25,9 @@ class TestDual(unittest.TestCase):
         aclear = alice_box.decrypt(alice_ctxt)
         self.assertEqual(msg, aclear)
         self.assertNotEqual(bob_ctxt, alice_ctxt)
+        self.assertEqual(bob.pk_hex, bob.hex_pk())
+        self.assertEqual(bob.sk_hex, bob.hex_sk())
+        self.assertEqual(bob.vk_hex, bob.hex_vk())
 
     def test_publickey(self):
         '''
@@ -39,6 +42,9 @@ class TestDual(unittest.TestCase):
         self.assertNotEqual(msg, bob_ctxt)
         bclear = alice_box.decrypt(bob_ctxt)
         self.assertEqual(msg, bclear)
+        self.assertEqual(bob.pk_hex, bob.hex_pk())
+        self.assertEqual(bob.sk_hex, bob.hex_sk())
+        self.assertEqual(bob.vk_hex, bob.hex_vk())
 
     def test_sign(self):
         msg = (b'Well, that\'s no ordinary rabbit.  That\'s the most foul, '

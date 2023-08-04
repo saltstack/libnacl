@@ -19,6 +19,7 @@ class PublicKey(libnacl.base.BaseKey):
             self.pk = pk
         else:
             raise ValueError('Passed in invalid public key')
+        super().__init__()
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -48,6 +49,7 @@ class SecretKey(libnacl.base.BaseKey):
             self.pk = libnacl.crypto_scalarmult_base(sk)
         else:
             raise ValueError('Passed in invalid secret key')
+        super().__init__()
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):

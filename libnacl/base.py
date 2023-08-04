@@ -13,6 +13,11 @@ class BaseKey(object):
     '''
     Include methods for key management convenience
     '''
+    def __init__(self):
+        self.sk_hex = self.hex_sk()
+        self.pk_hex = self.hex_pk()
+        self.vk_hex = self.hex_vk()
+
     def hex_sk(self):
         if hasattr(self, 'sk'):
             return libnacl.encode.hex_encode(self.sk)

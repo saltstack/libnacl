@@ -24,6 +24,8 @@ class TestPublic(unittest.TestCase):
         aclear = alice_box.decrypt(alice_ctxt)
         self.assertEqual(msg, aclear)
         self.assertNotEqual(bob_ctxt, alice_ctxt)
+        self.assertEqual(bob.pk_hex, bob.hex_pk())
+        self.assertEqual(bob.sk_hex, bob.hex_sk())
 
     def test_publickey(self):
         '''
@@ -38,4 +40,5 @@ class TestPublic(unittest.TestCase):
         self.assertNotEqual(msg, bob_ctxt)
         bclear = alice_box.decrypt(bob_ctxt)
         self.assertEqual(msg, bclear)
+        self.assertEqual(bob.sk_hex, bob.hex_sk())
 

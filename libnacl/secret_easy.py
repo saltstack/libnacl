@@ -18,6 +18,7 @@ class SecretBoxEasy(libnacl.base.BaseKey):
         if len(key) != libnacl.crypto_secretbox_KEYBYTES:
             raise ValueError('Invalid key')
         self.sk = key
+        super().__init__()
 
     def encrypt(self, msg, nonce=None, pack_nonce=True):
         '''

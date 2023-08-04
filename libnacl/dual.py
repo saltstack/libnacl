@@ -20,6 +20,7 @@ class DualSecret(libnacl.base.BaseKey):
         self.seed = self.signer.seed
         self.pk = self.crypt.pk
         self.vk = self.signer.vk
+        super().__init__()
 
     def sign(self, msg):
         '''
