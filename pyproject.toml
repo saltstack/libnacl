@@ -27,6 +27,7 @@ classifiers = [
         "Topic :: Security :: Cryptography",
     ]
 include = [
+    { path = "doc", format = "sdist" },
     { path = "tests", format = "sdist" },
 ]
 
