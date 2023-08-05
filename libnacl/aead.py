@@ -20,10 +20,15 @@ class AEAD(libnacl.base.BaseKey):
             raise ValueError('Invalid key')
         self.sk = key
         self.usingAES = False
+        self.usingXCHACHA = False
         super().__init__()
 
     def useAESGCM(self):
         self.usingAES = True
+        return self
+
+    def useXCHACHA(self):
+        self.usingXCHACHA = True
         return self
 
     def encrypt(self, msg, aad, nonce=None, pack_nonce_aad=True):
@@ -32,10 +37,19 @@ class AEAD(libnacl.base.BaseKey):
         generated via the rand_nonce function
         '''
         if nonce is None:
-            nonce = libnacl.utils.rand_aead_nonce()
-        if len(nonce) != libnacl.crypto_aead_aes256gcm_NPUBBYTES:
-            raise ValueError('Invalid nonce')
-        if self.usingAES:
+            if self.usingXCHACHA:
+                nonce = libnacl.utils.rand_aead_xchacha_nonce()
+            else:
+                nonce = libnacl.utils.rand_aead_nonce()
+        if self.usingXCHACHA:
+            if len(nonce) != libnacl.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES:
+                raise ValueError('Invalid nonce')
+        else:
+            if len(nonce) != libnacl.crypto_aead_aes256gcm_NPUBBYTES:
+                raise ValueError('Invalid nonce')
+        if self.usingXCHACHA:
+            ctxt = libnacl.crypto_aead_xchacha20poly1305_ietf_encrypt(msg, aad, nonce, self.sk)
+        elif self.usingAES:
             ctxt = libnacl.crypto_aead_aes256gcm_encrypt(msg, aad, nonce, self.sk)
         else:
             ctxt = libnacl.crypto_aead_chacha20poly1305_ietf_encrypt(msg, aad, nonce, self.sk)
@@ -51,10 +65,18 @@ class AEAD(libnacl.base.BaseKey):
         extracted from the message
         '''
         aad = ctxt[:aadLen]
-        nonce = ctxt[aadLen:aadLen+libnacl.crypto_aead_aes256gcm_NPUBBYTES]
-        ctxt = ctxt[aadLen+libnacl.crypto_aead_aes256gcm_NPUBBYTES:]
-        if len(nonce) != libnacl.crypto_aead_aes256gcm_NPUBBYTES:
-            raise ValueError('Invalid nonce')
+        if self.usingXCHACHA:
+            nonce = ctxt[aadLen:aadLen+libnacl.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES]
+            ctxt = ctxt[aadLen+libnacl.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES:]
+            if len(nonce) != libnacl.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES:
+                raise ValueError('Invalid nonce')
+        else:
+            nonce = ctxt[aadLen:aadLen+libnacl.crypto_aead_aes256gcm_NPUBBYTES]
+            ctxt = ctxt[aadLen+libnacl.crypto_aead_aes256gcm_NPUBBYTES:]
+            if len(nonce) != libnacl.crypto_aead_aes256gcm_NPUBBYTES:
+                raise ValueError('Invalid nonce')
+        if self.usingXCHACHA:
+            return libnacl.crypto_aead_xchacha20poly1305_ietf_decrypt(ctxt, aad, nonce, self.sk)
         if self.usingAES:
             return libnacl.crypto_aead_aes256gcm_decrypt(ctxt, aad, nonce, self.sk)
         return libnacl.crypto_aead_chacha20poly1305_ietf_decrypt(ctxt, aad, nonce, self.sk)
@@ -69,3 +91,20 @@ class AEAD(libnacl.base.BaseKey):
         if self.usingAES:
             return libnacl.crypto_aead_aes256gcm_decrypt(ctxt, aad, nonce, self.sk)
         return libnacl.crypto_aead_chacha20poly1305_ietf_decrypt(ctxt, aad, nonce, self.sk)
+
+
+class AEAD_AESGCM(AEAD):
+    def __init__(self, key=None):
+        super().__init__(key)
+        self.useAESGCM()
+
+
+class AEAD_XCHACHA(AEAD):
+    def __init__(self, key=None):
+        super().__init__(key)
+        self.useXCHACHA()
+
+
+class AEAD_CHACHA(AEAD):
+    def __init__(self, key=None):
+        super().__init__(key)

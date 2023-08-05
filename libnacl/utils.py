@@ -83,6 +83,14 @@ def rand_aead_nonce():
     return libnacl.randombytes(libnacl.crypto_aead_aes256gcm_NPUBBYTES)
 
 
+def rand_aead_xchacha_nonce():
+    '''
+    Generates and returns a random bytestring of the size defined in libsodium
+    as crypto_aead_aes256gcm_NPUBBYTES and crypto_aead_chacha20poly1305_ietf_NPUBBYTES
+    '''
+    return libnacl.randombytes(libnacl.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES)
+
+
 def rand_nonce():
     '''
     Generates and returns a random bytestring of the size defined in libsodium

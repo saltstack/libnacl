@@ -11,6 +11,8 @@ to execute:
 
 .. code-block:: python
 
+    import libnacl.secret_easy
+
     msg = b'But then of course African swallows are not migratory.'
     # Create a SecretBox object, if not passed in the secret key is
     # Generated purely from random data
