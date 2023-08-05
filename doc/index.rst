@@ -11,6 +11,7 @@ Contents:
    topics/secret
    topics/sign
    topics/dual
+   topics/aead
    topics/utils
    topics/raw_public
    topics/raw_sealed
