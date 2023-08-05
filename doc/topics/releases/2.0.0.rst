@@ -1,0 +1,9 @@
+===========================
+libnacl 2.0.0 Release Notes
+===========================
+
+Add Support for AEAD and AEAD Classes
+=====================================
+
+Added classes to the libnacl.aead module allowing for the use of
+XChaCha20-Poly1305-IETF, ChaCha20-Poly1305-IETF, and AES256-GCM.
