@@ -47,6 +47,9 @@ def load_key(path_or_file, serial='json'):
     elif 'priv' in key_data and 'pub' in key_data:
         return libnacl.public.SecretKey(
                 libnacl.encode.hex_decode(key_data['priv']))
+    elif 'kx_priv' in key_data and 'kx_pub' in key_data:
+        return libnacl.kx.ExchangeKey(
+                libnacl.encode.hex_decode(key_data['kx_priv']))
     elif 'sign' in key_data:
         return libnacl.sign.Signer(
                 libnacl.encode.hex_decode(key_data['sign']))
