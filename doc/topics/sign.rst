@@ -2,9 +2,7 @@
 Signing and Verifying Messages
 ==============================
 
-The nacl libs have the capability to sign and verify messages. Please be
-advised that public key encrypted messages do not need to be signed, the
-nacl box construct verifies the validity of the sender.
+The nacl libs have the capability to sign and verify messages.
 
 To sign and verify messages use the Signer and Verifier classes:
 
