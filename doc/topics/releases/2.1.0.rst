@@ -1,0 +1,14 @@
+===========================
+libnacl 2.1.0 Release Notes
+===========================
+
+Add Support for the Key Exchange System
+=======================================
+
+Added the libnacl.kx module. This module contains the ExchangeKey class.
+
+The ExchangeKey class makes it easy to use AEAD encryption with an
+exchange key setup. The class works much like a sealed box but allows
+for the creation of the exchange keys.
+
+This makes it very easy to set up a system using AEAD and exchange keys.
