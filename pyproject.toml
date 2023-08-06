@@ -27,7 +27,8 @@ classifiers = [
         "Topic :: Security :: Cryptography",
     ]
 include = [
-    { path = "test", format = "sdist" },
+    { path = "doc", format = "sdist" },
+    { path = "tests", format = "sdist" },
 ]
 
 [tool.poetry.dependencies]
