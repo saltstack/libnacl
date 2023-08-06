@@ -48,36 +48,36 @@ class ExchangeKey(libnacl.base.BaseKey):
         """
         return libnacl.crypto_kx_server_session_keys(self.kx_pk, self.kx_sk, remote_pk)
 
-    def encrypt_client(self, remote_pk, msg, aad):
+    def encrypt_client(self, remote_pk, msg, ad):
         """
         Encrypt the given message using the remote_sk
         """
         rx, tx, status = self.client_session_keys(remote_pk)
 
         crypter = self.get_crypt(tx)
-        return crypter.encrypt(msg, aad)
+        return crypter.encrypt(msg, ad)
 
-    def encrypt_server(self, remote_pk, msg, aad):
+    def encrypt_server(self, remote_pk, msg, ad):
         """
         Encrypt the given message using the remote_sk
         """
         rx, tx, status = self.server_session_keys(remote_pk)
 
         crypter = self.get_crypt(tx)
-        return crypter.encrypt(msg, aad)
+        return crypter.encrypt(msg, ad)
 
-    def decrypt_client(self, remote_pk, ctxt, len_aad):
+    def decrypt_client(self, remote_pk, ctxt, len_ad):
         rx, tx, status = self.client_session_keys(remote_pk)
 
         crypter = self.get_crypt(rx)
-        clear = crypter.decrypt(ctxt, len_aad)
-        aad = ctxt[:len_aad]
-        return clear, aad
+        clear = crypter.decrypt(ctxt, len_ad)
+        #ad = ctxt[:len_ad]
+        return clear
 
-    def decrypt_server(self, remote_pk, ctxt, len_aad):
+    def decrypt_server(self, remote_pk, ctxt, len_ad):
         rx, tx, status = self.server_session_keys(remote_pk)
 
         crypter = self.get_crypt(rx)
-        clear = crypter.decrypt(ctxt, len_aad)
-        aad = ctxt[:len_aad]
-        return clear, aad
+        clear = crypter.decrypt(ctxt, len_ad)
+        #ad = ctxt[:len_ad]
+        return clear

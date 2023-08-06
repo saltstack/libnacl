@@ -9,6 +9,8 @@ and better security.
 
 When using the ExchangeKey encryption class you can select which AEAD encryption
 subsystem to use, but it is recommended to stick with the default XChaCha algorithm.
+The options are: `aesgcm` for the AES256-GCM construct, `xchacha` for the XChaCha20-Poly1305-IETF
+construct, and `chacha` for the ChaCha20-Poly1305-IETF construct.
 
 To use the ExchangeKey system, simply create an ExchangeKey class for `bob` and `alice`
 and then encrypt a message and additional unencrypted data and send them back and forth.
@@ -33,3 +35,4 @@ functions and the other needs to call the client functions.
         # Similarly you can have alice encrypt as server and bob decrypt as client
         alice_ctxt = alice.encrypt_server(bob.kx_pk, msg, aad)
         aclear, clear_aad = bob.decrypt_client(alice.kx_pk, alice_ctxt, len(aad))
+
