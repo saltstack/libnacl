@@ -12,3 +12,10 @@ exchange key setup. The class works much like a sealed box but allows
 for the creation of the exchange keys.
 
 This makes it very easy to set up a system using AEAD and exchange keys.
+
+Fix issues with pyproject.toml
+==============================
+
+The 2.0.0 release introduced the use of poetry into libnacl, unfortunately I
+made a mistake in the pyproject.toml file. Thanks for @mgorny for catching the
+issue and getting a PR in.
