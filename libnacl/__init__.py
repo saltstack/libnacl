@@ -202,6 +202,23 @@ if not DOC_RUN:
         HAS_CRYPT_KDF = True
     except AttributeError:
         HAS_CRYPT_KDF = False
+    
+    try:
+        crypto_kdf_hkdf_sha256_KEYBYTES = nacl.crypto_kdf_hkdf_sha256_keybytes()
+        crypto_kdf_hkdf_sha256_BYTES_MIN = nacl.crypto_kdf_hkdf_sha256_bytes_min()
+        crypto_kdf_hkdf_sha256_BYTES_MAX = nacl.crypto_kdf_hkdf_sha256_bytes_max()
+        HAS_CRYPT_KDF_HKDF_SHA256 = True
+    except AttributeError:
+        HAS_CRYPT_KDF_HKDF_SHA256 = False
+    
+    try:
+        crypto_kdf_hkdf_sha512_KEYBYTES = nacl.crypto_kdf_hkdf_sha512_keybytes()
+        crypto_kdf_hkdf_sha512_BYTES_MIN = nacl.crypto_kdf_hkdf_sha512_bytes_min()
+        crypto_kdf_hkdf_sha512_BYTES_MAX = nacl.crypto_kdf_hkdf_sha512_bytes_max()
+        HAS_CRYPT_KDF_HKDF_SHA512 = True
+    except AttributeError:
+        HAS_CRYPT_KDF_HKDF_SHA512 = False
+
 
     try:
         crypto_kx_PUBLICKEYBYTES = nacl.crypto_kx_publickeybytes()
@@ -1370,6 +1387,56 @@ def crypto_kdf_derive_from_key(subkey_size, subkey_id, context, master_key):
     buf = ctypes.create_string_buffer(size)
     nacl.crypto_kdf_derive_from_key(buf, subkey_size, ctypes.c_ulonglong(subkey_id), context, master_key)
     return buf.raw
+
+def crypto_kdf_hkdf_sha256_keygen():
+    buf = ctypes.create_string_buffer(crypto_kdf_hkdf_sha256_KEYBYTES)
+    nacl.crypto_kdf_hkdf_sha256_keygen(buf)
+    return buf.raw
+
+def crypto_kdf_hkdf_sha256_extract(salt, key):
+    prk = ctypes.create_string_buffer(crypto_kdf_hkdf_sha256_KEYBYTES)
+    nacl.crypto_kdf_hkdf_sha256_extract(
+        prk,
+        salt, len(salt),
+        key, len(key)
+    )
+    return prk.raw
+
+def crypto_kdf_hkdf_sha256_expand(size, ctx, prk):
+    out = ctypes.create_string_buffer(size)
+    ret = nacl.crypto_kdf_hkdf_sha256_expand(
+        out, size,
+        ctx, len(ctx),
+        prk
+    )
+    if ret:
+        raise ValueError("Error")
+    return out.raw
+
+def crypto_kdf_hkdf_sha512_keygen():
+    buf = ctypes.create_string_buffer(crypto_kdf_hkdf_sha512_KEYBYTES)
+    nacl.crypto_kdf_hkdf_sha512_keygen(buf)
+    return buf.raw
+
+def crypto_kdf_hkdf_sha512_extract(salt, key):
+    prk = ctypes.create_string_buffer(crypto_kdf_hkdf_sha512_KEYBYTES)
+    nacl.crypto_kdf_hkdf_sha512_extract(
+        prk,
+        salt, len(salt),
+        key, len(key)
+    )
+    return prk.raw
+
+def crypto_kdf_hkdf_sha512_expand(size, ctx, prk):
+    out = ctypes.create_string_buffer(size)
+    ret = nacl.crypto_kdf_hkdf_sha512_expand(
+        out, size,
+        ctx, len(ctx),
+        prk
+    )
+    if ret:
+        raise ValueError("Error")
+    return out.raw
 
 # Key Exchange API
 
