@@ -128,6 +128,23 @@ if not DOC_RUN:
         HAS_AEAD_CHACHA20POLY1305_IETF = False
         HAS_AEAD_XCHACHA20POLY1305_IETF = False
         HAS_AEAD = False
+    
+    try:
+        crypto_aead_aegis256_KEYBYTES = nacl.crypto_aead_aegis256_keybytes()
+        crypto_aead_aegis256_NPUBBYTES = nacl.crypto_aead_aegis256_npubbytes()
+        crypto_aead_aegis256_ABYTES = nacl.crypto_aead_aegis256_abytes()
+        HAS_AEAD_AEGIS256 = True
+    except AttributeError:
+        HAS_AEAD_AEGIS256 = False
+
+    try:
+        crypto_aead_aegis128l_KEYBYTES = nacl.crypto_aead_aegis128l_keybytes()
+        crypto_aead_aegis128l_NPUBBYTES = nacl.crypto_aead_aegis128l_npubbytes()
+        crypto_aead_aegis128l_ABYTES = nacl.crypto_aead_aegis128l_abytes()
+        HAS_AEAD_AEGIS128L = True
+    except AttributeError:
+        HAS_AEAD_AEGIS128L = False
+
 
     crypto_box_SECRETKEYBYTES = nacl.crypto_box_secretkeybytes()
     crypto_box_SEEDBYTES = nacl.crypto_box_seedbytes()
@@ -896,6 +913,100 @@ def crypto_aead_xchacha20poly1305_ietf_decrypt(ctxt, aad, nonce, key):
     m = ctypes.create_string_buffer(length)
 
     ret = nacl.crypto_aead_xchacha20poly1305_ietf_decrypt(
+        m, ctypes.byref(mlen),
+        None,
+        ctxt, ctypes.c_ulonglong(len(ctxt)),
+        aad, ctypes.c_ulonglong(len(aad)),
+        nonce, key)
+    if ret:
+        raise ValueError('Failed to decrypt message')
+    return m.raw
+
+def crypto_aead_aegis256_encrypt(message, aad, nonce, key):
+    if not HAS_AEAD_AEGIS256:
+        raise ValueError('Underlying Sodium library does not support AEGIS256 AEAD')
+    
+    if len(key) != crypto_aead_aegis256_KEYBYTES:
+        raise ValueError('Invalid key')
+
+    if len(key) != crypto_aead_aegis256_NPUBBYTES:
+        raise ValueError('Invalid nonce')
+
+    length = len(message) + crypto_aead_aegis256_ABYTES
+    clen = ctypes.c_ulonglong()
+    c = ctypes.create_string_buffer(length)
+    ret = nacl.crypto_aead_aegis256_encrypt(
+        c, ctypes.pointer(clen),
+        message, ctypes.c_ulonglong(len(message)),
+        aad, ctypes.c_ulonglong(len(aad)),
+        None,
+        nonce, key)
+    if ret:
+        raise ValueError('Failed to encrypt message')
+    return c.raw
+
+def crypto_aead_aegis256_decrypt(ctxt, aad, nonce, key):
+    if not HAS_AEAD_AEGIS256:
+        raise ValueError('Underlying Sodium library does not support AEGIS256 AEAD')
+
+    if len(key) != crypto_aead_aegis256_KEYBYTES:
+        raise ValueError('Invalid key')
+
+    if len(nonce) != crypto_aead_aegis256_NPUBBYTES:
+        raise ValueError('Invalid nonce')
+
+    length = len(ctxt)-crypto_aead_aegis256_ABYTES
+    mlen = ctypes.c_ulonglong()
+    m = ctypes.create_string_buffer(length)
+
+    ret = nacl.crypto_aead_aegis256_decrypt(
+        m, ctypes.byref(mlen),
+        None,
+        ctxt, ctypes.c_ulonglong(len(ctxt)),
+        aad, ctypes.c_ulonglong(len(aad)),
+        nonce, key)
+    if ret:
+        raise ValueError('Failed to decrypt message')
+    return m.raw
+
+def crypto_aead_aegis128l_encrypt(message, aad, nonce, key):
+    if not HAS_AEAD_AEGIS128L:
+        raise ValueError('Underlying Sodium library does not support AEGIS128L AEAD')
+    
+    if len(key) != crypto_aead_aegis128l_KEYBYTES:
+        raise ValueError('Invalid key')
+
+    if len(key) != crypto_aead_aegis128l_NPUBBYTES:
+        raise ValueError('Invalid nonce')
+
+    length = len(message) + crypto_aead_aegis128l_ABYTES
+    clen = ctypes.c_ulonglong()
+    c = ctypes.create_string_buffer(length)
+    ret = nacl.crypto_aead_aegis128l_encrypt(
+        c, ctypes.pointer(clen),
+        message, ctypes.c_ulonglong(len(message)),
+        aad, ctypes.c_ulonglong(len(aad)),
+        None,
+        nonce, key)
+    if ret:
+        raise ValueError('Failed to encrypt message')
+    return c.raw
+
+def crypto_aead_aegis128l_decrypt(ctxt, aad, nonce, key):
+    if not HAS_AEAD_AEGIS128L:
+        raise ValueError('Underlying Sodium library does not support AES256-GCM AEAD')
+
+    if len(key) != crypto_aead_aegis128l_KEYBYTES:
+        raise ValueError('Invalid key')
+
+    if len(nonce) != crypto_aead_aegis128l_NPUBBYTES:
+        raise ValueError('Invalid nonce')
+
+    length = len(ctxt)-crypto_aead_aegis128l_ABYTES
+    mlen = ctypes.c_ulonglong()
+    m = ctypes.create_string_buffer(length)
+
+    ret = nacl.crypto_aead_aegis128l_decrypt(
         m, ctypes.byref(mlen),
         None,
         ctxt, ctypes.c_ulonglong(len(ctxt)),
