@@ -8,7 +8,7 @@ import ctypes, ctypes.util
 import sys
 import os
 
-__SONAMES = (23, 18, 17, 13, 10, 5, 4)
+__SONAMES = (26, 23, 18, 17, 13, 10, 5, 4)
 
 
 def _get_nacl():
