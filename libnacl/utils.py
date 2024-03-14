@@ -77,6 +77,12 @@ def aead_key():
     '''
     return libnacl.randombytes(libnacl.crypto_aead_aes256gcm_KEYBYTES)
 
+def aead_aegis128l_key():
+    '''
+    Generates an AEAD key (both implementations use the same size)
+    '''
+    return libnacl.randombytes(libnacl.crypto_aead_aegis128l_KEYBYTES)
+
 
 def rand_aead_nonce():
     '''
@@ -93,6 +99,19 @@ def rand_aead_xchacha_nonce():
     '''
     return libnacl.randombytes(libnacl.crypto_aead_xchacha20poly1305_ietf_NPUBBYTES)
 
+def rand_aead_aegis256_nonce():
+    '''
+    Generates and returns a random bytestring of the size defined in libsodium
+    as crypto_aead_aegis256_NPUBBYTES
+    '''
+    return libnacl.randombytes(libnacl.crypto_aead_aegis256_NPUBBYTES)
+
+def rand_aead_aegis128l_nonce():
+    '''
+    Generates and returns a random bytestring of the size defined in libsodium
+    as crypto_aead_aegis256_NPUBBYTES
+    '''
+    return libnacl.randombytes(libnacl.crypto_aead_aegis128l_NPUBBYTES)
 
 def rand_nonce():
     '''

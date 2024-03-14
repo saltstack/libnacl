@@ -109,3 +109,77 @@ class TestAEAD(unittest.TestCase):
         self.assertEqual(clear3, msg)
         self.assertEqual(clear3, msg)
 
+
+    @unittest.skipUnless(libnacl.HAS_AEAD_AEGIS256, 'AEAD AEGIS256 not available')
+    def test_ietf_aead_aegis256(self):
+        msg = b"Our King? Well i didn't vote for you!!"
+        aad = b'\x00\x11\x22\x33'
+        box = libnacl.aead.AEAD().useAEGIS256()
+        ctxt = box.encrypt(msg, aad)
+        self.assertNotEqual(msg, ctxt)
+
+        box2 = libnacl.aead.AEAD(box.sk).useAEGIS256()
+        clear1 = box.decrypt(ctxt, len(aad))
+        self.assertEqual(msg, clear1)
+        clear2 = box2.decrypt(ctxt, len(aad))
+        self.assertEqual(clear1, clear2)
+        ctxt2 = box2.encrypt(msg, aad)
+        clear3 = box.decrypt(ctxt2, len(aad))
+        self.assertEqual(clear3, msg)
+        self.assertEqual(clear3, msg)
+
+
+    @unittest.skipUnless(libnacl.HAS_AEAD_AEGIS256, 'AEAD AEGIS256 not available')
+    def test_ietf_aead_aegis256_class(self):
+        msg = b"Our King? Well i didn't vote for you!!"
+        aad = b'\x00\x11\x22\x33'
+        box = libnacl.aead.AEAD_AEGIS256()
+        ctxt = box.encrypt(msg, aad)
+        self.assertNotEqual(msg, ctxt)
+
+        box2 = libnacl.aead.AEAD_AEGIS256(box.sk)
+        clear1 = box.decrypt(ctxt, len(aad))
+        self.assertEqual(msg, clear1)
+        clear2 = box2.decrypt(ctxt, len(aad))
+        self.assertEqual(clear1, clear2)
+        ctxt2 = box2.encrypt(msg, aad)
+        clear3 = box.decrypt(ctxt2, len(aad))
+        self.assertEqual(clear3, msg)
+        self.assertEqual(clear3, msg)
+
+    @unittest.skipUnless(libnacl.HAS_AEAD_AEGIS128L, 'AEAD AEGIS128L not available')
+    def test_ietf_aead_aegis128l(self):
+        msg = b"Our King? Well i didn't vote for you!!"
+        aad = b'\x00\x11\x22\x33'
+        box = libnacl.aead.AEAD(keysize=libnacl.crypto_aead_aegis128l_KEYBYTES).useAEGIS128L()
+        ctxt = box.encrypt(msg, aad)
+        self.assertNotEqual(msg, ctxt)
+
+        box2 = libnacl.aead.AEAD(box.sk,keysize=libnacl.crypto_aead_aegis128l_KEYBYTES).useAEGIS128L()
+        clear1 = box.decrypt(ctxt, len(aad))
+        self.assertEqual(msg, clear1)
+        clear2 = box2.decrypt(ctxt, len(aad))
+        self.assertEqual(clear1, clear2)
+        ctxt2 = box2.encrypt(msg, aad)
+        clear3 = box.decrypt(ctxt2, len(aad))
+        self.assertEqual(clear3, msg)
+        self.assertEqual(clear3, msg)
+
+
+    @unittest.skipUnless(libnacl.HAS_AEAD_AEGIS128L, 'AEAD AEGIS128L not available')
+    def test_ietf_aead_aegis128l_class(self):
+        msg = b"Our King? Well i didn't vote for you!!"
+        aad = b'\x00\x11\x22\x33'
+        box = libnacl.aead.AEAD_AEGIS128L()
+        ctxt = box.encrypt(msg, aad)
+        self.assertNotEqual(msg, ctxt)
+
+        box2 = libnacl.aead.AEAD_AEGIS128L(box.sk)
+        clear1 = box.decrypt(ctxt, len(aad))
+        self.assertEqual(msg, clear1)
+        clear2 = box2.decrypt(ctxt, len(aad))
+        self.assertEqual(clear1, clear2)
+        ctxt2 = box2.encrypt(msg, aad)
+        clear3 = box.decrypt(ctxt2, len(aad))
+        self.assertEqual(clear3, msg)
+        self.assertEqual(clear3, msg)
